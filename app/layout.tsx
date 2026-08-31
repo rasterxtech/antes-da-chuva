@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://antes-da-chuva.felipeflumignan.chatgpt.site'),
   title: 'Antes da Chuva — Leitura pública municipal',
   description:
     'Histórico de desastres ligados à chuva e condições dos domicílios em uma leitura municipal curta, transparente e baseada em dados públicos.',
