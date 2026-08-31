@@ -301,15 +301,20 @@ function HistoryCard({ history }: { history: History | null }) {
         </CardContent>
       )}
 
-      <CardFooter className="justify-between gap-4 text-xs text-muted-foreground">
-        <span>
+      <CardFooter className="flex-col items-start gap-2 text-xs leading-5 text-muted-foreground">
+        <p className="w-full min-w-0">
           Fonte:{' '}
           {sourceLink(
             'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
             'Atlas Digital de Desastres',
           )}
-        </span>
-        {history && <span>{history.recognized} registros reconhecidos</span>}
+        </p>
+        {history && (
+          <p className="w-full">
+            <strong>{history.recognized}</strong> registros com reconhecimento
+            federal de situação de emergência ou calamidade pública.
+          </p>
+        )}
       </CardFooter>
     </Card>
   );
