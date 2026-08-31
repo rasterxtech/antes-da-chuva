@@ -590,7 +590,6 @@ export default function Home() {
         <div className="mx-auto flex min-h-10 max-w-7xl items-center justify-between gap-4 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-white/75 sm:px-8">
           <span>Dados públicos para agir antes da próxima chuva</span>
           <span className="hidden items-center gap-5 text-white/55 sm:flex">
-            <span>3 bases oficiais</span>
             <span>Atualizado em 30.08.2026</span>
           </span>
         </div>
@@ -640,10 +639,6 @@ export default function Home() {
               Fontes
             </a>
           </nav>
-          <div className="hidden items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs font-bold text-primary shadow-sm md:flex">
-            <span className="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgb(16_185_129/12%)]" />
-            MVP · Concurso CGU 2026
-          </div>
         </div>
       </header>
 
