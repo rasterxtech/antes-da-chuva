@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
 import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right.mjs';
 import CalendarDays from 'lucide-react/dist/esm/icons/calendar-days.mjs';
 import CheckCircle2 from 'lucide-react/dist/esm/icons/check-circle-2.mjs';
@@ -181,10 +182,12 @@ function Tag({
   );
 }
 
-function sourceLink(href: string, children: React.ReactNode) {
+function sourceLink(href: string, children: React.ReactNode, inverse = false) {
   return (
     <a
-      className="font-semibold underline decoration-current/30 underline-offset-4 transition-colors hover:text-foreground"
+      className={`font-bold underline decoration-current/30 underline-offset-4 transition-colors ${
+        inverse ? 'hover:text-white' : 'hover:text-foreground'
+      }`}
       href={href}
       rel="noreferrer"
       target="_blank"
@@ -199,7 +202,7 @@ function HistoryCard({ history }: { history: History | null }) {
   const maximum = Math.max(...types.map(([, count]) => count), 1);
 
   return (
-    <Card className="border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
+    <Card className="elevated-card h-full border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
       <CardHeader className="border-b border-border/80 pb-5">
         <div className="mb-3 grid size-11 place-items-center rounded-full bg-rain-soft text-rain-strong">
           <CloudRain aria-hidden="true" className="size-5" />
@@ -208,7 +211,8 @@ function HistoryCard({ history }: { history: History | null }) {
           O que já aconteceu
         </CardTitle>
         <CardDescription>
-          Registros nas cinco tipologias ligadas à chuva selecionadas para o MVP.
+          Registros nas cinco tipologias ligadas à chuva selecionadas para o
+          MVP.
         </CardDescription>
         <CardAction>
           <span className="font-heading text-4xl font-semibold text-primary">
@@ -221,10 +225,13 @@ function HistoryCard({ history }: { history: History | null }) {
       </CardHeader>
 
       {history ? (
-        <CardContent className="grid gap-6 pt-1 md:grid-cols-[0.9fr_1.1fr]">
+        <CardContent className="grid flex-1 gap-6 pt-1">
           <div>
             <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
-              <CalendarDays aria-hidden="true" className="size-4 text-primary" />
+              <CalendarDays
+                aria-hidden="true"
+                className="size-4 text-primary"
+              />
               Entre {history.firstYear} e {history.lastYear}
             </div>
             <div className="space-y-3">
@@ -278,14 +285,17 @@ function HistoryCard({ history }: { history: History | null }) {
       ) : (
         <CardContent className="py-8">
           <div className="rounded-xl border border-dashed border-border bg-muted/40 p-6">
-            <CircleDashed aria-hidden="true" className="mb-4 size-7 text-rain-strong" />
+            <CircleDashed
+              aria-hidden="true"
+              className="mb-4 size-7 text-rain-strong"
+            />
             <h3 className="font-heading text-xl font-semibold">
               Nenhum registro encontrado no recorte
             </h3>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              O Atlas não retornou ocorrência para as cinco tipologias entre 1991
-              e 2025. Isso não significa ausência de evento, risco ou necessidade
-              de prevenção.
+              O Atlas não retornou ocorrência para as cinco tipologias entre
+              1991 e 2025. Isso não significa ausência de evento, risco ou
+              necessidade de prevenção.
             </p>
           </div>
         </CardContent>
@@ -309,28 +319,31 @@ function CensusCard({ municipality }: { municipality: Municipality }) {
   const percentage = municipality.census.outsideSelectedSewerPct;
 
   return (
-    <Card className="border-0 bg-primary text-primary-foreground shadow-[0_12px_45px_rgb(21_42_57/14%)] ring-0">
+    <Card className="elevated-card h-full border-0 bg-primary text-primary-foreground shadow-[0_12px_45px_rgb(21_42_57/14%)] ring-0">
       <CardHeader>
         <div className="mb-3 grid size-11 place-items-center rounded-full bg-white/10 text-white">
           <HomeIcon aria-hidden="true" className="size-5" />
         </div>
         <CardTitle className="font-heading text-2xl font-semibold text-white">
-          O que pode ampliar o dano
+          Uma condição de saneamento
         </CardTitle>
         <CardDescription className="text-white/65">
-          Condição estrutural observada nos domicílios em 2022.
+          Retrato estrutural dos domicílios observado pelo Censo 2022.
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-2">
+      <CardContent className="flex-1 pt-2">
         {percentage === null ? (
           <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-            <TriangleAlert aria-hidden="true" className="mb-4 size-7 text-white/80" />
+            <TriangleAlert
+              aria-hidden="true"
+              className="mb-4 size-7 text-white/80"
+            />
             <strong className="font-heading text-xl font-semibold text-white">
               Valor não publicado
             </strong>
             <p className="mt-2 text-sm leading-6 text-white/65">
-              O SIDRA não apresentou percentual para esta categoria no município.
-              A ausência permanece explícita em vez de virar zero.
+              O SIDRA não apresentou percentual para esta categoria no
+              município. A ausência permanece explícita em vez de virar zero.
             </p>
           </div>
         ) : (
@@ -364,12 +377,17 @@ function CensusCard({ municipality }: { municipality: Municipality }) {
         )}
         <p className="mt-6 flex gap-2 border-t border-white/10 pt-5 text-xs leading-5 text-white/58">
           <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-          Isso não é uma nota de risco. É uma medida direta do Censo para orientar
-          perguntas sobre infraestrutura.
+          Isso não mede sozinho o risco de desastre. É uma condição de
+          saneamento que ajuda a orientar perguntas sobre infraestrutura.
         </p>
       </CardContent>
-      <CardFooter className="border-white/10 bg-white/5 text-white/60">
-        Fonte: IBGE · Censo 2022 · Tabela 6805
+      <CardFooter className="border-white/10 bg-white/5 text-white/65">
+        Fonte:{' '}
+        {sourceLink(
+          'https://sidra.ibge.gov.br/tabela/6805',
+          'IBGE · Censo 2022 · Tabela 6805',
+          true,
+        )}
       </CardFooter>
     </Card>
   );
@@ -381,7 +399,7 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
     false;
 
   return (
-    <Card className="border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
+    <Card className="elevated-card h-full border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
       <CardHeader>
         <div className="mb-3 grid size-11 place-items-center rounded-full bg-amber-100 text-amber-800">
           <HandCoins aria-hidden="true" className="size-5" />
@@ -394,7 +412,7 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
           município.
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1">
         {transfers ? (
           <>
             <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
@@ -434,13 +452,17 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
           </>
         ) : (
           <div className="rounded-xl border border-dashed border-border bg-muted/40 p-5">
-            <FileSearch aria-hidden="true" className="mb-4 size-7 text-amber-700" />
+            <FileSearch
+              aria-hidden="true"
+              className="mb-4 size-7 text-amber-700"
+            />
             <strong className="font-heading text-lg font-semibold">
               Nenhum instrumento encontrado neste recorte
             </strong>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Isso não significa ausência de investimento. O recorte cobre apenas
-              programas federais selecionados e objetos que citam o município.
+              Isso não significa ausência de investimento. O recorte cobre
+              apenas programas federais selecionados e objetos que citam o
+              município.
             </p>
           </div>
         )}
@@ -462,6 +484,7 @@ export default function Home() {
   const [selected, setSelected] = useState<Municipality>(DEFAULT_MUNICIPALITY);
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState('');
+  const [activeResultIndex, setActiveResultIndex] = useState(-1);
   const [loading, setLoading] = useState(true);
   const [dataError, setDataError] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -471,7 +494,8 @@ export default function Home() {
 
     fetch('/data/municipios.json')
       .then((response) => {
-        if (!response.ok) throw new Error('Falha ao carregar dados municipais.');
+        if (!response.ok)
+          throw new Error('Falha ao carregar dados municipais.');
         return response.json() as Promise<Municipality[]>;
       })
       .then((data) => {
@@ -531,9 +555,11 @@ export default function Home() {
   }, [query, searchEntries]);
 
   function chooseMunicipality(municipality: Municipality) {
+    searchInputRef.current?.blur();
     setSelected(municipality);
     setSearchFocused(false);
     setQuery('');
+    setActiveResultIndex(-1);
     window.history.replaceState(null, '', `?municipio=${municipality.code}`);
     window.setTimeout(() => {
       document.getElementById('resultado')?.scrollIntoView({
@@ -544,148 +570,237 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+    <main className="page-ambient min-h-screen overflow-x-hidden bg-background text-foreground">
       <div className="border-b border-white/10 bg-primary text-primary-foreground">
-        <div className="mx-auto flex min-h-9 max-w-7xl items-center justify-center px-4 py-2 text-center text-[11px] font-semibold uppercase tracking-[0.15em] text-white/75 sm:px-8">
-          Dados públicos para agir antes da próxima chuva
+        <div className="mx-auto flex min-h-10 max-w-7xl items-center justify-between gap-4 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-white/75 sm:px-8">
+          <span>Dados públicos para agir antes da próxima chuva</span>
+          <span className="hidden items-center gap-5 text-white/55 sm:flex">
+            <span>3 bases oficiais</span>
+            <span>Atualizado em 30.08.2026</span>
+          </span>
         </div>
       </div>
 
-      <header className="border-b border-border/80 bg-background/95 backdrop-blur">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-8">
+      <header className="sticky top-0 z-40 border-b border-border/80 bg-background/88 shadow-[0_8px_30px_rgb(17_47_62/5%)] backdrop-blur-xl">
+        <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-8">
           <a className="group flex items-center gap-3" href="#topo">
-            <span className="grid size-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform group-hover:-translate-y-0.5">
+            <span className="grid size-11 place-items-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform group-hover:-translate-y-0.5">
               <CloudRain aria-hidden="true" className="size-5" />
             </span>
             <span>
-              <span className="block font-heading text-xl font-semibold leading-none tracking-tight">
+              <span className="block font-heading text-[1.35rem] font-semibold leading-none tracking-tight">
                 Antes da Chuva
               </span>
-              <span className="mt-1 block text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                Leitura pública municipal
+              <span className="mt-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                Inteligência pública municipal
               </span>
             </span>
           </a>
-          <a
-            className="hidden items-center gap-2 text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground sm:flex"
-            href="#metodologia"
+          <nav
+            aria-label="Navegação principal"
+            className="hidden items-center gap-7 text-sm font-bold text-muted-foreground lg:flex"
           >
-            Como lemos os dados
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </a>
+            <a
+              className="transition-colors hover:text-foreground"
+              href="#resultado"
+            >
+              Leitura municipal
+            </a>
+            <a
+              className="transition-colors hover:text-foreground"
+              href="#metodologia"
+            >
+              Metodologia
+            </a>
+            <a
+              className="transition-colors hover:text-foreground"
+              href="#fontes"
+            >
+              Fontes
+            </a>
+          </nav>
+          <div className="hidden items-center gap-2 rounded-full border border-border bg-card px-3 py-2 text-xs font-bold text-primary shadow-sm md:flex">
+            <span className="size-2 rounded-full bg-emerald-500 shadow-[0_0_0_4px_rgb(16_185_129/12%)]" />
+            MVP · Concurso CGU 2026
+          </div>
         </div>
       </header>
 
       <section
-        className="relative border-b border-border/80 bg-[linear-gradient(135deg,var(--surface-storm)_0%,var(--surface-rain)_100%)]"
+        className="relative overflow-hidden border-b border-border/80 bg-[linear-gradient(135deg,var(--surface-storm)_0%,var(--surface-rain)_100%)]"
         id="topo"
       >
         <div className="weather-lines absolute inset-0 opacity-35" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-8 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:py-16">
-          <div className="max-w-2xl text-white">
-            <div className="mb-5">
+        <div className="soft-grid absolute inset-0 opacity-30" />
+        <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-8 sm:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
+          <div className="min-w-0 text-white lg:col-span-7">
+            <div className="mb-5 flex flex-wrap gap-2">
               <Tag tone="inverse">5.570 localidades disponíveis</Tag>
+              <Tag tone="inverse">Leitura em menos de 1 minuto</Tag>
             </div>
-            <h1 className="font-heading text-4xl font-semibold leading-[1.03] tracking-[-0.035em] text-balance sm:text-5xl lg:text-[3.7rem]">
+            <h1 className="max-w-3xl font-heading text-4xl font-semibold leading-[1.03] tracking-[-0.035em] text-balance sm:text-5xl lg:text-[3.75rem]">
               O que precisa ser visto antes da próxima chuva?
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-white/76 sm:text-lg">
-              Consulte o histórico ligado à chuva, uma condição dos domicílios e
-              evidências federais de prevenção — sem nota opaca e sem falsa
-              previsão.
+            <p className="mt-5 max-w-2xl text-base leading-7 text-white/78 sm:text-lg">
+              Em uma única leitura, veja o histórico de ocorrências ligadas à
+              chuva, uma condição de saneamento e evidências federais de
+              prevenção — com recorte e limitações à vista.
             </p>
-          </div>
 
-          <div className="relative rounded-2xl border border-white/15 bg-white p-3 shadow-[0_24px_80px_rgb(4_20_32/28%)]">
-            <p className="mb-2 px-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              Busque seu município
-            </p>
-            <div className="flex items-center gap-2">
-              <div className="relative flex h-12 min-w-0 flex-1 items-center rounded-xl border border-input bg-muted/40 px-4 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/30">
-                <Search aria-hidden="true" className="mr-3 size-5 shrink-0 text-primary" />
-                <input
-                  aria-autocomplete="list"
-                  aria-controls="municipios-resultados"
-                  aria-expanded={searchFocused}
-                  aria-label="Busque por nome, UF ou código IBGE"
-                  className="min-w-0 flex-1 bg-transparent text-base font-semibold outline-none"
+            <div className="relative mt-8 min-w-0 rounded-2xl border border-white/15 bg-white p-3 text-foreground shadow-[0_24px_80px_rgb(4_20_32/28%)] sm:p-4">
+              <p className="mb-2 px-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                Busque seu município
+              </p>
+              <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                <div className="relative flex h-12 min-w-0 items-center rounded-xl border border-input bg-muted/40 px-3 focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/30 sm:px-4">
+                  <Search
+                    aria-hidden="true"
+                    className="mr-3 size-5 shrink-0 text-primary"
+                  />
+                  <input
+                    aria-activedescendant={
+                      activeResultIndex >= 0 && results[activeResultIndex]
+                        ? `municipio-option-${results[activeResultIndex].code}`
+                        : undefined
+                    }
+                    aria-autocomplete="list"
+                    aria-controls="municipios-resultados"
+                    aria-expanded={searchFocused}
+                    aria-label="Busque por nome, UF ou código IBGE"
+                    className="min-w-0 flex-1 bg-transparent text-base font-bold outline-none"
+                    disabled={loading && municipalities.length === 0}
+                    onBlur={() =>
+                      window.setTimeout(() => setSearchFocused(false), 120)
+                    }
+                    onChange={(event) => {
+                      setQuery(event.target.value);
+                      setActiveResultIndex(0);
+                    }}
+                    onFocus={() => {
+                      setSearchFocused(true);
+                      setQuery('');
+                      setActiveResultIndex(0);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'ArrowDown' && results.length > 0) {
+                        event.preventDefault();
+                        setActiveResultIndex((current) =>
+                          current >= results.length - 1 ? 0 : current + 1,
+                        );
+                      }
+                      if (event.key === 'ArrowUp' && results.length > 0) {
+                        event.preventDefault();
+                        setActiveResultIndex((current) =>
+                          current <= 0 ? results.length - 1 : current - 1,
+                        );
+                      }
+                      if (
+                        event.key === 'Enter' &&
+                        activeResultIndex >= 0 &&
+                        results[activeResultIndex]
+                      ) {
+                        event.preventDefault();
+                        chooseMunicipality(results[activeResultIndex]);
+                      }
+                      if (event.key === 'Escape') {
+                        setSearchFocused(false);
+                        searchInputRef.current?.blur();
+                      }
+                    }}
+                    ref={searchInputRef}
+                    role="combobox"
+                    value={
+                      searchFocused
+                        ? query
+                        : loading
+                          ? 'Carregando localidades…'
+                          : `${selected.name}, ${selected.uf}`
+                    }
+                  />
+                </div>
+                <button
+                  className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 sm:w-auto"
                   disabled={loading && municipalities.length === 0}
-                  onBlur={() =>
-                    window.setTimeout(() => setSearchFocused(false), 120)
-                  }
-                  onChange={(event) => setQuery(event.target.value)}
-                  onFocus={() => {
+                  onClick={() => {
                     setSearchFocused(true);
                     setQuery('');
+                    setActiveResultIndex(0);
+                    searchInputRef.current?.focus();
                   }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Escape') {
-                      setSearchFocused(false);
-                      searchInputRef.current?.blur();
-                    }
-                  }}
-                  ref={searchInputRef}
-                  role="combobox"
-                  value={
-                    searchFocused
-                      ? query
-                      : loading
-                        ? 'Carregando localidades…'
-                        : `${selected.name}, ${selected.uf}`
-                  }
-                />
+                  onMouseDown={(event) => event.preventDefault()}
+                  type="button"
+                >
+                  Consultar
+                </button>
               </div>
-              <button
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
-                disabled={loading && municipalities.length === 0}
-                onClick={() => searchInputRef.current?.focus()}
-                type="button"
-              >
-                Consultar
-              </button>
-            </div>
-            {searchFocused && (
-              <div
-                className="absolute top-[calc(100%-0.4rem)] right-3 left-3 z-50 overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-[0_18px_50px_rgb(9_30_43/18%)]"
-                id="municipios-resultados"
-                role="listbox"
-              >
-                <p className="border-b border-border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                  {query.trim().length < 2 ? 'Sugestões' : 'Resultados'}
-                </p>
-                <div className="max-h-72 overflow-y-auto p-1">
-                  {!loading && results.length === 0 && (
-                    <p className="px-4 py-6 text-center text-sm text-muted-foreground">
-                      Nenhum município encontrado.
-                    </p>
-                  )}
-                  {results.map((municipality) => (
-                    <button
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
-                      key={municipality.code}
-                      onClick={() => chooseMunicipality(municipality)}
-                      onMouseDown={(event) => event.preventDefault()}
-                      role="option"
-                      type="button"
-                    >
-                      <MapPin aria-hidden="true" className="size-4 shrink-0 text-rain-strong" />
-                      <span className="min-w-0 flex-1 truncate font-medium">
-                        {municipality.name}, {municipality.uf}
-                      </span>
-                      <span className="text-xs tabular-nums text-muted-foreground">
-                        {municipality.code}
-                      </span>
-                    </button>
-                  ))}
+              {searchFocused && (
+                <div
+                  className="absolute top-[calc(100%-0.4rem)] right-3 left-3 z-50 overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-[0_18px_50px_rgb(9_30_43/18%)] sm:right-4 sm:left-4"
+                  id="municipios-resultados"
+                  role="listbox"
+                >
+                  <p className="border-b border-border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                    {query.trim().length < 2 ? 'Sugestões' : 'Resultados'}
+                  </p>
+                  <div className="max-h-72 overflow-y-auto p-1">
+                    {!loading && results.length === 0 && (
+                      <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+                        Nenhum município encontrado.
+                      </p>
+                    )}
+                    {results.map((municipality, index) => (
+                      <button
+                        aria-selected={activeResultIndex === index}
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none aria-selected:bg-muted"
+                        id={`municipio-option-${municipality.code}`}
+                        key={municipality.code}
+                        onClick={() => chooseMunicipality(municipality)}
+                        onMouseDown={(event) => event.preventDefault()}
+                        onMouseEnter={() => setActiveResultIndex(index)}
+                        role="option"
+                        type="button"
+                      >
+                        <MapPin
+                          aria-hidden="true"
+                          className="size-4 shrink-0 text-rain-strong"
+                        />
+                        <span className="min-w-0 flex-1 truncate font-bold">
+                          {municipality.name}, {municipality.uf}
+                        </span>
+                        <span className="text-xs tabular-nums text-muted-foreground">
+                          {municipality.code}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-            <p className="px-2 pt-2 text-xs text-muted-foreground">
-              {dataError
-                ? 'A lista completa não carregou; o exemplo de Blumenau continua disponível.'
-                : 'Digite o nome, a UF ou o código IBGE.'}
-            </p>
+              )}
+              <p className="px-2 pt-2 text-xs text-muted-foreground">
+                {dataError
+                  ? 'A lista completa não carregou; o exemplo de Blumenau continua disponível.'
+                  : 'Digite nome, UF ou código IBGE. Use as setas e Enter para selecionar.'}
+              </p>
+            </div>
           </div>
+
+          <figure className="hero-map-frame relative min-h-[300px] overflow-hidden rounded-[1.75rem] border border-white/20 bg-white/10 shadow-2xl sm:min-h-[380px] lg:col-span-5 lg:min-h-[560px]">
+            <Image
+              alt="Ilustração de um território visto do alto, com rios, áreas urbanas e nuvens de chuva"
+              className="hero-map-image object-cover"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              src="/hero-map.webp"
+            />
+            <figcaption className="absolute right-4 bottom-4 left-4 rounded-2xl border border-white/20 bg-primary/82 p-4 text-white shadow-lg backdrop-blur-md sm:p-5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/60">
+                Dados conectados ao território
+              </p>
+              <p className="mt-2 max-w-sm font-heading text-lg font-semibold leading-snug sm:text-xl">
+                Evidências públicas para priorizar perguntas antes da crise.
+              </p>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -711,15 +826,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid items-start gap-5 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid items-stretch gap-5 lg:grid-cols-3">
           <HistoryCard history={selected.history} />
-          <div className="grid gap-5">
-            <CensusCard municipality={selected} />
-            <TransferCard transfers={selected.transfers} />
-          </div>
+          <CensusCard municipality={selected} />
+          <TransferCard transfers={selected.transfers} />
         </div>
 
-        <div className="mt-5 flex flex-col justify-between gap-5 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
+        <div className="elevated-card mt-5 flex flex-col justify-between gap-5 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
           <div className="max-w-2xl">
             <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-rain-strong">
               Próxima ação
@@ -744,10 +857,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        className="border-y border-border bg-card/60"
-        id="metodologia"
-      >
+      <section className="border-y border-border bg-card/60" id="metodologia">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-16">
           <div className="max-w-2xl">
             <div className="mb-4">
@@ -780,10 +890,13 @@ export default function Home() {
               },
             ].map(({ icon: Icon, title, text }) => (
               <div
-                className="rounded-2xl border border-border bg-background p-5"
+                className="elevated-card h-full rounded-2xl border border-border bg-background p-5"
                 key={title}
               >
-                <Icon aria-hidden="true" className="mb-4 size-6 text-rain-strong" />
+                <Icon
+                  aria-hidden="true"
+                  className="mb-4 size-6 text-rain-strong"
+                />
                 <h3 className="font-heading text-lg font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {text}
@@ -794,21 +907,175 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-primary text-primary-foreground">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 px-4 py-8 text-sm sm:flex-row sm:items-center sm:px-8">
-          <div>
-            <strong className="font-heading text-lg">Antes da Chuva</strong>
-            <p className="mt-1 text-white/60">
-              Inteligência pública para prevenir desastres.
+      <section
+        className="relative overflow-hidden border-b border-border bg-background"
+        id="fontes"
+      >
+        <div className="rain-divider absolute inset-x-0 top-0 h-px" />
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-16">
+          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div>
+              <div className="mb-4">
+                <Tag>Fontes verificáveis</Tag>
+              </div>
+              <h2 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+                O dado termina em uma fonte, não em uma promessa
+              </h2>
+            </div>
+            <p className="max-w-2xl text-base leading-7 text-muted-foreground lg:justify-self-end">
+              A leitura reúne bases públicas com períodos e coberturas
+              diferentes. Por isso, cada evidência mantém sua origem e seu
+              limite visíveis.
             </p>
           </div>
-          <p className="max-w-lg text-xs leading-5 text-white/55 sm:text-right">
-            Dados públicos podem orientar decisões, mas não substituem alertas,
-            laudos técnicos ou a atuação da Defesa Civil.
-          </p>
+
+          <div className="mt-8 grid items-stretch gap-4 md:grid-cols-3">
+            {[
+              {
+                label: 'Histórico',
+                title: 'Atlas Digital de Desastres no Brasil',
+                text: 'Registros municipais das cinco tipologias relacionadas à chuva, entre 1991 e 2025.',
+                href: 'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
+                action: 'Consultar Atlas',
+              },
+              {
+                label: 'Saneamento',
+                title: 'Censo Demográfico 2022 · IBGE',
+                text: 'Condição de esgotamento sanitário dos domicílios, a partir da tabela 6805 do SIDRA.',
+                href: 'https://sidra.ibge.gov.br/tabela/6805',
+                action: 'Consultar SIDRA',
+              },
+              {
+                label: 'Prevenção federal',
+                title: 'Transferências e Parcerias da União',
+                text: 'Convênios selecionados por ação e objeto, com atribuição municipal explicitada na tela.',
+                href: 'https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao',
+                action: 'Consultar dados.gov.br',
+              },
+            ].map((source) => (
+              <article
+                className="elevated-card flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6"
+                key={source.title}
+              >
+                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-rain-strong">
+                  {source.label}
+                </p>
+                <h3 className="mt-3 font-heading text-xl font-semibold leading-snug">
+                  {source.title}
+                </h3>
+                <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">
+                  {source.text}
+                </p>
+                <a
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-primary transition-colors hover:text-rain-strong focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/40"
+                  href={source.href}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {source.action}
+                  <ArrowRight aria-hidden="true" className="size-4" />
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="relative overflow-hidden bg-primary text-primary-foreground">
+        <div className="soft-grid absolute inset-0 opacity-20" />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-12 text-sm sm:px-8 lg:grid-cols-[1.35fr_0.75fr_1fr_1.25fr] lg:py-14">
+          <div>
+            <a className="group inline-flex items-center gap-3" href="#topo">
+              <span className="grid size-11 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-transform group-hover:-translate-y-0.5">
+                <CloudRain aria-hidden="true" className="size-5" />
+              </span>
+              <span className="font-heading text-xl font-semibold">
+                Antes da Chuva
+              </span>
+            </a>
+            <p className="mt-4 max-w-sm leading-6 text-white/62">
+              Inteligência pública municipal para transformar bases abertas em
+              perguntas melhores antes da próxima crise.
+            </p>
+            <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-white/40">
+              Projeto independente · Concurso CGU 2026
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">
+              Navegue
+            </h2>
+            <nav
+              aria-label="Navegação do rodapé"
+              className="mt-4 grid gap-3 font-bold text-white/72"
+            >
+              <a
+                className="transition-colors hover:text-white"
+                href="#resultado"
+              >
+                Leitura municipal
+              </a>
+              <a
+                className="transition-colors hover:text-white"
+                href="#metodologia"
+              >
+                Metodologia
+              </a>
+              <a className="transition-colors hover:text-white" href="#fontes">
+                Fontes
+              </a>
+            </nav>
+          </div>
+
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">
+              Bases oficiais
+            </h2>
+            <div className="mt-4 grid gap-3 text-white/72">
+              {sourceLink(
+                'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
+                'Atlas de Desastres',
+                true,
+              )}
+              {sourceLink(
+                'https://sidra.ibge.gov.br/tabela/6805',
+                'Censo 2022 · IBGE',
+                true,
+              )}
+              {sourceLink(
+                'https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao',
+                'Transferegov',
+                true,
+              )}
+              {sourceLink('https://idap.mdr.gov.br/', 'Alertas oficiais', true)}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">
+              Transparência
+            </h2>
+            <ul className="mt-4 grid gap-3 leading-5 text-white/62">
+              <li>Atualização da leitura: 30 de agosto de 2026.</li>
+              <li>Código IBGE é a chave de integração municipal.</li>
+              <li>
+                Ausência de registro não significa ausência de ação ou risco.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="relative border-t border-white/10">
+          <div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-4 py-5 text-xs leading-5 text-white/48 sm:px-8 md:flex-row md:items-center">
+            <p>© 2026 Antes da Chuva. Dados públicos, leitura responsável.</p>
+            <p className="max-w-2xl md:text-right">
+              Não substitui alertas, laudos técnicos nem a atuação da Defesa
+              Civil.
+            </p>
+          </div>
         </div>
       </footer>
-
     </main>
   );
 }

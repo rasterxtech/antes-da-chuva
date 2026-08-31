@@ -1,26 +1,20 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import '@fontsource/atkinson-hyperlegible/latin-400.css';
+import '@fontsource/atkinson-hyperlegible/latin-700.css';
+import '@fontsource/source-serif-4/latin-400.css';
+import '@fontsource/source-serif-4/latin-600.css';
+import '@fontsource/source-serif-4/latin-700.css';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://antes-da-chuva.felipeflumignan.chatgpt.site'),
   title: 'Antes da Chuva — Leitura pública municipal',
   description:
-    'Histórico de desastres ligados à chuva e condições dos domicílios em uma leitura municipal curta, transparente e baseada em dados públicos.',
+    'Histórico de ocorrências ligadas à chuva, uma condição de saneamento e evidências federais de prevenção em uma leitura municipal transparente.',
   openGraph: {
     title: 'Antes da Chuva',
     description:
-      'Dados públicos para entender o que a chuva já causou e quais evidências de prevenção podem ser comprovadas no seu município.',
+      'Dados públicos para entender o que a chuva já causou e quais evidências de prevenção podem ser verificadas no seu município.',
     locale: 'pt_BR',
     type: 'website',
     images: [
@@ -48,11 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
