@@ -627,7 +627,7 @@ export default function Home() {
       </header>
 
       <section
-        className="relative overflow-hidden border-b border-border/80 bg-[linear-gradient(135deg,var(--surface-storm)_0%,var(--surface-rain)_100%)]"
+        className="relative z-20 border-b border-border/80 bg-[linear-gradient(135deg,var(--surface-storm)_0%,var(--surface-rain)_100%)]"
         id="topo"
       >
         <div className="weather-lines absolute inset-0 opacity-35" />
@@ -806,7 +806,7 @@ export default function Home() {
 
       <section
         aria-live="polite"
-        className="mx-auto max-w-7xl scroll-mt-4 px-4 py-10 sm:px-8 sm:py-14"
+        className="relative z-0 mx-auto max-w-7xl scroll-mt-4 px-4 py-10 sm:px-8 sm:py-14"
         id="resultado"
       >
         <div className="mb-7 flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-end">
