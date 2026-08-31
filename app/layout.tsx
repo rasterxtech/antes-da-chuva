@@ -7,10 +7,10 @@ import '@fontsource/source-serif-4/latin-700.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://antes-da-chuva.felipeflumignan.chatgpt.site'),
+  metadataBase: new URL('https://antesdachuva.info'),
   title: 'Antes da Chuva — Leitura pública municipal',
   description:
-    'Histórico de ocorrências ligadas à chuva, uma condição de saneamento e evidências federais de prevenção em uma leitura municipal transparente.',
+    'Histórico de ocorrências ligadas à chuva, evidências federais de prevenção e acesso aos canais oficiais de alerta em uma leitura municipal transparente.',
   openGraph: {
     title: 'Antes da Chuva',
     description:

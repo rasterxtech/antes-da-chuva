@@ -13,8 +13,12 @@ import HandCoins from 'lucide-react/dist/esm/icons/hand-coins.mjs';
 import HomeIcon from 'lucide-react/dist/esm/icons/home.mjs';
 import Info from 'lucide-react/dist/esm/icons/info.mjs';
 import MapPin from 'lucide-react/dist/esm/icons/map-pin.mjs';
+import MessageCircle from 'lucide-react/dist/esm/icons/message-circle.mjs';
+import Radio from 'lucide-react/dist/esm/icons/radio.mjs';
 import Search from 'lucide-react/dist/esm/icons/search.mjs';
+import Send from 'lucide-react/dist/esm/icons/send.mjs';
 import ShieldCheck from 'lucide-react/dist/esm/icons/shield-check.mjs';
+import Smartphone from 'lucide-react/dist/esm/icons/smartphone.mjs';
 import TriangleAlert from 'lucide-react/dist/esm/icons/triangle-alert.mjs';
 
 import {
@@ -619,6 +623,12 @@ export default function Home() {
             </a>
             <a
               className="transition-colors hover:text-foreground"
+              href="#alertas"
+            >
+              Alertas oficiais
+            </a>
+            <a
+              className="transition-colors hover:text-foreground"
               href="#metodologia"
             >
               Metodologia
@@ -858,13 +868,138 @@ export default function Home() {
           </div>
           <a
             className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-            href="https://idap.mdr.gov.br/"
-            rel="noreferrer"
-            target="_blank"
+            href="#alertas"
           >
-            Ver alertas oficiais
-            <ExternalLink aria-hidden="true" data-icon="inline-end" />
+            Como receber alertas
+            <ArrowRight aria-hidden="true" data-icon="inline-end" />
           </a>
+        </div>
+      </section>
+
+      <section
+        className="relative overflow-hidden border-y border-border bg-[linear-gradient(145deg,var(--surface-storm)_0%,#19495f_100%)] text-white"
+        id="alertas"
+      >
+        <div className="weather-lines absolute inset-0 opacity-30" />
+        <div className="soft-grid absolute inset-0 opacity-20" />
+        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-8 sm:py-16">
+          <div className="grid gap-6 lg:grid-cols-[1fr_0.85fr] lg:items-end">
+            <div>
+              <div className="mb-4">
+                <Tag tone="inverse">Serviço oficial e gratuito</Tag>
+              </div>
+              <h2 className="max-w-3xl font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+                Receba os alertas da Defesa Civil no canal que funciona para
+                você
+              </h2>
+            </div>
+            <p className="max-w-2xl text-base leading-7 text-white/70 lg:justify-self-end">
+              Os canais abaixo são mantidos ou indicados pela Defesa Civil
+              Nacional. O Antes da Chuva ajuda você a encontrá-los, mas não
+              emite nem substitui alertas oficiais.
+            </p>
+          </div>
+
+          <div className="mt-8 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                icon: MessageCircle,
+                eyebrow: 'Com cadastro',
+                title: 'WhatsApp',
+                text: 'Envie “Olá”, aceite os termos e cadastre um ou mais municípios, CEPs ou localidades de interesse.',
+                detail: '(61) 2034-4611',
+                href: 'https://wa.me/556120344611',
+                action: 'Abrir WhatsApp',
+                external: true,
+              },
+              {
+                icon: Send,
+                eyebrow: 'Com cadastro',
+                title: 'Telegram',
+                text: 'Inicie o robô Defesa Civil Alertas e escolha as áreas que deseja acompanhar.',
+                detail: '@defesacivilbrbot',
+                href: 'https://t.me/defesacivilbrbot',
+                action: 'Abrir Telegram',
+                external: true,
+              },
+              {
+                icon: Smartphone,
+                eyebrow: 'Com cadastro',
+                title: 'SMS 40199',
+                text: 'Envie somente o CEP da área que deseja acompanhar. É possível cadastrar mais de um CEP.',
+                detail: 'Envie seu CEP para 40199',
+                href: 'sms:40199',
+                action: 'Preparar SMS',
+                external: false,
+              },
+              {
+                icon: Radio,
+                eyebrow: 'Sem cadastro',
+                title: 'Defesa Civil Alerta',
+                text: 'Alertas críticos aparecem automaticamente em celulares compatíveis conectados às redes 4G ou 5G na área de risco.',
+                detail: 'Transmissão pela rede móvel',
+                href: 'https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/defesa-civil-alerta',
+                action: 'Entender como funciona',
+                external: true,
+              },
+            ].map((channel) => {
+              const Icon = channel.icon;
+
+              return (
+                <article
+                  className="elevated-card flex h-full flex-col rounded-2xl border border-white/14 bg-white/9 p-5 shadow-[0_18px_45px_rgb(2_18_29/18%)] backdrop-blur-sm sm:p-6"
+                  key={channel.title}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="grid size-11 place-items-center rounded-full bg-white/12 text-white ring-1 ring-white/15">
+                      <Icon aria-hidden="true" className="size-5" />
+                    </span>
+                    <span className="rounded-full border border-white/15 bg-white/8 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/65">
+                      {channel.eyebrow}
+                    </span>
+                  </div>
+                  <h3 className="mt-5 font-heading text-2xl font-semibold">
+                    {channel.title}
+                  </h3>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-white/68">
+                    {channel.text}
+                  </p>
+                  <p className="mt-5 border-t border-white/12 pt-4 text-xs font-bold text-white/85">
+                    {channel.detail}
+                  </p>
+                  <a
+                    className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-primary transition-colors hover:bg-white/88 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-white/40"
+                    href={channel.href}
+                    rel={channel.external ? 'noreferrer' : undefined}
+                    target={channel.external ? '_blank' : undefined}
+                  >
+                    {channel.action}
+                    {channel.external ? (
+                      <ExternalLink aria-hidden="true" className="size-4" />
+                    ) : (
+                      <ArrowRight aria-hidden="true" className="size-4" />
+                    )}
+                  </a>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 flex flex-col justify-between gap-4 rounded-2xl border border-white/14 bg-black/10 p-5 sm:flex-row sm:items-center">
+            <p className="max-w-3xl text-sm leading-6 text-white/68">
+              Em uma emergência, siga as instruções recebidas pelos canais
+              oficiais e as orientações da Defesa Civil do seu município.
+            </p>
+            <a
+              className="inline-flex shrink-0 items-center gap-2 text-sm font-bold text-white underline decoration-white/30 underline-offset-4 transition-colors hover:text-white/80"
+              href="https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/alertas-de-desastres-1"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Conferir orientações oficiais
+              <ExternalLink aria-hidden="true" className="size-4" />
+            </a>
+          </div>
         </div>
       </section>
 
@@ -1033,6 +1168,9 @@ export default function Home() {
               >
                 Metodologia
               </a>
+              <a className="transition-colors hover:text-white" href="#alertas">
+                Alertas oficiais
+              </a>
               <a className="transition-colors hover:text-white" href="#fontes">
                 Fontes
               </a>
@@ -1059,7 +1197,11 @@ export default function Home() {
                 'Transferegov',
                 true,
               )}
-              {sourceLink('https://idap.mdr.gov.br/', 'Alertas oficiais', true)}
+              {sourceLink(
+                'https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/alertas-de-desastres-1',
+                'Alertas da Defesa Civil',
+                true,
+              )}
             </div>
           </div>
 
