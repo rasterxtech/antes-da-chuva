@@ -382,12 +382,14 @@ function CensusCard({ municipality }: { municipality: Municipality }) {
         </p>
       </CardContent>
       <CardFooter className="border-white/10 bg-white/5 text-white/65">
-        Fonte:{' '}
-        {sourceLink(
-          'https://sidra.ibge.gov.br/tabela/6805',
-          'IBGE · Censo 2022 · Tabela 6805',
-          true,
-        )}
+        <p>
+          Fonte:{' '}
+          {sourceLink(
+            'https://sidra.ibge.gov.br/tabela/6805',
+            'IBGE · Censo 2022 · Tabela 6805',
+            true,
+          )}
+        </p>
       </CardFooter>
     </Card>
   );
@@ -467,13 +469,17 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
           </div>
         )}
       </CardContent>
-      <CardFooter className="text-xs leading-5 text-muted-foreground">
-        Fonte:{' '}
-        {sourceLink(
-          'https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao',
-          'Transferegov',
-        )}
-        . Proposta não é sinônimo de política municipal completa.
+      <CardFooter className="flex-col items-start gap-2 text-xs leading-5 text-muted-foreground">
+        <p className="w-full min-w-0">
+          Fonte:{' '}
+          {sourceLink(
+            'https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao',
+            'Transferegov',
+          )}
+        </p>
+        <p className="w-full">
+          Proposta não é sinônimo de política municipal completa.
+        </p>
       </CardFooter>
     </Card>
   );
