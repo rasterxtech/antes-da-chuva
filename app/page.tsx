@@ -179,7 +179,7 @@ function Tag({
 
   return (
     <span
-      className={`inline-flex min-h-5 w-fit items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${tones[tone]}`}
+      className={`inline-flex min-h-8 w-fit items-center rounded-full border px-3 py-1.5 text-sm font-bold leading-none ${tones[tone]}`}
     >
       {children}
     </span>
@@ -220,7 +220,7 @@ function HistoryCard({ history }: { history: History | null }) {
         </CardDescription>
         <CardAction>
           <span className="font-heading text-4xl font-semibold text-primary">
-            {history ? numberFormatter.format(history.records) : '—'}
+            {history ? numberFormatter.format(history.records) : 'Sem dado'}
           </span>
           <span className="block text-right text-xs text-muted-foreground">
             registros
@@ -258,7 +258,7 @@ function HistoryCard({ history }: { history: History | null }) {
             </div>
           </div>
           <div className="rounded-xl bg-muted/55 p-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.13em] text-muted-foreground">
+            <p className="text-sm font-bold text-muted-foreground">
               Impactos humanos informados
             </p>
             <div className="mt-4 grid grid-cols-2 gap-4">
@@ -436,7 +436,7 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
                 </span>
               </div>
               <span className="text-xs text-muted-foreground">
-                {transfers.firstYear}–{transfers.lastYear}
+                {transfers.firstYear} a {transfers.lastYear}
               </span>
             </div>
             <div className="pt-4">
@@ -587,9 +587,9 @@ export default function Home() {
   return (
     <main className="page-ambient min-h-screen overflow-x-hidden bg-background text-foreground">
       <div className="border-b border-white/10 bg-primary text-primary-foreground">
-        <div className="mx-auto flex min-h-10 max-w-7xl items-center justify-between gap-4 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-white/75 sm:px-8">
+        <div className="mx-auto flex min-h-11 max-w-7xl items-center justify-between gap-4 px-4 py-2 text-sm font-bold text-white/85 sm:px-8">
           <span>Dados públicos para agir antes da próxima chuva</span>
-          <span className="hidden items-center gap-5 text-white/55 sm:flex">
+          <span className="hidden items-center gap-5 text-white/72 sm:flex">
             <span>Atualizado em 30.08.2026</span>
           </span>
         </div>
@@ -598,14 +598,21 @@ export default function Home() {
       <header className="sticky top-0 z-40 border-b border-border/80 bg-background/88 shadow-[0_8px_30px_rgb(17_47_62/5%)] backdrop-blur-xl">
         <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-6 px-4 py-3 sm:px-8">
           <a className="group flex items-center gap-3" href="#topo">
-            <span className="grid size-11 place-items-center rounded-full bg-primary text-primary-foreground shadow-sm transition-transform group-hover:-translate-y-0.5">
-              <CloudRain aria-hidden="true" className="size-5" />
+            <span className="relative size-12 shrink-0 transition-transform group-hover:-translate-y-0.5">
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="object-contain"
+                fill
+                sizes="48px"
+                src="/brand-mark.png"
+              />
             </span>
             <span>
               <span className="block font-heading text-[1.35rem] font-semibold leading-none tracking-tight">
                 Antes da Chuva
               </span>
-              <span className="mt-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <span className="mt-1.5 block text-sm font-bold text-muted-foreground">
                 Inteligência pública municipal
               </span>
             </span>
@@ -650,7 +657,7 @@ export default function Home() {
         <div className="soft-grid absolute inset-0 opacity-30" />
         <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-8 sm:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
           <div className="min-w-0 text-white lg:col-span-7">
-            <div className="mb-5 flex flex-wrap gap-2">
+            <div className="mb-5 flex flex-wrap gap-3">
               <Tag tone="inverse">5.570 localidades disponíveis</Tag>
               <Tag tone="inverse">Leitura em menos de 1 minuto</Tag>
             </div>
@@ -660,11 +667,11 @@ export default function Home() {
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/78 sm:text-lg">
               Em uma única leitura, veja o histórico de ocorrências ligadas à
               chuva, uma condição de saneamento e evidências federais de
-              prevenção — com recorte e limitações à vista.
+              prevenção, com recorte e limitações à vista.
             </p>
 
             <div className="relative mt-8 min-w-0 rounded-2xl border border-white/15 bg-white p-3 text-foreground shadow-[0_24px_80px_rgb(4_20_32/28%)] sm:p-4">
-              <p className="mb-2 px-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="mb-2 px-2 text-sm font-bold text-muted-foreground">
                 Busque seu município
               </p>
               <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
@@ -755,7 +762,7 @@ export default function Home() {
                   id="municipios-resultados"
                   role="listbox"
                 >
-                  <p className="border-b border-border px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  <p className="border-b border-border px-4 py-2 text-sm font-bold text-muted-foreground">
                     {query.trim().length < 2 ? 'Sugestões' : 'Resultados'}
                   </p>
                   <div className="max-h-72 overflow-y-auto p-1">
@@ -809,7 +816,7 @@ export default function Home() {
               src="/hero-map.webp"
             />
             <figcaption className="absolute right-4 bottom-4 left-4 rounded-2xl border border-white/20 bg-primary/82 p-4 text-white shadow-lg backdrop-blur-md sm:p-5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/60">
+              <p className="text-sm font-bold text-white/80">
                 Dados conectados ao território
               </p>
               <p className="mt-2 max-w-sm font-heading text-lg font-semibold leading-snug sm:text-xl">
@@ -836,7 +843,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-            <Tag>Atlas 1991–2025</Tag>
+            <Tag>Atlas 1991 a 2025</Tag>
             <Tag>Censo 2022</Tag>
             <Tag>Transferegov</Tag>
           </div>
@@ -850,7 +857,7 @@ export default function Home() {
 
         <div className="elevated-card mt-5 flex flex-col justify-between gap-5 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-rain-strong">
+            <p className="text-sm font-bold text-rain-strong">
               Próxima ação
             </p>
             <h3 className="mt-1 font-heading text-xl font-semibold">
@@ -949,7 +956,7 @@ export default function Home() {
                     <span className="grid size-11 place-items-center rounded-full bg-white/12 text-white ring-1 ring-white/15">
                       <Icon aria-hidden="true" className="size-5" />
                     </span>
-                    <span className="rounded-full border border-white/15 bg-white/8 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/65">
+                    <span className="rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-sm font-bold text-white/85">
                       {channel.eyebrow}
                     </span>
                   </div>
@@ -1098,7 +1105,7 @@ export default function Home() {
                 className="elevated-card flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm sm:p-6"
                 key={source.title}
               >
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-rain-strong">
+                <p className="text-sm font-bold text-rain-strong">
                   {source.label}
                 </p>
                 <h3 className="mt-3 font-heading text-xl font-semibold leading-snug">
@@ -1127,29 +1134,36 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-12 text-sm sm:px-8 lg:grid-cols-[1.35fr_0.75fr_1fr_1.25fr] lg:py-14">
           <div>
             <a className="group inline-flex items-center gap-3" href="#topo">
-              <span className="grid size-11 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/15 transition-transform group-hover:-translate-y-0.5">
-                <CloudRain aria-hidden="true" className="size-5" />
+              <span className="relative size-12 shrink-0 transition-transform group-hover:-translate-y-0.5">
+                <Image
+                  alt=""
+                  aria-hidden="true"
+                  className="object-contain"
+                  fill
+                  sizes="48px"
+                  src="/brand-mark.png"
+                />
               </span>
               <span className="font-heading text-xl font-semibold">
                 Antes da Chuva
               </span>
             </a>
-            <p className="mt-4 max-w-sm leading-6 text-white/62">
+            <p className="mt-4 max-w-sm leading-6 text-white/74">
               Inteligência pública municipal para transformar bases abertas em
               perguntas melhores antes da próxima crise.
             </p>
-            <p className="mt-4 text-xs font-bold uppercase tracking-[0.12em] text-white/40">
+            <p className="mt-4 text-sm font-bold text-white/72">
               Projeto independente · Concurso CGU 2026
             </p>
           </div>
 
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">
+            <h2 className="text-sm font-bold text-white/78">
               Navegue
             </h2>
             <nav
               aria-label="Navegação do rodapé"
-              className="mt-4 grid gap-3 font-bold text-white/72"
+              className="mt-4 grid gap-3 font-bold text-white/82"
             >
               <a
                 className="transition-colors hover:text-white"
@@ -1173,10 +1187,10 @@ export default function Home() {
           </div>
 
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">
+            <h2 className="text-sm font-bold text-white/78">
               Bases oficiais
             </h2>
-            <div className="mt-4 grid gap-3 text-white/72">
+            <div className="mt-4 grid gap-3 text-white/82">
               {sourceLink(
                 'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
                 'Atlas de Desastres',
@@ -1201,10 +1215,10 @@ export default function Home() {
           </div>
 
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-white/45">
+            <h2 className="text-sm font-bold text-white/78">
               Transparência
             </h2>
-            <ul className="mt-4 grid gap-3 leading-5 text-white/62">
+            <ul className="mt-4 grid gap-3 leading-5 text-white/74">
               <li>Atualização da leitura: 30 de agosto de 2026.</li>
               <li>Código IBGE é a chave de integração municipal.</li>
               <li>
@@ -1215,7 +1229,7 @@ export default function Home() {
         </div>
 
         <div className="relative border-t border-white/10">
-          <div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-4 py-5 text-xs leading-5 text-white/48 sm:px-8 md:flex-row md:items-center">
+          <div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-4 py-5 text-xs leading-5 text-white/70 sm:px-8 md:flex-row md:items-center">
             <p>© 2026 Antes da Chuva. Dados públicos, leitura responsável.</p>
             <p className="max-w-2xl md:text-right">
               Não substitui alertas, laudos técnicos nem a atuação da Defesa
