@@ -609,7 +609,7 @@ export default function Home() {
               />
             </span>
             <span>
-              <span className="block font-heading text-[1.35rem] font-semibold leading-none tracking-tight">
+              <span className="font-brand block text-[1.45rem] font-bold leading-none tracking-[-0.025em]">
                 Antes da Chuva
               </span>
               <span className="mt-1.5 block text-sm font-bold text-muted-foreground">
@@ -1134,17 +1134,17 @@ export default function Home() {
         <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-12 text-sm sm:px-8 lg:grid-cols-[1.35fr_0.75fr_1fr_1.25fr] lg:py-14">
           <div>
             <a className="group inline-flex items-center gap-3" href="#topo">
-              <span className="relative size-12 shrink-0 transition-transform group-hover:-translate-y-0.5">
+              <span className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-[#f3f0e7] shadow-sm ring-1 ring-white/20 transition-transform group-hover:-translate-y-0.5">
                 <Image
                   alt=""
                   aria-hidden="true"
-                  className="object-contain"
+                  className="object-contain p-1"
                   fill
                   sizes="48px"
                   src="/brand-mark.png"
                 />
               </span>
-              <span className="font-heading text-xl font-semibold">
+              <span className="font-brand text-2xl font-bold tracking-[-0.025em]">
                 Antes da Chuva
               </span>
             </a>

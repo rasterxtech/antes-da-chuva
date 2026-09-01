@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import '@fontsource/atkinson-hyperlegible/latin-400.css';
 import '@fontsource/atkinson-hyperlegible/latin-700.css';
+import '@fontsource-variable/bricolage-grotesque/wght.css';
 import './globals.css';
 
 export const metadata: Metadata = {
