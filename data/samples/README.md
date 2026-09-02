@@ -46,3 +46,5 @@ O script valida a existência dos municípios, duplicatas e a cobertura das 27 u
 ## Bases originais
 
 As fontes brutas permanecem fora do Git por tamanho e podem ser obtidas nos portais oficiais indicados em `docs/FONTES_DE_DADOS.md`. Os dados continuam sujeitos aos termos e às condições de suas fontes de origem.
+
+Os colaboradores autorizados também podem solicitar aos mantenedores acesso ao pacote privado das bases completas e conferir sua integridade em `data/FULL_DATA_MANIFEST.md`.
