@@ -85,6 +85,8 @@ npm run build
 
 As bases originais são grandes e permanecem fora do Git. O repositório mantém o script de transformação e o conjunto compacto que a aplicação consome.
 
+Para exploração e testes rápidos, consulte as [amostras reduzidas para colaboradores](data/samples/README.md). Elas cobrem as 27 unidades federativas e casos de presença e ausência de dados nas três dimensões do produto.
+
 Entradas locais esperadas:
 
 ```text

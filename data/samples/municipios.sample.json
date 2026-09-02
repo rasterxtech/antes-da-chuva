@@ -1,0 +1,1296 @@
+[
+  {
+    "code": "1200013",
+    "name": "Acrelândia",
+    "uf": "AC",
+    "census": {
+      "connectedSewerPct": 0.85,
+      "outsideSelectedSewerPct": 99.15,
+      "year": 2022
+    },
+    "history": null,
+    "transfers": null
+  },
+  {
+    "code": "1200401",
+    "name": "Rio Branco",
+    "uf": "AC",
+    "census": {
+      "connectedSewerPct": 68.19,
+      "outsideSelectedSewerPct": 31.81,
+      "year": 2022
+    },
+    "history": {
+      "records": 23,
+      "recognized": 13,
+      "firstYear": 1991,
+      "lastYear": 2025,
+      "types": {
+        "Inundações": 16,
+        "Enxurradas": 5,
+        "Movimento de massa": 2
+      },
+      "years": {
+        "1991": 1,
+        "1994": 1,
+        "1995": 1,
+        "1997": 1,
+        "1999": 1,
+        "2006": 1,
+        "2009": 1,
+        "2010": 1,
+        "2012": 2,
+        "2013": 1,
+        "2014": 3,
+        "2015": 1,
+        "2018": 1,
+        "2021": 2,
+        "2023": 1,
+        "2024": 1,
+        "2025": 3
+      },
+      "deaths": 4,
+      "injured": 385,
+      "displaced": 73460,
+      "missing": 2
+    },
+    "transfers": null
+  },
+  {
+    "code": "2704302",
+    "name": "Maceió",
+    "uf": "AL",
+    "census": {
+      "connectedSewerPct": 48.29,
+      "outsideSelectedSewerPct": 51.71,
+      "year": 2022
+    },
+    "history": {
+      "records": 15,
+      "recognized": 7,
+      "firstYear": 1994,
+      "lastYear": 2023,
+      "types": {
+        "Movimento de massa": 6,
+        "Enxurradas": 5,
+        "Alagamentos": 4
+      },
+      "years": {
+        "1994": 1,
+        "2000": 1,
+        "2002": 1,
+        "2004": 1,
+        "2009": 1,
+        "2010": 1,
+        "2017": 1,
+        "2018": 1,
+        "2019": 2,
+        "2020": 1,
+        "2021": 1,
+        "2022": 2,
+        "2023": 1
+      },
+      "deaths": 22,
+      "injured": 88,
+      "displaced": 104044,
+      "missing": 45
+    },
+    "transfers": {
+      "agreements": 1,
+      "firstYear": 2023,
+      "lastYear": 2023,
+      "actions": [
+        "00T5"
+      ],
+      "latest": {
+        "number": "946437",
+        "year": 2023,
+        "status": "Em execução",
+        "object": "Elaboração de Projetos e Obras de Contenção e Estabilização de Encostas no Município em diversos bairros de Maceió-AL",
+        "globalValue": 53294891.92
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "1302603",
+    "name": "Manaus",
+    "uf": "AM",
+    "census": {
+      "connectedSewerPct": 50.6,
+      "outsideSelectedSewerPct": 49.4,
+      "year": 2022
+    },
+    "history": {
+      "records": 25,
+      "recognized": 6,
+      "firstYear": 2007,
+      "lastYear": 2023,
+      "types": {
+        "Inundações": 10,
+        "Chuvas intensas": 8,
+        "Enxurradas": 3,
+        "Alagamentos": 2,
+        "Movimento de massa": 2
+      },
+      "years": {
+        "2007": 1,
+        "2009": 4,
+        "2012": 1,
+        "2013": 3,
+        "2014": 1,
+        "2015": 1,
+        "2016": 1,
+        "2017": 2,
+        "2019": 1,
+        "2021": 4,
+        "2022": 4,
+        "2023": 2
+      },
+      "deaths": 20,
+      "injured": 149,
+      "displaced": 78770,
+      "missing": 3
+    },
+    "transfers": null
+  },
+  {
+    "code": "1600303",
+    "name": "Macapá",
+    "uf": "AP",
+    "census": {
+      "connectedSewerPct": 16.91,
+      "outsideSelectedSewerPct": 83.09,
+      "year": 2022
+    },
+    "history": {
+      "records": 10,
+      "recognized": 1,
+      "firstYear": 2008,
+      "lastYear": 2024,
+      "types": {
+        "Chuvas intensas": 5,
+        "Alagamentos": 2,
+        "Inundações": 2,
+        "Movimento de massa": 1
+      },
+      "years": {
+        "2008": 1,
+        "2012": 1,
+        "2016": 1,
+        "2021": 4,
+        "2022": 1,
+        "2024": 2
+      },
+      "deaths": 0,
+      "injured": 1,
+      "displaced": 2290,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "2903953",
+    "name": "Bom Jesus da Serra",
+    "uf": "BA",
+    "census": {
+      "connectedSewerPct": 0.16,
+      "outsideSelectedSewerPct": 99.84,
+      "year": 2022
+    },
+    "history": null,
+    "transfers": {
+      "agreements": 1,
+      "firstYear": 2009,
+      "lastYear": 2009,
+      "actions": [
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "723958",
+        "year": 2009,
+        "status": "Prestação de Contas Aprovada",
+        "object": "Construção de cisternas de placa nas localidades Água Bela, Fazenda Três Barras, Fazenda Araras I e II, na zona rural do município de Bom Jesus da Serra.",
+        "globalValue": 499950.0
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "2927408",
+    "name": "Salvador",
+    "uf": "BA",
+    "census": {
+      "connectedSewerPct": 94.97,
+      "outsideSelectedSewerPct": 5.03,
+      "year": 2022
+    },
+    "history": {
+      "records": 12,
+      "recognized": 4,
+      "firstYear": 1995,
+      "lastYear": 2022,
+      "types": {
+        "Enxurradas": 4,
+        "Movimento de massa": 4,
+        "Alagamentos": 2,
+        "Chuvas intensas": 2
+      },
+      "years": {
+        "1995": 1,
+        "1996": 1,
+        "1999": 1,
+        "2003": 1,
+        "2005": 1,
+        "2006": 1,
+        "2009": 1,
+        "2010": 1,
+        "2011": 1,
+        "2015": 1,
+        "2021": 1,
+        "2022": 1
+      },
+      "deaths": 19,
+      "injured": 19,
+      "displaced": 8454,
+      "missing": 1
+    },
+    "transfers": {
+      "agreements": 5,
+      "firstYear": 2008,
+      "lastYear": 2023,
+      "actions": [
+        "8865",
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "955255",
+        "year": 2023,
+        "status": "Em execução",
+        "object": "CONTENÇÃO DE ENCOSTA NO MUNICÍPIO DE SALVADOR",
+        "globalValue": 18752655.11
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "2304400",
+    "name": "Fortaleza",
+    "uf": "CE",
+    "census": {
+      "connectedSewerPct": 71.72,
+      "outsideSelectedSewerPct": 28.28,
+      "year": 2022
+    },
+    "history": {
+      "records": 6,
+      "recognized": 0,
+      "firstYear": 2001,
+      "lastYear": 2023,
+      "types": {
+        "Enxurradas": 3,
+        "Inundações": 3
+      },
+      "years": {
+        "2001": 1,
+        "2002": 1,
+        "2004": 1,
+        "2022": 2,
+        "2023": 1
+      },
+      "deaths": 11,
+      "injured": 1071,
+      "displaced": 70312,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "5300108",
+    "name": "Brasília",
+    "uf": "DF",
+    "census": {
+      "connectedSewerPct": 86.22,
+      "outsideSelectedSewerPct": 13.78,
+      "year": 2022
+    },
+    "history": {
+      "records": 2,
+      "recognized": 1,
+      "firstYear": 2021,
+      "lastYear": 2024,
+      "types": {
+        "Alagamentos": 1,
+        "Chuvas intensas": 1
+      },
+      "years": {
+        "2021": 1,
+        "2024": 1
+      },
+      "deaths": 0,
+      "injured": 0,
+      "displaced": 80,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "3205309",
+    "name": "Vitória",
+    "uf": "ES",
+    "census": {
+      "connectedSewerPct": 99.67,
+      "outsideSelectedSewerPct": 0.33,
+      "year": 2022
+    },
+    "history": {
+      "records": 15,
+      "recognized": 1,
+      "firstYear": 2001,
+      "lastYear": 2024,
+      "types": {
+        "Chuvas intensas": 8,
+        "Movimento de massa": 3,
+        "Inundações": 2,
+        "Alagamentos": 1,
+        "Enxurradas": 1
+      },
+      "years": {
+        "2001": 2,
+        "2013": 2,
+        "2018": 2,
+        "2019": 2,
+        "2021": 1,
+        "2022": 1,
+        "2023": 1,
+        "2024": 4
+      },
+      "deaths": 0,
+      "injured": 1,
+      "displaced": 271,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "5208707",
+    "name": "Goiânia",
+    "uf": "GO",
+    "census": {
+      "connectedSewerPct": 79.19,
+      "outsideSelectedSewerPct": 20.81,
+      "year": 2022
+    },
+    "history": {
+      "records": 13,
+      "recognized": 0,
+      "firstYear": 2018,
+      "lastYear": 2025,
+      "types": {
+        "Alagamentos": 6,
+        "Movimento de massa": 3,
+        "Enxurradas": 2,
+        "Inundações": 2
+      },
+      "years": {
+        "2018": 2,
+        "2020": 2,
+        "2021": 2,
+        "2022": 3,
+        "2024": 3,
+        "2025": 1
+      },
+      "deaths": 0,
+      "injured": 0,
+      "displaced": 951,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "2106672",
+    "name": "Milagres do Maranhão",
+    "uf": "MA",
+    "census": {
+      "connectedSewerPct": null,
+      "outsideSelectedSewerPct": null,
+      "year": 2022
+    },
+    "history": {
+      "records": 1,
+      "recognized": 1,
+      "firstYear": 2004,
+      "lastYear": 2004,
+      "types": {
+        "Inundações": 1
+      },
+      "years": {
+        "2004": 1
+      },
+      "deaths": 0,
+      "injured": 0,
+      "displaced": 0,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "2111300",
+    "name": "São Luís",
+    "uf": "MA",
+    "census": {
+      "connectedSewerPct": 53.64,
+      "outsideSelectedSewerPct": 46.36,
+      "year": 2022
+    },
+    "history": {
+      "records": 5,
+      "recognized": 1,
+      "firstYear": 2009,
+      "lastYear": 2025,
+      "types": {
+        "Chuvas intensas": 2,
+        "Alagamentos": 1,
+        "Enxurradas": 1,
+        "Inundações": 1
+      },
+      "years": {
+        "2009": 1,
+        "2014": 1,
+        "2022": 1,
+        "2023": 1,
+        "2025": 1
+      },
+      "deaths": 0,
+      "injured": 1,
+      "displaced": 1495,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "3106200",
+    "name": "Belo Horizonte",
+    "uf": "MG",
+    "census": {
+      "connectedSewerPct": 97.23,
+      "outsideSelectedSewerPct": 2.77,
+      "year": 2022
+    },
+    "history": {
+      "records": 25,
+      "recognized": 7,
+      "firstYear": 1997,
+      "lastYear": 2022,
+      "types": {
+        "Chuvas intensas": 11,
+        "Enxurradas": 6,
+        "Movimento de massa": 4,
+        "Inundações": 3,
+        "Alagamentos": 1
+      },
+      "years": {
+        "1997": 1,
+        "2003": 1,
+        "2008": 1,
+        "2009": 2,
+        "2010": 3,
+        "2011": 1,
+        "2012": 2,
+        "2015": 2,
+        "2016": 1,
+        "2017": 3,
+        "2018": 3,
+        "2020": 2,
+        "2021": 2,
+        "2022": 1
+      },
+      "deaths": 45,
+      "injured": 17,
+      "displaced": 19328,
+      "missing": 0
+    },
+    "transfers": {
+      "agreements": 1,
+      "firstYear": 2011,
+      "lastYear": 2011,
+      "actions": [
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "755386",
+        "year": 2011,
+        "status": "Prestação de Contas Aprovada",
+        "object": "Construção de uma bacia de detenção no córrego São Francisco no município de Belo Horizonte",
+        "globalValue": 11563142.92
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "5002704",
+    "name": "Campo Grande",
+    "uf": "MS",
+    "census": {
+      "connectedSewerPct": 67.19,
+      "outsideSelectedSewerPct": 32.81,
+      "year": 2022
+    },
+    "history": {
+      "records": 89,
+      "recognized": 3,
+      "firstYear": 1997,
+      "lastYear": 2025,
+      "types": {
+        "Chuvas intensas": 67,
+        "Enxurradas": 12,
+        "Alagamentos": 8,
+        "Inundações": 1,
+        "Movimento de massa": 1
+      },
+      "years": {
+        "1997": 2,
+        "2005": 1,
+        "2007": 1,
+        "2008": 2,
+        "2010": 1,
+        "2011": 1,
+        "2014": 4,
+        "2015": 1,
+        "2016": 1,
+        "2017": 4,
+        "2019": 6,
+        "2020": 9,
+        "2021": 7,
+        "2022": 33,
+        "2023": 12,
+        "2025": 4
+      },
+      "deaths": 2,
+      "injured": 500,
+      "displaced": 3275,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "5103403",
+    "name": "Cuiabá",
+    "uf": "MT",
+    "census": {
+      "connectedSewerPct": 71.2,
+      "outsideSelectedSewerPct": 28.8,
+      "year": 2022
+    },
+    "history": {
+      "records": 28,
+      "recognized": 1,
+      "firstYear": 1991,
+      "lastYear": 2025,
+      "types": {
+        "Chuvas intensas": 15,
+        "Inundações": 4,
+        "Movimento de massa": 4,
+        "Alagamentos": 3,
+        "Enxurradas": 2
+      },
+      "years": {
+        "1991": 1,
+        "1995": 1,
+        "2001": 1,
+        "2007": 1,
+        "2013": 3,
+        "2014": 1,
+        "2016": 5,
+        "2017": 2,
+        "2018": 8,
+        "2019": 2,
+        "2022": 1,
+        "2023": 1,
+        "2025": 1
+      },
+      "deaths": 0,
+      "injured": 0,
+      "displaced": 4628,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "1501402",
+    "name": "Belém",
+    "uf": "PA",
+    "census": {
+      "connectedSewerPct": 59.91,
+      "outsideSelectedSewerPct": 40.09,
+      "year": 2022
+    },
+    "history": {
+      "records": 14,
+      "recognized": 2,
+      "firstYear": 1999,
+      "lastYear": 2025,
+      "types": {
+        "Alagamentos": 9,
+        "Chuvas intensas": 3,
+        "Inundações": 1,
+        "Movimento de massa": 1
+      },
+      "years": {
+        "1999": 1,
+        "2013": 1,
+        "2018": 3,
+        "2020": 1,
+        "2021": 4,
+        "2022": 1,
+        "2023": 1,
+        "2025": 2
+      },
+      "deaths": 1,
+      "injured": 0,
+      "displaced": 10635,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "2507507",
+    "name": "João Pessoa",
+    "uf": "PB",
+    "census": {
+      "connectedSewerPct": 70.33,
+      "outsideSelectedSewerPct": 29.67,
+      "year": 2022
+    },
+    "history": {
+      "records": 10,
+      "recognized": 1,
+      "firstYear": 1994,
+      "lastYear": 2019,
+      "types": {
+        "Chuvas intensas": 4,
+        "Inundações": 4,
+        "Enxurradas": 2
+      },
+      "years": {
+        "1994": 1,
+        "2000": 1,
+        "2004": 1,
+        "2011": 1,
+        "2013": 3,
+        "2015": 1,
+        "2017": 1,
+        "2019": 1
+      },
+      "deaths": 0,
+      "injured": 203,
+      "displaced": 30265,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "2611606",
+    "name": "Recife",
+    "uf": "PE",
+    "census": {
+      "connectedSewerPct": 67.44,
+      "outsideSelectedSewerPct": 32.56,
+      "year": 2022
+    },
+    "history": {
+      "records": 13,
+      "recognized": 1,
+      "firstYear": 1991,
+      "lastYear": 2022,
+      "types": {
+        "Enxurradas": 6,
+        "Movimento de massa": 4,
+        "Alagamentos": 1,
+        "Chuvas intensas": 1,
+        "Inundações": 1
+      },
+      "years": {
+        "1991": 1,
+        "1994": 1,
+        "1996": 1,
+        "1997": 3,
+        "2000": 1,
+        "2005": 1,
+        "2007": 1,
+        "2008": 1,
+        "2010": 1,
+        "2012": 1,
+        "2022": 1
+      },
+      "deaths": 58,
+      "injured": 117,
+      "displaced": 10402,
+      "missing": 4
+    },
+    "transfers": {
+      "agreements": 2,
+      "firstYear": 2010,
+      "lastYear": 2011,
+      "actions": [
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "755480",
+        "year": 2011,
+        "status": "Prestação de Contas Aprovada",
+        "object": "Objeto 1 - Levantamento aerofotogramétrico com perfilamento a laser aero transportado de 220 Km2 do município do Recife.Objeto 2 - Restituição esterofotogramétrica das áreas de risco, com obtenção de edificações através dos dados do perfilamento a laser de 122 Km2 do município do Recife.Objeto 3 - Proteção de 44.317 M2 de encostas com aplicação de gel impermeabilizante (polímero acrílico) em diversas localidades do município do Recife.",
+        "globalValue": 5104167.0
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "2211001",
+    "name": "Teresina",
+    "uf": "PI",
+    "census": {
+      "connectedSewerPct": 40.17,
+      "outsideSelectedSewerPct": 59.83,
+      "year": 2022
+    },
+    "history": {
+      "records": 11,
+      "recognized": 5,
+      "firstYear": 1995,
+      "lastYear": 2025,
+      "types": {
+        "Enxurradas": 4,
+        "Inundações": 3,
+        "Alagamentos": 2,
+        "Chuvas intensas": 1,
+        "Movimento de massa": 1
+      },
+      "years": {
+        "1995": 1,
+        "1999": 1,
+        "2004": 1,
+        "2007": 1,
+        "2008": 1,
+        "2009": 1,
+        "2018": 1,
+        "2019": 2,
+        "2022": 1,
+        "2025": 1
+      },
+      "deaths": 10,
+      "injured": 83,
+      "displaced": 20648,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "4106902",
+    "name": "Curitiba",
+    "uf": "PR",
+    "census": {
+      "connectedSewerPct": 97.17,
+      "outsideSelectedSewerPct": 2.83,
+      "year": 2022
+    },
+    "history": {
+      "records": 20,
+      "recognized": 2,
+      "firstYear": 1992,
+      "lastYear": 2025,
+      "types": {
+        "Alagamentos": 11,
+        "Chuvas intensas": 3,
+        "Enxurradas": 3,
+        "Movimento de massa": 2,
+        "Inundações": 1
+      },
+      "years": {
+        "1992": 2,
+        "1993": 2,
+        "1995": 1,
+        "2010": 1,
+        "2013": 1,
+        "2014": 1,
+        "2016": 1,
+        "2023": 3,
+        "2024": 2,
+        "2025": 6
+      },
+      "deaths": 0,
+      "injured": 25,
+      "displaced": 4973,
+      "missing": 0
+    },
+    "transfers": {
+      "agreements": 1,
+      "firstYear": 2011,
+      "lastYear": 2011,
+      "actions": [
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "755430",
+        "year": 2011,
+        "status": "Prestação de Contas enviada para Análise",
+        "object": "Execução de desassoreamento, istmo, recuperação de margens e instalação de comportas mecânicas para ampliação do volume de acumulação dos lagos: Barigui, Tingui e São Lourenço, existentes ao longo dos Rios Bariguí e Belém, no Município de Curitiba/PR.Os lagos estão situados:- No Parque Barigui, na rua Cândido Hartmann;- No Parque São Lourenço, na rua Mateus Leme;- No Parque Tingui, na rua Dr Mba de Ferrante;Todos no Município de Curitiba.",
+        "globalValue": 9875000.0
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "3304557",
+    "name": "Rio de Janeiro",
+    "uf": "RJ",
+    "census": {
+      "connectedSewerPct": 94.9,
+      "outsideSelectedSewerPct": 5.1,
+      "year": 2022
+    },
+    "history": {
+      "records": 23,
+      "recognized": 3,
+      "firstYear": 1996,
+      "lastYear": 2024,
+      "types": {
+        "Chuvas intensas": 16,
+        "Movimento de massa": 5,
+        "Alagamentos": 1,
+        "Enxurradas": 1
+      },
+      "years": {
+        "1996": 1,
+        "2007": 1,
+        "2010": 2,
+        "2014": 1,
+        "2016": 1,
+        "2019": 1,
+        "2020": 7,
+        "2021": 5,
+        "2022": 2,
+        "2023": 1,
+        "2024": 1
+      },
+      "deaths": 81,
+      "injured": 132,
+      "displaced": 12662,
+      "missing": 18
+    },
+    "transfers": null
+  },
+  {
+    "code": "2408102",
+    "name": "Natal",
+    "uf": "RN",
+    "census": {
+      "connectedSewerPct": 45.29,
+      "outsideSelectedSewerPct": 54.71,
+      "year": 2022
+    },
+    "history": {
+      "records": 18,
+      "recognized": 6,
+      "firstYear": 1994,
+      "lastYear": 2025,
+      "types": {
+        "Chuvas intensas": 11,
+        "Alagamentos": 2,
+        "Enxurradas": 2,
+        "Inundações": 2,
+        "Movimento de massa": 1
+      },
+      "years": {
+        "1994": 1,
+        "2000": 1,
+        "2005": 1,
+        "2008": 1,
+        "2011": 1,
+        "2014": 1,
+        "2019": 1,
+        "2020": 5,
+        "2022": 2,
+        "2023": 3,
+        "2025": 1
+      },
+      "deaths": 0,
+      "injured": 1,
+      "displaced": 10202,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "1100205",
+    "name": "Porto Velho",
+    "uf": "RO",
+    "census": {
+      "connectedSewerPct": 22.99,
+      "outsideSelectedSewerPct": 77.01,
+      "year": 2022
+    },
+    "history": {
+      "records": 9,
+      "recognized": 3,
+      "firstYear": 1997,
+      "lastYear": 2025,
+      "types": {
+        "Inundações": 7,
+        "Enxurradas": 2
+      },
+      "years": {
+        "1997": 1,
+        "2007": 1,
+        "2013": 2,
+        "2014": 2,
+        "2019": 1,
+        "2021": 1,
+        "2025": 1
+      },
+      "deaths": 0,
+      "injured": 28,
+      "displaced": 16157,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "1400100",
+    "name": "Boa Vista",
+    "uf": "RR",
+    "census": {
+      "connectedSewerPct": 61.29,
+      "outsideSelectedSewerPct": 38.71,
+      "year": 2022
+    },
+    "history": {
+      "records": 8,
+      "recognized": 2,
+      "firstYear": 1996,
+      "lastYear": 2021,
+      "types": {
+        "Inundações": 5,
+        "Alagamentos": 2,
+        "Enxurradas": 1
+      },
+      "years": {
+        "1996": 1,
+        "2010": 1,
+        "2011": 1,
+        "2017": 1,
+        "2018": 2,
+        "2020": 1,
+        "2021": 1
+      },
+      "deaths": 0,
+      "injured": 4,
+      "displaced": 411,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "4314902",
+    "name": "Porto Alegre",
+    "uf": "RS",
+    "census": {
+      "connectedSewerPct": 93.01,
+      "outsideSelectedSewerPct": 6.99,
+      "year": 2022
+    },
+    "history": {
+      "records": 13,
+      "recognized": 6,
+      "firstYear": 2015,
+      "lastYear": 2025,
+      "types": {
+        "Chuvas intensas": 5,
+        "Enxurradas": 4,
+        "Inundações": 4
+      },
+      "years": {
+        "2015": 2,
+        "2017": 3,
+        "2018": 1,
+        "2023": 3,
+        "2024": 3,
+        "2025": 1
+      },
+      "deaths": 5,
+      "injured": 50,
+      "displaced": 33230,
+      "missing": 2
+    },
+    "transfers": null
+  },
+  {
+    "code": "4202404",
+    "name": "Blumenau",
+    "uf": "SC",
+    "census": {
+      "connectedSewerPct": 67.62,
+      "outsideSelectedSewerPct": 32.38,
+      "year": 2022
+    },
+    "history": {
+      "records": 30,
+      "recognized": 14,
+      "firstYear": 1991,
+      "lastYear": 2025,
+      "types": {
+        "Enxurradas": 13,
+        "Chuvas intensas": 9,
+        "Inundações": 6,
+        "Movimento de massa": 2
+      },
+      "years": {
+        "1991": 1,
+        "1992": 1,
+        "1993": 1,
+        "1994": 1,
+        "1995": 1,
+        "1997": 1,
+        "2000": 1,
+        "2001": 1,
+        "2005": 1,
+        "2008": 1,
+        "2009": 1,
+        "2010": 1,
+        "2011": 3,
+        "2013": 1,
+        "2017": 2,
+        "2018": 4,
+        "2019": 1,
+        "2021": 1,
+        "2022": 1,
+        "2023": 1,
+        "2024": 1,
+        "2025": 3
+      },
+      "deaths": 32,
+      "injured": 2524,
+      "displaced": 155729,
+      "missing": 6
+    },
+    "transfers": {
+      "agreements": 2,
+      "firstYear": 2010,
+      "lastYear": 2024,
+      "actions": [
+        "00T5",
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "959786",
+        "year": 2024,
+        "status": "Em execução",
+        "object": "Execução de obras de contenção de encostas nas margens do Rio Itajaí-Açu e Ribeirão Garcia, no município de Blumenau/SC.",
+        "globalValue": 1499695.06
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "4205407",
+    "name": "Florianópolis",
+    "uf": "SC",
+    "census": {
+      "connectedSewerPct": 57.1,
+      "outsideSelectedSewerPct": 42.9,
+      "year": 2022
+    },
+    "history": {
+      "records": 38,
+      "recognized": 7,
+      "firstYear": 1991,
+      "lastYear": 2025,
+      "types": {
+        "Enxurradas": 18,
+        "Chuvas intensas": 15,
+        "Alagamentos": 3,
+        "Inundações": 1,
+        "Movimento de massa": 1
+      },
+      "years": {
+        "1991": 1,
+        "1995": 2,
+        "1997": 1,
+        "2000": 1,
+        "2001": 1,
+        "2008": 2,
+        "2010": 2,
+        "2011": 6,
+        "2015": 2,
+        "2017": 2,
+        "2018": 1,
+        "2019": 1,
+        "2020": 3,
+        "2021": 2,
+        "2022": 4,
+        "2023": 3,
+        "2024": 2,
+        "2025": 2
+      },
+      "deaths": 12,
+      "injured": 78,
+      "displaced": 17461,
+      "missing": 0
+    },
+    "transfers": null
+  },
+  {
+    "code": "2800308",
+    "name": "Aracaju",
+    "uf": "SE",
+    "census": {
+      "connectedSewerPct": 87.45,
+      "outsideSelectedSewerPct": 12.55,
+      "year": 2022
+    },
+    "history": {
+      "records": 18,
+      "recognized": 2,
+      "firstYear": 1991,
+      "lastYear": 2025,
+      "types": {
+        "Alagamentos": 6,
+        "Enxurradas": 4,
+        "Chuvas intensas": 3,
+        "Inundações": 3,
+        "Movimento de massa": 2
+      },
+      "years": {
+        "1991": 2,
+        "1997": 1,
+        "2010": 1,
+        "2011": 1,
+        "2013": 1,
+        "2017": 2,
+        "2019": 1,
+        "2020": 2,
+        "2021": 1,
+        "2022": 1,
+        "2023": 2,
+        "2024": 2,
+        "2025": 1
+      },
+      "deaths": 0,
+      "injured": 47,
+      "displaced": 2678,
+      "missing": 0
+    },
+    "transfers": {
+      "agreements": 6,
+      "firstYear": 2010,
+      "lastYear": 2010,
+      "actions": [
+        "prevenção/preparação"
+      ],
+      "latest": {
+        "number": "747903",
+        "year": 2010,
+        "status": "Prestação de Contas Aprovada",
+        "object": "CONSTRUÇÃO DE MURO DE ARRIMO, COM 180 METROS DE EXTENSÃO NA RUA 7 - BAIRRO SOLEDADE - ARACAJU -SE.",
+        "globalValue": 535597.7
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "3550308",
+    "name": "São Paulo",
+    "uf": "SP",
+    "census": {
+      "connectedSewerPct": 95.23,
+      "outsideSelectedSewerPct": 4.77,
+      "year": 2022
+    },
+    "history": {
+      "records": 64,
+      "recognized": 3,
+      "firstYear": 1993,
+      "lastYear": 2020,
+      "types": {
+        "Alagamentos": 18,
+        "Enxurradas": 18,
+        "Movimento de massa": 15,
+        "Inundações": 9,
+        "Chuvas intensas": 4
+      },
+      "years": {
+        "1993": 1,
+        "1994": 2,
+        "1995": 1,
+        "1996": 1,
+        "1998": 1,
+        "1999": 1,
+        "2000": 2,
+        "2001": 1,
+        "2002": 1,
+        "2003": 2,
+        "2004": 1,
+        "2005": 4,
+        "2006": 8,
+        "2007": 4,
+        "2008": 7,
+        "2009": 10,
+        "2010": 5,
+        "2011": 1,
+        "2012": 2,
+        "2013": 5,
+        "2018": 2,
+        "2019": 1,
+        "2020": 1
+      },
+      "deaths": 53,
+      "injured": 159,
+      "displaced": 28305,
+      "missing": 22
+    },
+    "transfers": {
+      "agreements": 1,
+      "firstYear": 2021,
+      "lastYear": 2021,
+      "actions": [
+        "8865"
+      ],
+      "latest": {
+        "number": "919345",
+        "year": 2021,
+        "status": "Convênio Anulado",
+        "object": "Obras de Contenção de Encostas em Áreas Urbanas do Município de São Paulo.",
+        "globalValue": 1173505.03
+      },
+      "attribution": "objeto menciona o município"
+    }
+  },
+  {
+    "code": "1721000",
+    "name": "Palmas",
+    "uf": "TO",
+    "census": {
+      "connectedSewerPct": 73.26,
+      "outsideSelectedSewerPct": 26.74,
+      "year": 2022
+    },
+    "history": {
+      "records": 2,
+      "recognized": 0,
+      "firstYear": 2013,
+      "lastYear": 2022,
+      "types": {
+        "Inundações": 2
+      },
+      "years": {
+        "2013": 1,
+        "2022": 1
+      },
+      "deaths": 0,
+      "injured": 0,
+      "displaced": 36,
+      "missing": 0
+    },
+    "transfers": null
+  }
+]
