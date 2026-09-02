@@ -1,0 +1,42 @@
+name: Relatar um problema
+description: Informe um comportamento incorreto ou inesperado.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Obrigado por ajudar a melhorar o Antes da Chuva. Não inclua dados pessoais ou credenciais.
+  - type: textarea
+    id: problem
+    attributes:
+      label: O que aconteceu?
+      description: Descreva o problema e o resultado que você esperava.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Como reproduzir?
+      description: Informe município pesquisado, passos e página afetada.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Navegador e dispositivo
+      placeholder: Exemplo: Chrome 140 no Windows 11
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidências adicionais
+      description: Adicione imagens ou contexto que ajudem na análise.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmações
+      options:
+        - label: Pesquisei issues existentes antes de abrir esta.
+          required: true
+        - label: Esta issue não expõe uma vulnerabilidade ainda não corrigida.
+          required: true

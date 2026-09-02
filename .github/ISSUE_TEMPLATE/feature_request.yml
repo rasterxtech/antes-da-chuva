@@ -1,0 +1,37 @@
+name: Propor uma melhoria
+description: Sugira uma funcionalidade, fonte ou aperfeiçoamento.
+title: "[Melhoria]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Qual necessidade deve ser atendida?
+      description: Explique o problema do usuário antes de descrever a solução.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Qual é a proposta?
+      description: Descreva a mudança e o benefício esperado.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Fontes públicas relacionadas
+      description: Para propostas de dados, informe URLs oficiais, recorte e atualização.
+  - type: textarea
+    id: risks
+    attributes:
+      label: Limitações ou riscos
+      description: Considere interpretação, acessibilidade, privacidade e manutenção.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmação
+      options:
+        - label: Pesquisei issues existentes antes de abrir esta.
+          required: true
