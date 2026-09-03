@@ -13,18 +13,42 @@ coverage/
 
 __pycache__/
 *.pyc
+*.parquet
 .pytest_cache/
 .venv/
 
+# Large pipeline artifacts stay local. Only the placeholders are versioned.
 data/raw/*
 !data/raw/.gitkeep
+data/silver/*
+!data/silver/.gitkeep
+data/gold/*
+!data/gold/.gitkeep
+
+# Run manifests are intentionally limited to compact JSON metadata.
+data/manifests/**
+!data/manifests/**/
+!data/manifests/**/*.json
+
+# Legacy frontend pipeline intermediates also stay local.
 data/processed/*
 !data/processed/.gitkeep
+
+# Generated v1 frontend payloads stay local; keep only the directory placeholder.
+app/public/data/v1/*
+!app/public/data/v1/.gitkeep
 
 work/
 tmp/
 .agents/
 .codex/
+.omo/
+**/.omo/
+.codegraph
+**/.codegraph
+.playwright-mcp/
+**/.playwright-mcp/
+docs/part05-regional-*.png
 *.log
 *.tar.gz
 

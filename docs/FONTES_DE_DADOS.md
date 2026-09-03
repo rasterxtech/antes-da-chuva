@@ -1,16 +1,29 @@
 # Inventário de fontes de dados
 
-Atualizado em 30 de agosto de 2026. A classificação abaixo já incorpora testes de acesso, estrutura, cobertura e possibilidade de união municipal.
+Estado consolidado do código em 3 de setembro de 2026. As contagens e os status
+históricos abaixo descrevem a baseline materializada na origem; manifests não
+substituem os arquivos locais nem comprovam uma nova execução neste clone.
 
-| Fonte | Papel no produto | Cobertura validada | Decisão |
+| Fonte | Papel no produto | Evidência registrada | Estado atual |
 |---|---|---|---|
-| [Atlas Digital de Desastres](https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml) | Histórico de ocorrências e danos de 1991–2025. | 76.190 protocolos; 5.256 municípios com algum registro; 4.708 no recorte de chuva. | **Núcleo aprovado.** |
-| [Censo 2022 — características dos domicílios](https://sidra.ibge.gov.br/pesquisa/censo-demografico/demografico-2022/universo-caracteristicas-dos-domicilios) | Condição estrutural dos domicílios. | Tabela 6805 testada em 5.570 municípios; a medida escolhida tem 5.545 valores numéricos e 25 indisponíveis. | **Núcleo aprovado.** |
-| [Transferências e Parcerias da União — Transferegov](https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao) | Instrumentos federais selecionados de prevenção. | O recorte amplo contém 976 instrumentos em 721 municípios; a atribuição local estrita usada no produto retém 519 instrumentos em 417 municípios. | **Complementar aprovada, com ressalvas.** |
-| [Alertas de desastres — Anatel](https://dados.gov.br/dados/conjuntos-dados/anatel-utilidade-publica) | Histórico de mensagens de alerta por município. | Painel oficial possui filtro municipal e exportação; ingestão automática ainda não fechada. | **Condicional.** |
-| [IDAP — alertas ativos](https://idap.mdr.gov.br/) | Próxima ação oficial do usuário. | Consulta pública por localidade; não é uma base histórica documentada para ingestão. | **Link de serviço, não fonte analítica.** |
-| [Atlas da Vulnerabilidade Social — Ipea](https://dados.gov.br/dados/conjuntos-dados/ivs) | Referência conceitual de vulnerabilidade. | Base municipal publicada ligada aos Censos 2000/2010; ZIP com atualização não verificável. | **Não usar no MVP.** |
-| [Índice Integrado de Seca — Cemaden](https://www.gov.br/cemaden/pt-br/assuntos/monitoramento/impactos-seca/monitoramento-de-seca-para-o-brasil/monitoramento-de-secas-e-impactos-no-brasil-2013-junho-2026/IIS_Brasil_2026_06.xlsx/view) | Monitoramento mensal de seca. | 5.570 códigos municipais; janeiro de 2021 a junho de 2026. | **Válida, mas fora do recorte de chuva.** |
+| [IBGE - API de Localidades](https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=id) | Dimensão territorial e índice de busca. | Baseline com 5.571 unidades analíticas, 27 UFs e 5 regiões. | **Canônica.** Gera `dim_municipality` e o índice v1. |
+| [Atlas Digital de Desastres](https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml) | Histórico de ocorrências e danos de 1991-2025. | 76.190 protocolos; 5.256 municípios com algum registro; 4.708 no recorte de chuva. | **Canônica.** A apresentação vem das GOLDs Atlas. |
+| [MapBiomas Brasil](https://brasil.mapbiomas.org/) | Cobertura e uso da terra municipal. | Baseline da Coleção 11, série 1985-2025; 5.570 códigos associados à dimensão. | **Canônica.** Fernando de Noronha é `no_coverage`, não zero. |
+| [Censo 2022 - características dos domicílios](https://sidra.ibge.gov.br/pesquisa/censo-demografico/demografico-2022/universo-caracteristicas-dos-domicilios) | Condição estrutural dos domicílios. | Tabela 6805 com 5.570 códigos; 5.545 valores numéricos e 25 indisponíveis na baseline. | **Transicional.** O payload legado é reempacotado até existir pipeline canônico. |
+| [Transferências e Parcerias da União - Transferegov](https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao) | Instrumentos federais selecionados de prevenção. | Recorte amplo: 976 instrumentos em 721 municípios; atribuição estrita: 519 em 417 municípios. | **Transicional.** O payload legado é reempacotado até existir pipeline canônico. |
+| [Alertas de desastres - Anatel](https://dados.gov.br/dados/conjuntos-dados/anatel-utilidade-publica) | Histórico de mensagens de alerta por município. | Painel oficial possui filtro municipal e exportação; ingestão automática não fechada. | **Condicional.** Não integra o contrato v1. |
+| [IDAP - alertas ativos](https://idap.mdr.gov.br/) | Próxima ação oficial do usuário. | Consulta pública por localidade; não é base histórica documentada para ingestão. | **Link de serviço, não fonte analítica.** |
+| [Atlas da Vulnerabilidade Social - Ipea](https://dados.gov.br/dados/conjuntos-dados/ivs) | Referência conceitual de vulnerabilidade. | Base municipal publicada ligada aos Censos 2000/2010; atualização não verificável na auditoria. | **Não usar no MVP.** |
+| [Índice Integrado de Seca - Cemaden](https://www.gov.br/cemaden/pt-br/assuntos/monitoramento/impactos-seca/monitoramento-de-seca-para-o-brasil/monitoramento-de-secas-e-impactos-no-brasil-2013-junho-2026/IIS_Brasil_2026_06.xlsx/view) | Monitoramento mensal de seca. | 5.570 códigos municipais; janeiro de 2021 a junho de 2026. | **Válida, fora do recorte de chuva.** |
+
+## Caminho até a interface
+
+IBGE, Atlas e MapBiomas são lidos pelos pipelines canônicos, materializados em
+GOLDs locais e exportados pelo `scripts/export_frontend_data.py`. O navegador
+recebe somente `metadata.json`, `municipal-index.json` e shards por UF do
+contrato v1. Censo e Transferegov conservam `provenance: "transitional_legacy"`
+até que seus pipelines oficiais sejam entregues. O contrato e os estados de
+ausência estão em [CONTRATO_APRESENTACAO_V1.md](CONTRATO_APRESENTACAO_V1.md).
 
 ## Critérios de aprovação de uma fonte
 

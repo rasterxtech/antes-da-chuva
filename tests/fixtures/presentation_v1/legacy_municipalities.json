@@ -1,0 +1,10 @@
+[
+  {"code":"1200013","census":{"connectedSewerPct":0.85,"outsideSelectedSewerPct":99.15,"year":2022},"transfers":null},
+  {"code":"2106672","census":{"connectedSewerPct":null,"outsideSelectedSewerPct":null,"year":2022},"transfers":null},
+  {"code":"2605459","census":{"connectedSewerPct":79.22,"outsideSelectedSewerPct":20.78,"year":2022},"transfers":null},
+  {"code":"2903953","census":{"connectedSewerPct":0.16,"outsideSelectedSewerPct":99.84,"year":2022},"transfers":{"agreements":1,"firstYear":2009,"lastYear":2009,"actions":["prevenção/preparação"],"latest":{"number":"723958","year":2009,"status":"Prestação de Contas Aprovada","object":"Construção de cisternas.","globalValue":499950.0},"attribution":"objeto menciona o município"}},
+  {"code":"3304557","census":{"connectedSewerPct":94.9,"outsideSelectedSewerPct":5.1,"year":2022},"transfers":null},
+  {"code":"3550308","census":{"connectedSewerPct":95.23,"outsideSelectedSewerPct":4.77,"year":2022},"transfers":null},
+  {"code":"4202404","census":{"connectedSewerPct":67.62,"outsideSelectedSewerPct":32.38,"year":2022},"transfers":null},
+  {"code":"5300108","census":{"connectedSewerPct":86.22,"outsideSelectedSewerPct":13.78,"year":2022},"transfers":null}
+]

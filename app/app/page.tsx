@@ -12,6 +12,7 @@ import FileSearch from 'lucide-react/dist/esm/icons/file-search.mjs';
 import HandCoins from 'lucide-react/dist/esm/icons/hand-coins.mjs';
 import HomeIcon from 'lucide-react/dist/esm/icons/home.mjs';
 import Info from 'lucide-react/dist/esm/icons/info.mjs';
+import MapIcon from 'lucide-react/dist/esm/icons/map.mjs';
 import MapPin from 'lucide-react/dist/esm/icons/map-pin.mjs';
 import MessageCircle from 'lucide-react/dist/esm/icons/message-circle.mjs';
 import Radio from 'lucide-react/dist/esm/icons/radio.mjs';
@@ -30,122 +31,29 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-
-type History = {
-  records: number;
-  recognized: number;
-  firstYear: number;
-  lastYear: number;
-  types: Record<string, number>;
-  years: Record<string, number>;
-  deaths: number;
-  injured: number;
-  displaced: number;
-  missing: number;
-};
-
-type Transfers = {
-  agreements: number;
-  firstYear: number;
-  lastYear: number;
-  actions: string[];
-  attribution: string;
-  latest: {
-    number: string;
-    year: number;
-    status: string;
-    object: string;
-    globalValue: number | null;
-  };
-};
-
-type Municipality = {
-  code: string;
-  name: string;
-  uf: string;
-  census: {
-    connectedSewerPct: number | null;
-    outsideSelectedSewerPct: number | null;
-    year: number;
-  };
-  history: History | null;
-  transfers: Transfers | null;
-};
-
-const DEFAULT_MUNICIPALITY: Municipality = {
-  code: '4202404',
-  name: 'Blumenau',
-  uf: 'SC',
-  census: {
-    connectedSewerPct: 67.62,
-    outsideSelectedSewerPct: 32.38,
-    year: 2022,
-  },
-  history: {
-    records: 30,
-    recognized: 14,
-    firstYear: 1991,
-    lastYear: 2025,
-    types: {
-      Enxurradas: 13,
-      'Chuvas intensas': 9,
-      Inundações: 6,
-      'Movimento de massa': 2,
-    },
-    years: {},
-    deaths: 32,
-    injured: 2524,
-    displaced: 155729,
-    missing: 6,
-  },
-  transfers: {
-    agreements: 2,
-    firstYear: 2010,
-    lastYear: 2024,
-    actions: ['00T5', 'prevenção/preparação'],
-    attribution: 'objeto menciona o município',
-    latest: {
-      number: '959786',
-      year: 2024,
-      status: 'Em execução',
-      object:
-        'Execução de obras de contenção de encostas nas margens do Rio Itajaí-Açu e Ribeirão Garcia, no município de Blumenau/SC.',
-      globalValue: 1499695.06,
-    },
-  },
-};
-
-const UF_NAMES: Record<string, string> = {
-  AC: 'Acre',
-  AL: 'Alagoas',
-  AM: 'Amazonas',
-  AP: 'Amapá',
-  BA: 'Bahia',
-  CE: 'Ceará',
-  DF: 'Distrito Federal',
-  ES: 'Espírito Santo',
-  GO: 'Goiás',
-  MA: 'Maranhão',
-  MG: 'Minas Gerais',
-  MS: 'Mato Grosso do Sul',
-  MT: 'Mato Grosso',
-  PA: 'Pará',
-  PB: 'Paraíba',
-  PE: 'Pernambuco',
-  PI: 'Piauí',
-  PR: 'Paraná',
-  RJ: 'Rio de Janeiro',
-  RN: 'Rio Grande do Norte',
-  RO: 'Rondônia',
-  RR: 'Roraima',
-  RS: 'Rio Grande do Sul',
-  SC: 'Santa Catarina',
-  SE: 'Sergipe',
-  SP: 'São Paulo',
-  TO: 'Tocantins',
-};
+import {
+  fetchJson,
+  inactiveTransferStatus,
+  isMunicipalIndex,
+  isMunicipalShard,
+  isPresentationMetadata,
+  requestedCodigoIbge,
+} from '@/lib/presentation-data';
+import type {
+  MunicipalIndexEntry,
+  MunicipalityPresentation,
+  PresentationMetadata,
+  PresentationState,
+} from '@/lib/presentation-contract';
+import { DisasterHistory } from '@/components/presentation/disaster-history';
+import { TypesAndMonths } from '@/components/presentation/types-and-months';
+import { LandCoverHistory } from '@/components/presentation/land-cover-history';
+import { RegionalComparison } from '@/components/presentation/regional-comparison';
 
 const numberFormatter = new Intl.NumberFormat('pt-BR');
+const hectareFormatter = new Intl.NumberFormat('pt-BR', {
+  maximumFractionDigits: 2,
+});
 const percentageFormatter = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
@@ -155,12 +63,51 @@ const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   currency: 'BRL',
   maximumFractionDigits: 0,
 });
+const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+});
 
 function normalizeSearch(value: string) {
   return value
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLocaleLowerCase('pt-BR');
+}
+
+function formatPublicationDate(value: string | null | undefined) {
+  if (!value) return 'data não informada';
+  const date = new Date(value.length === 10 ? `${value}T12:00:00Z` : value);
+  return Number.isNaN(date.getTime()) ? value : dateFormatter.format(date);
+}
+
+function sourceStateLabel(source: string, state: PresentationState) {
+  const labels: Record<PresentationState, string> = {
+    record: 'registro disponível',
+    no_record: 'sem registro no recorte',
+    no_coverage: 'sem cobertura',
+    not_published: 'não publicado',
+    not_in_legacy_universe: 'fora do universo temporal',
+  };
+  return `${source}: ${labels[state]}`;
+}
+
+function sourceAbsenceCopy(source: 'census' | 'transfers', state: PresentationState) {
+  if (state === 'not_in_legacy_universe') {
+    return source === 'census'
+      ? 'O município atual não existe no universo temporal do indicador censitário publicado.'
+      : 'O município atual não existe no universo temporal do recorte publicado de transferências.';
+  }
+  if (state === 'not_published') {
+    return 'O indicador existe na fonte, mas não foi publicado para este município.';
+  }
+  if (state === 'no_coverage') {
+    return 'A fonte não cobre esta unidade territorial. Isso não é um valor zero.';
+  }
+  return source === 'census'
+    ? 'Não há valor disponível nesta fonte para o município. A ausência não foi convertida em zero.'
+    : 'Nenhum instrumento foi encontrado no recorte publicado. Isso não prova ausência de investimento.';
 }
 
 function Tag({
@@ -197,13 +144,120 @@ function sourceLink(href: string, children: React.ReactNode, inverse = false) {
       target="_blank"
     >
       {children}
+      <span className="sr-only"> (abre em uma nova aba)</span>
     </a>
   );
 }
 
-function HistoryCard({ history }: { history: History | null }) {
-  const types = history ? Object.entries(history.types) : [];
-  const maximum = Math.max(...types.map(([, count]) => count), 1);
+function ThirtySecondSummary({
+  municipality,
+  summary,
+  disasters,
+  landCover,
+  metadata,
+}: {
+  municipality: MunicipalityPresentation['municipality'];
+  summary: MunicipalityPresentation['summary'];
+  disasters: MunicipalityPresentation['disasters'];
+  landCover: MunicipalityPresentation['land_cover'];
+  metadata: PresentationMetadata | null;
+}) {
+  const history = disasters.history;
+  const change = landCover.change;
+  const hasAtlas = disasters.state === 'record';
+  const hasMapBiomas = landCover.state === 'record';
+  const firstYear = landCover.history[0]?.year;
+  const latestYear = landCover.history.at(-1)?.year;
+  const atlasPeriod = metadata
+    ? `${metadata.sources.atlas.first_year}–${metadata.sources.atlas.latest_year}`
+    : 'período não informado';
+  const mapBiomasPeriod = firstYear && latestYear ? `${firstYear}–${latestYear}` : null;
+
+  return (
+    <section
+      aria-labelledby="resumo-30-segundos"
+      className="elevated-card mb-7 overflow-hidden rounded-2xl border border-border bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)]"
+    >
+      <div className="border-b border-border bg-[linear-gradient(135deg,var(--surface-storm)_0%,var(--surface-rain)_100%)] px-5 py-6 text-white sm:px-7">
+        <p className="text-sm font-bold uppercase tracking-[0.14em] text-white/70">
+          Resumo de 30 segundos
+        </p>
+        <h2
+          className="mt-2 font-heading text-3xl font-semibold tracking-tight sm:text-4xl"
+          id="resumo-30-segundos"
+        >
+          {municipality.municipio.toLocaleUpperCase('pt-BR')} / {municipality.uf}
+        </h2>
+        <p className="mt-2 text-sm font-semibold text-white/78 sm:text-base">
+          Região Geográfica Imediata de {municipality.regiao_imediata}
+        </p>
+      </div>
+      <div className="p-5 sm:p-7">
+        <p className="max-w-4xl text-base leading-7 text-muted-foreground sm:text-lg">
+          {summary.thirty_second_text}
+        </p>
+        <dl className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-xl bg-rain-soft p-4">
+            <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+              Registros relacionados à chuva
+            </dt>
+            <dd className="mt-2 font-heading text-2xl font-semibold text-primary">
+              {hasAtlas ? numberFormatter.format(history.rain_related_event_count) : 'Sem registro'}
+            </dd>
+          </div>
+          <div className="rounded-xl bg-muted/55 p-4">
+            <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+              Último registro
+            </dt>
+            <dd className="mt-2 font-heading text-2xl font-semibold">
+              {hasAtlas ? history.latest_event_date?.slice(0, 4) : 'Não disponível'}
+            </dd>
+          </div>
+          {hasMapBiomas && (
+            <>
+              <div className="rounded-xl bg-emerald-50 p-4">
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  Área urbanizada
+                </dt>
+                <dd className="mt-2 font-heading text-2xl font-semibold text-emerald-900">
+                  {formatSignedPercentage(change?.urban_area_change_pct) ?? 'Não publicada'}
+                </dd>
+                {mapBiomasPeriod && <span className="text-xs text-muted-foreground">desde {firstYear}</span>}
+              </div>
+              <div className="rounded-xl bg-emerald-50 p-4">
+                <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                  Vegetação nativa
+                </dt>
+                <dd className="mt-2 font-heading text-2xl font-semibold text-emerald-900">
+                  {formatSignedPercentage(change?.native_vegetation_change_pct) ?? 'Não publicada'}
+                </dd>
+                {mapBiomasPeriod && <span className="text-xs text-muted-foreground">desde {firstYear}</span>}
+              </div>
+            </>
+          )}
+        </dl>
+      </div>
+      <div className="flex flex-col gap-2 border-t border-border px-5 py-4 text-xs leading-5 text-muted-foreground sm:flex-row sm:flex-wrap sm:gap-x-5 sm:px-7">
+        <span>Atlas/S2ID: {atlasPeriod}</span>
+        <span>
+          MapBiomas: {mapBiomasPeriod ?? 'sem cobertura publicada para este município'}
+        </span>
+      </div>
+    </section>
+  );
+}
+
+export function HistoryCard({
+  disasters,
+  metadata,
+}: {
+  disasters: MunicipalityPresentation['disasters'];
+  metadata: PresentationMetadata | null;
+}) {
+  const history = disasters.history;
+  const types = disasters.types;
+  const maximum = Math.max(...types.map((type) => Number(type.event_count)), 1);
+  const hasRecord = disasters.state === 'record';
 
   return (
     <Card className="elevated-card h-full border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
@@ -220,15 +274,17 @@ function HistoryCard({ history }: { history: History | null }) {
         </CardDescription>
         <CardAction>
           <span className="font-heading text-4xl font-semibold text-primary">
-            {history ? numberFormatter.format(history.records) : 'Sem dado'}
+            {hasRecord
+              ? numberFormatter.format(history.rain_related_event_count)
+              : 'Sem registro'}
           </span>
           <span className="block text-right text-xs text-muted-foreground">
-            registros
+            {hasRecord ? 'registros' : 'no recorte'}
           </span>
         </CardAction>
       </CardHeader>
 
-      {history ? (
+      {hasRecord ? (
         <CardContent className="grid flex-1 gap-6 pt-1">
           <div>
             <div className="mb-4 flex items-center gap-2 text-sm font-semibold">
@@ -236,22 +292,28 @@ function HistoryCard({ history }: { history: History | null }) {
                 aria-hidden="true"
                 className="size-4 text-primary"
               />
-              Entre {history.firstYear} e {history.lastYear}
+              Entre {history.first_event_date?.slice(0, 4)} e{' '}
+              {history.latest_event_date?.slice(0, 4)}
             </div>
             <div className="space-y-3">
-              {types.map(([type, count]) => (
-                <div className="flex items-center gap-3" key={type}>
+              {types.map((type) => (
+                <div
+                  className="flex items-center gap-3"
+                  key={`${type.atlas_type_id}-${type.type_name}`}
+                >
                   <span className="w-32 truncate text-xs text-muted-foreground sm:w-36">
-                    {type}
+                    {type.type_name}
                   </span>
                   <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                     <span
                       className="block h-full rounded-full bg-rain-strong"
-                      style={{ width: `${(count / maximum) * 100}%` }}
+                      style={{
+                        width: `${(Number(type.event_count) / maximum) * 100}%`,
+                      }}
                     />
                   </span>
                   <strong className="w-7 text-right text-xs tabular-nums">
-                    {numberFormatter.format(count)}
+                    {numberFormatter.format(Number(type.event_count))}
                   </strong>
                 </div>
               ))}
@@ -264,7 +326,7 @@ function HistoryCard({ history }: { history: History | null }) {
             <div className="mt-4 grid grid-cols-2 gap-4">
               <div>
                 <strong className="font-heading text-2xl font-semibold">
-                  {numberFormatter.format(history.deaths)}
+                  {numberFormatter.format(history.human_impacts.deaths)}
                 </strong>
                 <span className="block text-xs text-muted-foreground">
                   mortes registradas
@@ -272,7 +334,7 @@ function HistoryCard({ history }: { history: History | null }) {
               </div>
               <div>
                 <strong className="font-heading text-2xl font-semibold">
-                  {numberFormatter.format(history.displaced)}
+                  {numberFormatter.format(history.human_impacts.displaced)}
                 </strong>
                 <span className="block text-xs text-muted-foreground">
                   desabrigados ou desalojados
@@ -297,9 +359,9 @@ function HistoryCard({ history }: { history: History | null }) {
               Nenhum registro encontrado no recorte
             </h3>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              O Atlas não retornou ocorrência para as cinco tipologias entre
-              1991 e 2025. Isso não significa ausência de evento, risco ou
-              necessidade de prevenção.
+              O Atlas não retornou ocorrência para as cinco tipologias no
+              recorte publicado. Isso não significa ausência de evento, risco
+              ou necessidade de prevenção.
             </p>
           </div>
         </CardContent>
@@ -310,13 +372,16 @@ function HistoryCard({ history }: { history: History | null }) {
           Fonte:{' '}
           {sourceLink(
             'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
-            'Atlas Digital de Desastres',
+            metadata
+              ? `Atlas Digital de Desastres · ${metadata.sources.atlas.release}`
+              : 'Atlas Digital de Desastres · metadados indisponíveis',
           )}
         </p>
-        {history && (
+        {hasRecord && (
           <p className="w-full">
-            <strong>{history.recognized}</strong> registros com reconhecimento
-            federal de situação de emergência ou calamidade pública.
+            <strong>{numberFormatter.format(history.recognized_event_count)}</strong>{' '}
+            registros com reconhecimento federal de situação de emergência ou
+            calamidade pública.
           </p>
         )}
       </CardFooter>
@@ -324,8 +389,15 @@ function HistoryCard({ history }: { history: History | null }) {
   );
 }
 
-function CensusCard({ municipality }: { municipality: Municipality }) {
-  const percentage = municipality.census.outsideSelectedSewerPct;
+function CensusCard({
+  census,
+  metadata,
+}: {
+  census: MunicipalityPresentation['census'];
+  metadata: PresentationMetadata | null;
+}) {
+  const percentage = census.outside_selected_sewer_pct;
+  const hasRecord = census.state === 'record' && percentage !== null;
 
   return (
     <Card className="elevated-card h-full border-0 bg-primary text-primary-foreground shadow-[0_12px_45px_rgb(21_42_57/14%)] ring-0">
@@ -337,22 +409,23 @@ function CensusCard({ municipality }: { municipality: Municipality }) {
           Uma condição de saneamento
         </CardTitle>
         <CardDescription className="text-white/65">
-          Retrato estrutural dos domicílios observado pelo Censo 2022.
+          Retrato estrutural dos domicílios observado na fonte publicada.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pt-2">
-        {percentage === null ? (
+        {!hasRecord ? (
           <div className="rounded-xl border border-white/10 bg-white/5 p-5">
             <TriangleAlert
               aria-hidden="true"
               className="mb-4 size-7 text-white/80"
             />
             <strong className="font-heading text-xl font-semibold text-white">
-              Valor não publicado
+              {census.state === 'not_published'
+                ? 'Valor não publicado'
+                : 'Sem dado para este município'}
             </strong>
             <p className="mt-2 text-sm leading-6 text-white/65">
-              O SIDRA não apresentou percentual para esta categoria no
-              município. A ausência permanece explícita em vez de virar zero.
+              {sourceAbsenceCopy('census', census.state)}
             </p>
           </div>
         ) : (
@@ -395,7 +468,7 @@ function CensusCard({ municipality }: { municipality: Municipality }) {
           Fonte:{' '}
           {sourceLink(
             'https://sidra.ibge.gov.br/tabela/6805',
-            'IBGE · Censo 2022 · Tabela 6805',
+            metadata?.sources.census.reference ?? 'IBGE · metadados indisponíveis',
             true,
           )}
         </p>
@@ -404,10 +477,17 @@ function CensusCard({ municipality }: { municipality: Municipality }) {
   );
 }
 
-function TransferCard({ transfers }: { transfers: Transfers | null }) {
-  const statusIsNegative =
-    transfers?.latest.status.toLocaleLowerCase('pt-BR').includes('anulad') ??
-    false;
+function TransferCard({
+  transfers,
+  metadata,
+}: {
+  transfers: MunicipalityPresentation['transfers'];
+  metadata: PresentationMetadata | null;
+}) {
+  const record = transfers.legacy;
+  const statusIsNegative = record
+    ? inactiveTransferStatus(record.latest.status)
+    : false;
 
   return (
     <Card className="elevated-card h-full border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
@@ -416,7 +496,7 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
           <HandCoins aria-hidden="true" className="size-5" />
         </div>
         <CardTitle className="font-heading text-2xl font-semibold">
-          Prevenção pública encontrada
+          Instrumentos federais encontrados
         </CardTitle>
         <CardDescription>
           Instrumentos federais em programas selecionados cujo objeto menciona o
@@ -424,38 +504,44 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1">
-        {transfers ? (
+        {transfers.state === 'record' && record ? (
           <>
             <div className="flex items-end justify-between gap-4 border-b border-border pb-4">
               <div>
                 <strong className="font-heading text-4xl font-semibold text-primary">
-                  {transfers.agreements}
+                  {numberFormatter.format(record.agreements)}
                 </strong>
                 <span className="ml-2 text-sm text-muted-foreground">
-                  {transfers.agreements === 1 ? 'instrumento' : 'instrumentos'}
+                  {record.agreements === 1 ? 'instrumento' : 'instrumentos'}
                 </span>
               </div>
               <span className="text-xs text-muted-foreground">
-                {transfers.firstYear} a {transfers.lastYear}
+                {record.firstYear} a {record.lastYear}
               </span>
             </div>
             <div className="pt-4">
               <div className="flex flex-wrap items-center gap-2">
                 <Tag tone={statusIsNegative ? 'danger' : 'secondary'}>
-                  {transfers.latest.status}
+                  {record.latest.status}
                 </Tag>
                 <span className="text-xs text-muted-foreground">
-                  mais recente · {transfers.latest.year}
+                  mais recente · {record.latest.year}
                 </span>
               </div>
+              {statusIsNegative && (
+                <p className="mt-3 rounded-lg bg-destructive/8 p-3 text-sm leading-6 text-destructive">
+                  Este instrumento está cancelado ou anulado e não é apresentado
+                  como capacidade ou prevenção em execução.
+                </p>
+              )}
               <p className="mt-3 line-clamp-4 text-sm leading-6">
-                {transfers.latest.object}
+                {record.latest.object}
               </p>
-              {transfers.latest.globalValue !== null && (
+              {record.latest.globalValue !== null && (
                 <p className="mt-3 text-sm">
                   <span className="text-muted-foreground">Valor global: </span>
                   <strong>
-                    {currencyFormatter.format(transfers.latest.globalValue)}
+                    {currencyFormatter.format(record.latest.globalValue)}
                   </strong>
                 </p>
               )}
@@ -468,12 +554,12 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
               className="mb-4 size-7 text-amber-700"
             />
             <strong className="font-heading text-lg font-semibold">
-              Nenhum instrumento encontrado neste recorte
+              {transfers.state === 'no_record'
+                ? 'Nenhum instrumento encontrado neste recorte'
+                : 'Dados de transferência indisponíveis'}
             </strong>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              Isso não significa ausência de investimento. O recorte cobre
-              apenas programas federais selecionados e objetos que citam o
-              município.
+              {sourceAbsenceCopy('transfers', transfers.state)}
             </p>
           </div>
         )}
@@ -483,7 +569,8 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
           Fonte:{' '}
           {sourceLink(
             'https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao',
-            'Transferegov',
+            metadata?.sources.transferegov.reference ??
+              'Transferegov · metadados indisponíveis',
           )}
         </p>
         <p className="w-full">
@@ -494,46 +581,398 @@ function TransferCard({ transfers }: { transfers: Transfers | null }) {
   );
 }
 
+function formatHectares(value: number) {
+  return hectareFormatter.format(Math.abs(value));
+}
+
+function formatSignedHectares(value: number | null | undefined) {
+  if (value === null || value === undefined) return null;
+  const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+  return `${sign}${formatHectares(value)} ha`;
+}
+
+function formatSignedPercentage(value: number | null | undefined) {
+  if (value === null || value === undefined) return null;
+  const sign = value > 0 ? '+' : value < 0 ? '-' : '';
+  return `${sign}${percentageFormatter.format(Math.abs(value))}%`;
+}
+
+function changeMetrics(
+  areaChange: number | null | undefined,
+  percentageChange: number | null | undefined,
+) {
+  const area = formatSignedHectares(areaChange);
+  const percentage = formatSignedPercentage(percentageChange);
+  if (area && percentage) return `${area} · ${percentage}`;
+  if (area) return area;
+  if (percentage) return percentage;
+  return 'Variação não publicada';
+}
+
+function changeNarrative(
+  label: string,
+  areaChange: number | null | undefined,
+  percentageChange: number | null | undefined,
+) {
+  if (areaChange === null || areaChange === undefined) {
+    return `${label} não tem variação em hectares publicada`;
+  }
+
+  const percentage = formatSignedPercentage(percentageChange);
+  if (areaChange === 0) {
+    return `${label} não teve variação na área classificada (${formatHectares(areaChange)} ha${percentage ? `; ${percentage}` : ''})`;
+  }
+
+  const direction = areaChange > 0 ? 'aumentou' : 'diminuiu';
+  return `${label} ${direction} ${formatHectares(areaChange)} ha${percentage ? ` (${percentage})` : ''}`;
+}
+
+export function LandCoverCard({
+  landCover,
+  metadata,
+}: {
+  landCover: MunicipalityPresentation['land_cover'];
+  metadata: PresentationMetadata | null;
+}) {
+  const history = [...landCover.history].sort((left, right) => left.year - right.year);
+  const first = history[0];
+  const latest = history.at(-1);
+  const change = landCover.change;
+  const urbanAreaChange = change?.urban_area_change_ha;
+  const urbanAreaPercentageChange = change?.urban_area_change_pct;
+  const nativeVegetationChange = change?.native_vegetation_change_ha;
+  const nativeVegetationPercentageChange =
+    change?.native_vegetation_change_pct;
+  const hasCoverage = landCover.state === 'record';
+  const hasSnapshots = first !== undefined && latest !== undefined;
+  const period = hasSnapshots
+    ? first.year === latest.year
+      ? `em ${first.year}`
+      : `entre ${first.year} e ${latest.year}`
+    : null;
+
+  return (
+    <Card className="elevated-card mt-5 border-0 bg-card shadow-[0_12px_45px_rgb(21_42_57/8%)] ring-border">
+      <CardHeader className="border-b border-border/80 pb-5">
+        <div className="mb-3 grid size-11 place-items-center rounded-full bg-emerald-100 text-emerald-800">
+          <MapIcon aria-hidden="true" className="size-5" />
+        </div>
+        <CardTitle className="font-heading text-2xl font-semibold">
+          Cobertura e uso da terra
+        </CardTitle>
+        <CardDescription>
+          Classificação MapBiomas da área mapeada no município.
+        </CardDescription>
+        {period && (
+          <CardAction>
+            <span className="block text-right text-xs font-bold text-muted-foreground">
+              Série disponível
+            </span>
+            <span className="block text-right text-sm font-bold text-primary">
+              {period.replace('entre ', '').replace('em ', '')}
+            </span>
+          </CardAction>
+        )}
+      </CardHeader>
+
+      {!hasCoverage ? (
+        <CardContent className="py-8">
+          <div className="rounded-xl border border-dashed border-border bg-muted/40 p-6">
+            <CircleDashed
+              aria-hidden="true"
+              className="mb-4 size-7 text-rain-strong"
+            />
+            <h3 className="font-heading text-xl font-semibold">
+              Sem cobertura MapBiomas para este município
+            </h3>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Não há classificação publicada para esta unidade territorial no
+              recorte carregado. A ausência não é um valor zero.
+            </p>
+          </div>
+        </CardContent>
+      ) : !hasSnapshots ? (
+        <CardContent className="py-8">
+          <div className="rounded-xl border border-dashed border-border bg-muted/40 p-6">
+            <TriangleAlert
+              aria-hidden="true"
+              className="mb-4 size-7 text-amber-700"
+            />
+            <h3 className="font-heading text-xl font-semibold">
+              Série MapBiomas incompleta no recorte
+            </h3>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Há cobertura para o município, mas o payload não trouxe snapshots
+              para apresentar o período e as variações.
+            </p>
+          </div>
+        </CardContent>
+      ) : (
+        <CardContent className="pt-6">
+          <p className="max-w-4xl text-base leading-7 text-muted-foreground">
+            {`No período ${period}, ${changeNarrative(
+              'a área classificada como urbanizada',
+              urbanAreaChange,
+              urbanAreaPercentageChange,
+            )}; ${changeNarrative(
+              'a vegetação nativa selecionada',
+              nativeVegetationChange,
+              nativeVegetationPercentageChange,
+            )}.`}
+          </p>
+
+          <dl className="mt-6 grid gap-4 md:grid-cols-2">
+            {[
+              {
+                title: 'Área urbanizada',
+                description: 'Área classificada como urbanizada',
+                firstArea: first.urban_area_ha,
+                latestArea: latest.urban_area_ha,
+                change: urbanAreaChange,
+                percentage: urbanAreaPercentageChange,
+              },
+              {
+                title: 'Vegetação nativa',
+                description: 'Ramos naturais selecionados na classificação',
+                firstArea: first.native_vegetation_area_ha,
+                latestArea: latest.native_vegetation_area_ha,
+                change: nativeVegetationChange,
+                percentage: nativeVegetationPercentageChange,
+              },
+            ].map((metric) => (
+              <div
+                className="rounded-xl border border-border bg-muted/35 p-5"
+                key={metric.title}
+              >
+                <dt className="font-heading text-lg font-semibold">
+                  {metric.title}
+                </dt>
+                <dd className="mt-1 text-sm text-muted-foreground">
+                  {metric.description}
+                </dd>
+                <dd className="mt-4 text-sm leading-6">
+                  <span className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                    Área classificada
+                  </span>
+                  <span className="font-semibold tabular-nums">
+                    {`${hectareFormatter.format(metric.firstArea)} ha → ${hectareFormatter.format(metric.latestArea)} ha`}
+                  </span>
+                </dd>
+                <dd className="mt-3 text-sm leading-6">
+                  <span className="block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                    Variação no período
+                  </span>
+                  <strong className="tabular-nums">
+                    {changeMetrics(metric.change, metric.percentage)}
+                  </strong>
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <p className="mt-6 flex gap-2 border-t border-border pt-5 text-xs leading-5 text-muted-foreground">
+            <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+            Área urbanizada é uma classificação de cobertura da terra e não
+            equivale a superfície impermeabilizada. Esses dados não medem, por
+            si, risco ou vulnerabilidade.
+          </p>
+        </CardContent>
+      )}
+
+      <CardFooter className="text-xs leading-5 text-muted-foreground">
+        <p>
+          Fonte:{' '}
+          {sourceLink(
+            'https://brasil.mapbiomas.org/',
+            metadata
+              ? `MapBiomas Brasil · Coleção ${metadata.sources.mapbiomas.collection_id}, ${metadata.sources.mapbiomas.collection_version}`
+              : 'MapBiomas Brasil · metadados indisponíveis',
+          )}
+        </p>
+      </CardFooter>
+    </Card>
+  );
+}
+
 export default function Home() {
-  const [municipalities, setMunicipalities] = useState<Municipality[]>([]);
-  const [selected, setSelected] = useState<Municipality>(DEFAULT_MUNICIPALITY);
+  const [municipalities, setMunicipalities] = useState<MunicipalIndexEntry[]>([]);
+  const [metadata, setMetadata] = useState<PresentationMetadata | null>(null);
+  const [selectedEntry, setSelectedEntry] =
+    useState<MunicipalIndexEntry | null>(null);
+  const [selected, setSelected] = useState<MunicipalityPresentation | null>(null);
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState('');
   const [activeResultIndex, setActiveResultIndex] = useState(-1);
-  const [loading, setLoading] = useState(true);
-  const [dataError, setDataError] = useState(false);
+  const [indexLoading, setIndexLoading] = useState(true);
+  const [indexError, setIndexError] = useState<string | null>(null);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
+  const [payloadLoading, setPayloadLoading] = useState(false);
+  const [payloadError, setPayloadError] = useState<string | null>(null);
+  const [requestedCodeError, setRequestedCodeError] = useState<string | null>(
+    null,
+  );
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const shardCache = useRef(
+    new Map<string, Record<string, MunicipalityPresentation>>(),
+  );
+  const payloadRequest = useRef(0);
+  const payloadController = useRef<AbortController | null>(null);
+
+  function publishCanonicalCode(code: string) {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('municipio');
+    url.searchParams.set('codigo_ibge', code);
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+  }
+
+  function selectPayload(
+    entry: MunicipalIndexEntry,
+    municipalitiesByCode: Record<string, MunicipalityPresentation>,
+    requestId: number,
+  ) {
+    const payload = municipalitiesByCode[entry.codigo_ibge];
+    if (
+      !payload ||
+      payload.municipality.codigo_ibge !== entry.codigo_ibge ||
+      payload.municipality.uf !== entry.uf
+    ) {
+      throw new Error('O recorte carregado não contém o município solicitado.');
+    }
+    if (payloadRequest.current !== requestId) return;
+    setSelected(payload);
+    setPayloadLoading(false);
+  }
+
+  function loadMunicipality(entry: MunicipalIndexEntry) {
+    const requestId = payloadRequest.current + 1;
+    payloadRequest.current = requestId;
+    payloadController.current?.abort();
+    payloadController.current = null;
+    setSelectedEntry(entry);
+    setSelected(null);
+    setPayloadError(null);
+    setRequestedCodeError(null);
+    setPayloadLoading(true);
+    publishCanonicalCode(entry.codigo_ibge);
+
+    const cachedShard = shardCache.current.get(entry.shard);
+    if (cachedShard) {
+      try {
+        selectPayload(entry, cachedShard, requestId);
+      } catch (error) {
+        shardCache.current.delete(entry.shard);
+        if (payloadRequest.current !== requestId) return;
+        setPayloadLoading(false);
+        setPayloadError(
+          error instanceof Error
+            ? error.message
+            : 'O recorte municipal publicado é inválido.',
+        );
+      }
+      return;
+    }
+
+    const controller = new AbortController();
+    payloadController.current = controller;
+    void fetchJson(entry.shard, controller.signal)
+      .then((data) => {
+        if (!isMunicipalShard(data) || data.uf !== entry.uf) {
+          throw new Error('O recorte municipal publicado é inválido.');
+        }
+        selectPayload(entry, data.municipalities, requestId);
+        shardCache.current.set(entry.shard, data.municipalities);
+      })
+      .catch((error: unknown) => {
+        if (
+          payloadRequest.current !== requestId ||
+          (error instanceof Error && error.name === 'AbortError')
+        ) {
+          return;
+        }
+        setPayloadLoading(false);
+        setPayloadError(
+          error instanceof Error
+            ? `Não foi possível carregar o recorte de ${entry.uf}: ${error.message}`
+            : `Não foi possível carregar o recorte de ${entry.uf}.`,
+        );
+      });
+  }
 
   useEffect(() => {
+    const controller = new AbortController();
     let cancelled = false;
 
-    fetch('/data/municipios.json')
-      .then((response) => {
-        if (!response.ok)
-          throw new Error('Falha ao carregar dados municipais.');
-        return response.json() as Promise<Municipality[]>;
-      })
-      .then((data) => {
-        if (cancelled) return;
-        setMunicipalities(data);
-        const requestedCode = new URLSearchParams(window.location.search).get(
-          'municipio',
+    async function loadIndex() {
+      try {
+        const data = await fetchJson(
+          '/data/v1/municipal-index.json',
+          controller.signal,
         );
-        const requested = data.find((item) => item.code === requestedCode);
-        const defaultFromData = data.find(
-          (item) => item.code === DEFAULT_MUNICIPALITY.code,
-        );
-        setSelected(requested ?? defaultFromData ?? DEFAULT_MUNICIPALITY);
-        setLoading(false);
-      })
-      .catch(() => {
+        if (!isMunicipalIndex(data)) {
+          throw new Error('O índice municipal publicado é inválido.');
+        }
         if (cancelled) return;
-        setDataError(true);
-        setLoading(false);
-      });
+
+        setMunicipalities(data.municipalities);
+        setIndexLoading(false);
+        const requested = requestedCodigoIbge(window.location.search);
+        if (requested.hasInvalidCode) {
+          setRequestedCodeError(
+            'O link informado não possui um código IBGE de sete dígitos.',
+          );
+          return;
+        }
+        if (!requested.code) return;
+
+        const entry = data.municipalities.find(
+          (municipality) => municipality.codigo_ibge === requested.code,
+        );
+        if (!entry) {
+          setRequestedCodeError(
+            'O código IBGE solicitado não foi encontrado no índice municipal publicado.',
+          );
+          return;
+        }
+        loadMunicipality(entry);
+      } catch (error) {
+        if (cancelled || (error instanceof Error && error.name === 'AbortError')) {
+          return;
+        }
+        setIndexLoading(false);
+        setIndexError(
+          error instanceof Error
+            ? `Não foi possível carregar o índice municipal: ${error.message}`
+            : 'Não foi possível carregar o índice municipal.',
+        );
+      }
+    }
+
+    async function loadMetadata() {
+      try {
+        const data = await fetchJson('/data/v1/metadata.json', controller.signal);
+        if (!isPresentationMetadata(data)) {
+          throw new Error('Os metadados publicados são inválidos.');
+        }
+        if (!cancelled) setMetadata(data);
+      } catch (error) {
+        if (cancelled || (error instanceof Error && error.name === 'AbortError')) {
+          return;
+        }
+        setMetadataError(
+          error instanceof Error
+            ? `Não foi possível carregar os metadados: ${error.message}`
+            : 'Não foi possível carregar os metadados.',
+        );
+      }
+    }
+
+    void loadIndex();
+    void loadMetadata();
 
     return () => {
       cancelled = true;
+      controller.abort();
+      payloadController.current?.abort();
     };
   }, []);
 
@@ -542,7 +981,7 @@ export default function Home() {
       municipalities.map((municipality) => ({
         municipality,
         search: normalizeSearch(
-          `${municipality.name} ${municipality.uf} ${municipality.code}`,
+          `${municipality.municipio} ${municipality.uf} ${municipality.codigo_ibge}`,
         ),
       })),
     [municipalities],
@@ -551,17 +990,7 @@ export default function Home() {
   const results = useMemo(() => {
     const normalizedQuery = normalizeSearch(query.trim());
     if (normalizedQuery.length < 2) {
-      const featuredCodes = new Set([
-        '4202404',
-        '3303906',
-        '2611606',
-        '3550308',
-        '1302603',
-        '2927408',
-      ]);
-      return searchEntries
-        .filter(({ municipality }) => featuredCodes.has(municipality.code))
-        .map(({ municipality }) => municipality);
+      return [];
     }
     return searchEntries
       .filter(({ search }) => search.includes(normalizedQuery))
@@ -569,13 +998,12 @@ export default function Home() {
       .map(({ municipality }) => municipality);
   }, [query, searchEntries]);
 
-  function chooseMunicipality(municipality: Municipality) {
+  function chooseMunicipality(municipality: MunicipalIndexEntry) {
     searchInputRef.current?.blur();
-    setSelected(municipality);
     setSearchFocused(false);
     setQuery('');
     setActiveResultIndex(-1);
-    window.history.replaceState(null, '', `?municipio=${municipality.code}`);
+    loadMunicipality(municipality);
     window.setTimeout(() => {
       document.getElementById('resultado')?.scrollIntoView({
         behavior: 'smooth',
@@ -585,12 +1013,25 @@ export default function Home() {
   }
 
   return (
-    <main className="page-ambient min-h-screen overflow-x-hidden bg-background text-foreground">
+    <>
+      <a className="skip-link" href="#conteudo-principal">
+        Pular para o conteúdo principal
+      </a>
+      <main
+        className="page-ambient min-h-screen overflow-x-hidden bg-background text-foreground"
+        id="topo"
+      >
       <div className="border-b border-white/10 bg-primary text-primary-foreground">
         <div className="mx-auto flex min-h-11 max-w-7xl items-center justify-between gap-4 px-4 py-2 text-sm font-bold text-white/85 sm:px-8">
           <span>Dados públicos para agir antes da próxima chuva</span>
           <span className="hidden items-center gap-5 text-white/72 sm:flex">
-            <span>Atualizado em 30.08.2026</span>
+            <span>
+              {metadata
+                ? `Atualizado em ${formatPublicationDate(metadata.sources.atlas.materialized_at)}`
+                : metadataError
+                  ? 'Metadados indisponíveis'
+                  : 'Atualização em carregamento'}
+            </span>
           </span>
         </div>
       </div>
@@ -651,14 +1092,20 @@ export default function Home() {
 
       <section
         className="relative z-20 border-b border-border/80 bg-[linear-gradient(135deg,var(--surface-storm)_0%,var(--surface-rain)_100%)]"
-        id="topo"
+        id="conteudo-principal"
       >
         <div className="weather-lines absolute inset-0 opacity-35" />
         <div className="soft-grid absolute inset-0 opacity-30" />
         <div className="relative mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-8 sm:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
           <div className="min-w-0 text-white lg:col-span-7">
             <div className="mb-5 flex flex-wrap gap-3">
-              <Tag tone="inverse">5.570 localidades disponíveis</Tag>
+              <Tag tone="inverse">
+                {metadata
+                  ? `${numberFormatter.format(metadata.territorial_universe.municipality_count)} localidades disponíveis`
+                  : metadataError
+                    ? 'Metadados indisponíveis'
+                    : 'Dados de publicação em carregamento'}
+              </Tag>
               <Tag tone="inverse">Leitura em menos de 1 minuto</Tag>
             </div>
             <h1 className="max-w-3xl font-heading text-4xl font-semibold leading-[1.03] tracking-[-0.035em] text-balance sm:text-5xl lg:text-[3.75rem]">
@@ -683,7 +1130,7 @@ export default function Home() {
                   <input
                     aria-activedescendant={
                       activeResultIndex >= 0 && results[activeResultIndex]
-                        ? `municipio-option-${results[activeResultIndex].code}`
+                        ? `municipio-option-${results[activeResultIndex].codigo_ibge}`
                         : undefined
                     }
                     aria-autocomplete="list"
@@ -691,7 +1138,7 @@ export default function Home() {
                     aria-expanded={searchFocused}
                     aria-label="Busque por nome, UF ou código IBGE"
                     className="min-w-0 flex-1 bg-transparent text-base font-bold outline-none"
-                    disabled={loading && municipalities.length === 0}
+                    disabled={indexLoading || indexError !== null}
                     onBlur={() =>
                       window.setTimeout(() => setSearchFocused(false), 120)
                     }
@@ -735,15 +1182,17 @@ export default function Home() {
                     value={
                       searchFocused
                         ? query
-                        : loading
+                        : indexLoading
                           ? 'Carregando localidades…'
-                          : `${selected.name}, ${selected.uf}`
+                          : selectedEntry
+                            ? `${selectedEntry.municipio}, ${selectedEntry.uf}`
+                            : ''
                     }
                   />
                 </div>
                 <button
                   className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 sm:w-auto"
-                  disabled={loading && municipalities.length === 0}
+                  disabled={indexLoading || indexError !== null}
                   onClick={() => {
                     setSearchFocused(true);
                     setQuery('');
@@ -763,20 +1212,29 @@ export default function Home() {
                   role="listbox"
                 >
                   <p className="border-b border-border px-4 py-2 text-sm font-bold text-muted-foreground">
-                    {query.trim().length < 2 ? 'Sugestões' : 'Resultados'}
+                    {query.trim().length < 2
+                      ? 'Digite ao menos dois caracteres'
+                      : 'Resultados'}
                   </p>
                   <div className="max-h-72 overflow-y-auto p-1">
-                    {!loading && results.length === 0 && (
+                    {indexLoading && (
                       <p className="px-4 py-6 text-center text-sm text-muted-foreground">
-                        Nenhum município encontrado.
+                        Carregando índice municipal…
+                      </p>
+                    )}
+                    {!indexLoading && results.length === 0 && (
+                      <p className="px-4 py-6 text-center text-sm text-muted-foreground">
+                        {query.trim().length < 2
+                          ? 'Digite nome, UF ou código IBGE para buscar.'
+                          : 'Nenhum município encontrado.'}
                       </p>
                     )}
                     {results.map((municipality, index) => (
                       <button
                         aria-selected={activeResultIndex === index}
                         className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none aria-selected:bg-muted"
-                        id={`municipio-option-${municipality.code}`}
-                        key={municipality.code}
+                        id={`municipio-option-${municipality.codigo_ibge}`}
+                        key={municipality.codigo_ibge}
                         onClick={() => chooseMunicipality(municipality)}
                         onMouseDown={(event) => event.preventDefault()}
                         onMouseEnter={() => setActiveResultIndex(index)}
@@ -788,21 +1246,30 @@ export default function Home() {
                           className="size-4 shrink-0 text-rain-strong"
                         />
                         <span className="min-w-0 flex-1 truncate font-bold">
-                          {municipality.name}, {municipality.uf}
+                          {municipality.municipio}, {municipality.uf}
                         </span>
                         <span className="text-xs tabular-nums text-muted-foreground">
-                          {municipality.code}
+                          {municipality.codigo_ibge}
                         </span>
                       </button>
                     ))}
                   </div>
                 </div>
               )}
-              <p className="px-2 pt-2 text-xs text-muted-foreground">
-                {dataError
-                  ? 'A lista completa não carregou; o exemplo de Blumenau continua disponível.'
-                  : 'Digite nome, UF ou código IBGE. Use as setas e Enter para selecionar.'}
-              </p>
+              {indexError ? (
+                <p className="px-2 pt-2 text-xs font-bold text-destructive" role="alert">
+                  {indexError}
+                </p>
+              ) : metadataError ? (
+                <p className="px-2 pt-2 text-xs font-bold text-amber-900" role="alert">
+                  {metadataError}
+                </p>
+              ) : (
+                <p className="px-2 pt-2 text-xs text-muted-foreground">
+                  Digite nome, UF ou código IBGE. Use as setas e Enter para
+                  selecionar.
+                </p>
+              )}
             </div>
           </div>
 
@@ -832,50 +1299,194 @@ export default function Home() {
         className="relative z-0 mx-auto max-w-7xl scroll-mt-4 px-4 py-10 sm:px-8 sm:py-14"
         id="resultado"
       >
-        <div className="mb-7 flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-end">
-          <div>
-            <div className="mb-2 flex items-center gap-2 text-sm font-bold text-primary">
-              <MapPin aria-hidden="true" className="size-4" />
-              {selected.name} · {UF_NAMES[selected.uf] ?? selected.uf}
-            </div>
-            <h2 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
-              A cidade em uma leitura
+        {indexLoading ? (
+          <div className="rounded-2xl border border-dashed border-border bg-card/70 p-8 text-center">
+            <CircleDashed
+              aria-hidden="true"
+              className="mx-auto mb-4 size-7 animate-spin text-rain-strong"
+            />
+            <h2 className="font-heading text-2xl font-semibold">
+              Carregando índice municipal
             </h2>
-          </div>
-          <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-            <Tag>Atlas 1991 a 2025</Tag>
-            <Tag>Censo 2022</Tag>
-            <Tag>Transferegov</Tag>
-          </div>
-        </div>
-
-        <div className="grid items-stretch gap-5 lg:grid-cols-3">
-          <HistoryCard history={selected.history} />
-          <CensusCard municipality={selected} />
-          <TransferCard transfers={selected.transfers} />
-        </div>
-
-        <div className="elevated-card mt-5 flex flex-col justify-between gap-5 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
-          <div className="max-w-2xl">
-            <p className="text-sm font-bold text-rain-strong">
-              Próxima ação
-            </p>
-            <h3 className="mt-1 font-heading text-xl font-semibold">
-              Há um alerta ativo agora?
-            </h3>
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">
-              O Antes da Chuva não substitui a Defesa Civil. Consulte a fonte
-              oficial para alertas em andamento.
+            <p className="mt-2 text-sm text-muted-foreground">
+              A busca será habilitada assim que a lista publicada estiver pronta.
             </p>
           </div>
-          <a
-            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-border bg-background px-4 text-sm font-semibold transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-            href="#alertas"
+        ) : indexError ? (
+          <div
+            className="rounded-2xl border border-destructive/30 bg-destructive/5 p-7"
+            role="alert"
           >
-            Como receber alertas
-            <ArrowRight aria-hidden="true" data-icon="inline-end" />
-          </a>
-        </div>
+            <TriangleAlert
+              aria-hidden="true"
+              className="mb-4 size-7 text-destructive"
+            />
+            <h2 className="font-heading text-2xl font-semibold">
+              Índice municipal indisponível
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {indexError}
+            </p>
+            <button
+              className="mt-5 inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-primary-foreground"
+              onClick={() => window.location.reload()}
+              type="button"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        ) : requestedCodeError ? (
+          <div
+            className="rounded-2xl border border-amber-300 bg-amber-50 p-7"
+            role="alert"
+          >
+            <TriangleAlert
+              aria-hidden="true"
+              className="mb-4 size-7 text-amber-800"
+            />
+            <h2 className="font-heading text-2xl font-semibold">
+              Município não selecionado
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {requestedCodeError} Use a busca para escolher um município válido.
+            </p>
+          </div>
+        ) : payloadLoading && selectedEntry ? (
+          <div className="rounded-2xl border border-dashed border-border bg-card/70 p-8 text-center">
+            <CircleDashed
+              aria-hidden="true"
+              className="mx-auto mb-4 size-7 animate-spin text-rain-strong"
+            />
+            <h2 className="font-heading text-2xl font-semibold">
+              Carregando dados de {selectedEntry.municipio}, {selectedEntry.uf}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Somente o recorte de {selectedEntry.uf} está sendo carregado.
+            </p>
+          </div>
+        ) : payloadError && selectedEntry ? (
+          <div
+            className="rounded-2xl border border-destructive/30 bg-destructive/5 p-7"
+            role="alert"
+          >
+            <TriangleAlert
+              aria-hidden="true"
+              className="mb-4 size-7 text-destructive"
+            />
+            <h2 className="font-heading text-2xl font-semibold">
+              Dados municipais indisponíveis
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              {payloadError}
+            </p>
+            <button
+              className="mt-5 inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-primary-foreground"
+              onClick={() => loadMunicipality(selectedEntry)}
+              type="button"
+            >
+              Tentar novamente
+            </button>
+          </div>
+          ) : selected ? (
+          <>
+            <div className="mb-7 flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-end">
+              <div>
+                <div className="mb-2 flex items-center gap-2 text-sm font-bold text-primary">
+                  <MapPin aria-hidden="true" className="size-4" />
+                  {selected.municipality.municipio} · {selected.municipality.uf}
+                </div>
+                <h2 className="font-heading text-3xl font-semibold tracking-tight sm:text-4xl">
+                  A cidade em uma leitura
+                </h2>
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <Tag>
+                  {metadata
+                    ? `Atlas ${metadata.sources.atlas.first_year} a ${metadata.sources.atlas.latest_year}`
+                    : 'Atlas: metadados indisponíveis'}
+                </Tag>
+                <Tag>
+                  {metadata?.sources.census.reference ??
+                    'Censo: metadados indisponíveis'}
+                </Tag>
+                <Tag>
+                  {metadata?.sources.transferegov.reference ??
+                    'Transferegov: metadados indisponíveis'}
+                </Tag>
+                {selected.land_cover.state !== 'record' && (
+                  <Tag>
+                    {sourceStateLabel('MapBiomas', selected.land_cover.state)}
+                  </Tag>
+                )}
+              </div>
+            </div>
+
+            <ThirtySecondSummary
+              disasters={selected.disasters}
+              landCover={selected.land_cover}
+              metadata={metadata}
+              municipality={selected.municipality}
+              summary={selected.summary}
+            />
+
+            <div className="grid items-stretch gap-5 lg:grid-cols-3">
+              <DisasterHistory disasters={selected.disasters} />
+              <TypesAndMonths disasters={selected.disasters} />
+              <CensusCard census={selected.census} metadata={metadata} />
+              <TransferCard transfers={selected.transfers} metadata={metadata} />
+            </div>
+
+            <LandCoverHistory landCover={selected.land_cover} />
+            <RegionalComparison benchmarks={selected.benchmarks} />
+
+            <div className="elevated-card mt-5 flex flex-col justify-between gap-5 rounded-2xl border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:p-6">
+              <div className="max-w-2xl">
+                <p className="text-sm font-bold text-rain-strong">
+                  Próxima ação
+                </p>
+                <h3 className="mt-1 font-heading text-xl font-semibold">
+                  Há um alerta ativo agora?
+                </h3>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  Consulte o painel oficial de alertas ativos. Ele é separado do
+                  histórico municipal apresentado acima.
+                </p>
+              </div>
+              <div className="flex shrink-0 flex-col gap-2 sm:items-end">
+                <a
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  href="https://idap.mdr.gov.br/"
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  Ver alertas ativos no IDAP
+                  <ExternalLink aria-hidden="true" className="size-4" />
+                </a>
+                <a
+                  className="inline-flex min-h-10 items-center justify-center gap-2 text-sm font-semibold text-primary underline decoration-primary/30 underline-offset-4"
+                  href="#alertas"
+                >
+                  Como receber alertas
+                  <ArrowRight aria-hidden="true" data-icon="inline-end" />
+                </a>
+              </div>
+            </div>
+          </>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-border bg-card/70 p-8 text-center">
+            <MapPin
+              aria-hidden="true"
+              className="mx-auto mb-4 size-7 text-rain-strong"
+            />
+            <h2 className="font-heading text-2xl font-semibold">
+              Escolha um município para começar
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              A leitura municipal só é exibida depois que um código IBGE válido
+              é selecionado no índice publicado.
+            </p>
+          </div>
+        )}
       </section>
 
       <section
@@ -1081,14 +1692,18 @@ export default function Home() {
             {[
               {
                 label: 'Histórico',
-                title: 'Atlas Digital de Desastres no Brasil',
-                text: 'Registros municipais das cinco tipologias relacionadas à chuva, entre 1991 e 2025.',
+                title: metadata
+                  ? `Atlas Digital de Desastres · ${metadata.sources.atlas.release}`
+                  : 'Atlas Digital de Desastres',
+                text: metadata
+                  ? `Registros municipais das cinco tipologias relacionadas à chuva, entre ${metadata.sources.atlas.first_year} e ${metadata.sources.atlas.latest_year}.`
+                  : 'Registros municipais das cinco tipologias relacionadas à chuva.',
                 href: 'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
                 action: 'Consultar Atlas',
               },
               {
                 label: 'Saneamento',
-                title: 'Censo Demográfico 2022 · IBGE',
+                title: metadata?.sources.census.reference ?? 'Censo Demográfico · IBGE',
                 text: 'Condição de esgotamento sanitário dos domicílios, a partir da tabela 6805 do SIDRA.',
                 href: 'https://sidra.ibge.gov.br/tabela/6805',
                 action: 'Consultar SIDRA',
@@ -1193,12 +1808,14 @@ export default function Home() {
             <div className="mt-4 grid gap-3 text-white/82">
               {sourceLink(
                 'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
-                'Atlas de Desastres',
+                metadata
+                  ? `Atlas de Desastres · ${metadata.sources.atlas.release}`
+                  : 'Atlas de Desastres',
                 true,
               )}
               {sourceLink(
                 'https://sidra.ibge.gov.br/tabela/6805',
-                'Censo 2022 · IBGE',
+                metadata?.sources.census.reference ?? 'Censo · IBGE',
                 true,
               )}
               {sourceLink(
@@ -1211,6 +1828,11 @@ export default function Home() {
                 'Alertas da Defesa Civil',
                 true,
               )}
+              {sourceLink(
+                'https://idap.mdr.gov.br/',
+                'Alertas ativos · IDAP',
+                true,
+              )}
             </div>
           </div>
 
@@ -1219,7 +1841,11 @@ export default function Home() {
               Transparência
             </h2>
             <ul className="mt-4 grid gap-3 leading-5 text-white/74">
-              <li>Atualização da leitura: 30 de agosto de 2026.</li>
+              <li>
+                {metadata
+                  ? `Atualização da leitura: ${formatPublicationDate(metadata.sources.atlas.materialized_at)}.`
+                  : 'Atualização da leitura: metadados indisponíveis.'}
+              </li>
               <li>Código IBGE é a chave de integração municipal.</li>
               <li>
                 Ausência de registro não significa ausência de ação ou risco.
@@ -1238,6 +1864,7 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </main>
+      </main>
+    </>
   );
 }

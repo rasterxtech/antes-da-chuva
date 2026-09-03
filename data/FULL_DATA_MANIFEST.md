@@ -1,6 +1,9 @@
 # Manifesto das bases completas
 
-Este manifesto identifica as entradas completas usadas pelo pipeline do Antes da Chuva e o conjunto municipal produzido a partir delas. Os arquivos grandes são compartilhados de forma privada com os colaboradores e permanecem fora do Git.
+Este manifesto identifica as entradas completas do gerador legado e seu payload
+municipal. Os arquivos grandes são compartilhados de forma privada com os
+colaboradores e permanecem fora do Git. Ele não descreve a execução dos
+pipelines canônicos nem comprova que os arquivos estejam presentes neste clone.
 
 ## Fontes originais
 
@@ -17,7 +20,7 @@ Este manifesto identifica as entradas completas usadas pelo pipeline do Antes da
 
 | Arquivo | Tamanho | SHA-256 | Uso |
 | --- | ---: | --- | --- |
-| `municipios.json` | 2,01 MB | `d27d90d50175f506375785d05f68394c1b9f118f2b9d57077b8f000cfa4384bf` | Conjunto consolidado de 5.570 localidades consumido pelo frontend |
+| `municipios.json` | 2,01 MB | `d27d90d50175f506375785d05f68394c1b9f118f2b9d57077b8f000cfa4384bf` | Payload legado de 5.570 localidades, usado transitoriamente para Censo e Transferegov |
 
 Tamanho total do pacote: aproximadamente 294 MB.
 
@@ -45,7 +48,9 @@ Copie os seis arquivos de fontes originais para `data/raw/`, preservando os nome
 python scripts/build_data.py
 ```
 
-A saída será gravada em `app/public/data/municipios.json`.
+A saída será gravada em `app/public/data/municipios.json`. Esse arquivo não é
+mais lido pelo navegador: após materializar as GOLDs canônicas, gere o contrato
+de apresentação com `python scripts/export_frontend_data.py`.
 
 ## Proveniência e limites
 
