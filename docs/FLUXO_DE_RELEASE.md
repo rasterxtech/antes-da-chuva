@@ -68,7 +68,7 @@ Após essa validação, no projeto correto da Vercel:
 1. Configure **Root Directory** como `app`, **Framework Preset** como **Next.js** e **Node.js Version** como **22.x**. Use `npm ci`, `npm run build` e o diretório de saída padrão do Next.js (`.next`), sem apontar para o antigo `dist`.
 2. Em **Settings → Environments → Production → Branch Tracking**, selecione explicitamente `main`, mesmo que a branch padrão do GitHub seja `staging`.
 3. Vincule `staging` a um ambiente customizado de homologação, se disponível no plano. Como alternativa, use o Preview dessa branch com domínio e variáveis específicos.
-4. Se desejar `staging.antesdachuva.info`, configure esse domínio para a branch ou ambiente de homologação, separado do domínio de Production. Nenhuma alteração de DNS é realizada por este documento.
+4. Use `stg.antesdachuva.info` para o Preview da branch `staging` e `antesdachuva.info` para Production (`main`). Esses vínculos já estão cadastrados no projeto `rasterxtech/antes-da-chuva` da Vercel; a ativação pública depende da validação dos deployments e da configuração de DNS. Nenhuma alteração de DNS é realizada por este documento.
 5. Separe variáveis e credenciais de homologação e produção. Não exponha segredos em variáveis do frontend, e não versione arquivos `.env`.
 6. Verifique que um merge em `staging` atualiza somente homologação, e que um merge em `main` dispara Production. Confirme também a associação automática do domínio de produção se a publicação deve ocorrer sem etapa manual.
 7. Faça um teste completo do fluxo antes de liberar a publicação no domínio público.
