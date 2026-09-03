@@ -1,0 +1,11 @@
+{
+  "4202404": {"disasters": "record", "land_cover": "record", "census": "record", "transfers": "no_record", "territorial_type": "municipio"},
+  "3550308": {"disasters": "record", "land_cover": "record", "census": "record", "transfers": "no_record", "territorial_type": "municipio"},
+  "3304557": {"disasters": "record", "land_cover": "record", "census": "record", "transfers": "no_record", "territorial_type": "municipio"},
+  "5300108": {"disasters": "record", "land_cover": "record", "census": "record", "transfers": "no_record", "territorial_type": "distrito_federal"},
+  "2605459": {"disasters": "record", "land_cover": "no_coverage", "census": "record", "transfers": "no_record", "territorial_type": "distrito_estadual"},
+  "5101837": {"disasters": "no_record", "land_cover": "record", "census": "not_in_legacy_universe", "transfers": "not_in_legacy_universe", "territorial_type": "municipio"},
+  "1200013": {"disasters": "no_record", "land_cover": "record", "census": "record", "transfers": "no_record", "territorial_type": "municipio"},
+  "2903953": {"disasters": "no_record", "land_cover": "record", "census": "record", "transfers": "record", "territorial_type": "municipio"},
+  "2106672": {"disasters": "record", "land_cover": "record", "census": "not_published", "transfers": "no_record", "territorial_type": "municipio"}
+}

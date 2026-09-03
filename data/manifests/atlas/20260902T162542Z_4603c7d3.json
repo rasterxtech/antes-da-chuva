@@ -1,0 +1,75 @@
+{
+  "run_id": "20260902T162542Z_4603c7d3",
+  "source": "atlas",
+  "source_release": "atlas_1991_2025_v1.1_2026-08-06",
+  "started_at": "2026-09-02T16:25:42+00:00",
+  "finished_at": "2026-09-02T16:25:43+00:00",
+  "discovery_urls": [
+    "https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml"
+  ],
+  "resolved_urls": {
+    "csv": "file:///tmp/opencode/atlas.csv",
+    "xlsx": "file:///tmp/opencode/atlas.xlsx",
+    "manual": "file:///tmp/opencode/atlas-manual.pdf",
+    "correction_log": "file:///tmp/opencode/atlas-log.xlsx"
+  },
+  "source_hashes": {
+    "csv": "78f7efd2d853021678ff4af891e938375b9fd0ce77026cbe052a53dae12bf425",
+    "xlsx": "b7871f503d57887f5a77e7064cbf278cb8a34edfc46c9daddb241c465341cf7e",
+    "manual": "2287740926d28205c3f3c58ae5d0b0ae5e16daa8e8bb565e613077e61d9af808",
+    "correction_log": "fafdf50cfd5f0a185e6fe01b13caed45995446a67cf85e9f354b10ade1e24115"
+  },
+  "rows_raw": 76190,
+  "rows_silver": 76190,
+  "rows_gold": 171397,
+  "rows": {
+    "raw": 76190,
+    "silver": 76190,
+    "correction_factor": 36,
+    "disaster_type": 65,
+    "fact": 76190,
+    "snapshot": 5571,
+    "type_summary": 22719,
+    "month_profile": 66852
+  },
+  "municipality_coverage_pct": 94.34571890145395,
+  "schema_fingerprint": "7f18a7412c4f95eb5082d42df170458f464e8a18e930ad3e6a4e4852be32a1de",
+  "source_contract_fingerprint": "fe29d3fe8e1fdbd34165215e5d3f625481cc0c616117b1ff23245da2e87cbfba",
+  "pipeline_fingerprint": "01ea6b47b5b730748cc0e4777860c4c0dcdc56b15d711c97b58585a48e57c9cc",
+  "input_signature": {
+    "source_release": "atlas_1991_2025_v1.1_2026-08-06",
+    "source_official_date": "2026-08-06",
+    "discovered_urls": {
+      "csv": "https://atlasdigital.mdr.gov.br/arquivos/2026/BD_Atlas_1991_2025_v1.1_2026.08.06_Consolidado.csv",
+      "xlsx": "https://atlasdigital.mdr.gov.br/arquivos/2026/BD_Atlas_1991_2025_v1.1_2026.08.06_Consolidado.xlsx",
+      "manual": "https://atlasdigital.mdr.gov.br/arquivos/Atlas_Digital_Desastres_Manual_Aplicacao.pdf",
+      "correction_log": "https://atlasdigital.mdr.gov.br/arquivos/2026/2026.08-logs-correcoes.xlsx"
+    },
+    "source_hashes": {
+      "csv": "78f7efd2d853021678ff4af891e938375b9fd0ce77026cbe052a53dae12bf425",
+      "xlsx": "b7871f503d57887f5a77e7064cbf278cb8a34edfc46c9daddb241c465341cf7e",
+      "manual": "2287740926d28205c3f3c58ae5d0b0ae5e16daa8e8bb565e613077e61d9af808",
+      "correction_log": "fafdf50cfd5f0a185e6fe01b13caed45995446a67cf85e9f354b10ade1e24115"
+    }
+  },
+  "output_hashes": {
+    "data/silver/silver_disaster_event.parquet": "0ab9ca3e2872e2cd8416a072a33f907a9c0c873235bcd011e7fb6cd699175553",
+    "data/silver/atlas_monetary_correction_factor.parquet": "1fea971de5df3f1b86c6b091f76e062fa7220bd5705179886f77af1e9b863211",
+    "data/gold/dim_disaster_type.parquet": "01fb280171a4840ed3a002b42a9cf4236a667f990450d34fd38ac685aac6d2c3",
+    "data/gold/fact_disaster_event.parquet": "19398fe688ec8d027d87b2292dcb59b27e243804e63c6304a26a8625e42ea4dc",
+    "data/gold/snapshot_municipality_disaster_history.parquet": "552bafb6633d4ee7ca952bc817b7e31f4ca61c9c58bfecf5e8e6958174868aa2",
+    "data/gold/municipality_disaster_type_summary.parquet": "84b2f0a0dde8e0748f45d4abf9bec8e3e79e8e003751522b8073849769a96f21",
+    "data/gold/municipality_disaster_month_profile.parquet": "d2f8e206aa594142a9d493772119507e0a4856f5c31294d2b6ca049e362c0155",
+    "data/gold/atlas_data_quality_report.json": "b2734ea8c13651efdc0d38e58b69dfe74482c699a33d8b364955cb2a54195e26",
+    "docs/atlas-data-quality-report.md": "ce26bab9b91732ac17feb102a340ef23a7c06897003a45343046bc4c93460ebd",
+    "docs/atlas.md": "322760db8d476668ae5e448f2f7f520a94ecb3451a04d1e740916a9ee7d4b7a3"
+  },
+  "discovery_manifest": {
+    "url": "https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml",
+    "sha256": "8a112b9ca15e6a9f732d0cb9ffc7ad8302f113a93a0e7ce9079b620dc93e6ee1",
+    "content_type": "text/html;charset=UTF-8",
+    "path": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/raw/atlas/discovery/8a112b9ca15e/downloads.html"
+  },
+  "release_impact_report": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/manifests/atlas/atlas_1991_2025_v1.1_2026-08-06_initial_impact.json",
+  "status": "NO_CHANGE"
+}

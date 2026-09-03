@@ -37,16 +37,27 @@ Na pasta `app`:
 
 ```bash
 npm run lint
+npm test
 npm run build
 ```
 
-Se a mudança afetar dados, execute também:
+Toda mudança no exportador ou no contrato deve executar a exportação com
+fixtures versionadas:
 
 ```bash
-python scripts/build_data.py
+python -m pytest -q tests/test_presentation_export.py
 ```
 
-Confira o resultado gerado em `app/public/data/municipios.json` e descreva no pull request quais fontes e recortes foram modificados.
+Quando a mudança afetar uma GOLD, um manifest ou a saída pública v1 e as GOLDs
+locais estiverem materializadas, execute também:
+
+```bash
+python scripts/export_frontend_data.py
+```
+
+Confira `app/public/data/v1/metadata.json`, `municipal-index.json` e os shards
+por UF; descreva no pull request quais fontes e recortes foram modificados. Não
+trate o teste com fixtures como substituto de uma exportação completa.
 
 ## Regras para dados e conteúdo
 

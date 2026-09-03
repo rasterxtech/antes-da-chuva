@@ -27,7 +27,11 @@ Essa composição testa presença e ausência de informações nas três dimens�
 
 ## Regeneração
 
-O arquivo completo normalizado usado pelo frontend já está versionado em `app/public/data/municipios.json`. Para reconstruir as amostras a partir dele:
+O payload legado normalizado `app/public/data/municipios.json` permanece
+versionado para a transicao de Censo e Transferegov e para regenerar estas
+amostras. A aplicacao atual consome o contrato v1 em `app/public/data/v1/`, nao
+esse payload diretamente. Para reconstruir as amostras a partir do payload
+legado:
 
 ```bash
 python scripts/build_samples.py

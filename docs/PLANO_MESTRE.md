@@ -2,6 +2,11 @@
 
 Atualizado em 30 de agosto de 2026.
 
+> Este é o plano inicial do MVP e preserva suas metas e hipóteses daquela data.
+> Para o estado implementado após a consolidação, incluindo o universo vigente
+> de 5.571 unidades e MapBiomas, consulte [METODOLOGIA.md](METODOLOGIA.md) e
+> [UNIVERSO_TERRITORIAL.md](UNIVERSO_TERRITORIAL.md).
+
 ## Resultado pretendido
 
 Entregar uma iniciativa funcional, acessível e verificável que ajude moradores, gestores, jornalistas e organizações de controle a identificar lacunas de proteção contra desastres nos municípios brasileiros.

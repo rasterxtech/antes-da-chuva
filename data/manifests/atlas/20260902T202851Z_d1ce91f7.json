@@ -1,0 +1,76 @@
+{
+  "run_id": "20260902T202851Z_d1ce91f7",
+  "source": "atlas",
+  "source_release": "atlas_1991_2025_v1.1_2026-08-06",
+  "started_at": "2026-09-02T20:28:51+00:00",
+  "finished_at": "2026-09-02T20:29:38+00:00",
+  "discovery_urls": [
+    "https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml"
+  ],
+  "resolved_urls": {
+    "csv": "https://atlasdigital.mdr.gov.br/arquivos/2026/BD_Atlas_1991_2025_v1.1_2026.08.06_Consolidado.csv",
+    "xlsx": "https://atlasdigital.mdr.gov.br/arquivos/2026/BD_Atlas_1991_2025_v1.1_2026.08.06_Consolidado.xlsx",
+    "manual": "https://atlasdigital.mdr.gov.br/arquivos/Atlas_Digital_Desastres_Manual_Aplicacao.pdf",
+    "correction_log": "https://atlasdigital.mdr.gov.br/arquivos/2026/2026.08-logs-correcoes.xlsx"
+  },
+  "source_hashes": {
+    "csv": "78f7efd2d853021678ff4af891e938375b9fd0ce77026cbe052a53dae12bf425",
+    "xlsx": "b7871f503d57887f5a77e7064cbf278cb8a34edfc46c9daddb241c465341cf7e",
+    "manual": "2287740926d28205c3f3c58ae5d0b0ae5e16daa8e8bb565e613077e61d9af808",
+    "correction_log": "fafdf50cfd5f0a185e6fe01b13caed45995446a67cf85e9f354b10ade1e24115"
+  },
+  "rows_raw": 76190,
+  "rows_silver": 76190,
+  "rows_gold": 171332,
+  "rows": {
+    "raw": 76190,
+    "silver": 76190,
+    "correction_factor": 36,
+    "disaster_type": 65,
+    "fact": 76190,
+    "snapshot": 5571,
+    "type_summary": 22719,
+    "month_profile": 66852
+  },
+  "municipality_coverage_pct": 94.34571890145395,
+  "schema_fingerprint": "7f18a7412c4f95eb5082d42df170458f464e8a18e930ad3e6a4e4852be32a1de",
+  "source_contract_fingerprint": "e7c9af4691886a81bedc1a419fab4649886f229059fe770dae72cbf5173940c4",
+  "pipeline_fingerprint": "e8999c35a3a827c670c5db7b20af7d0962db54a03b7e35b49a1dbea63a9bebed",
+  "input_signature": {
+    "source_release": "atlas_1991_2025_v1.1_2026-08-06",
+    "source_official_date": "2026-08-06",
+    "discovered_urls": {
+      "csv": "https://atlasdigital.mdr.gov.br/arquivos/2026/BD_Atlas_1991_2025_v1.1_2026.08.06_Consolidado.csv",
+      "xlsx": "https://atlasdigital.mdr.gov.br/arquivos/2026/BD_Atlas_1991_2025_v1.1_2026.08.06_Consolidado.xlsx",
+      "manual": "https://atlasdigital.mdr.gov.br/arquivos/Atlas_Digital_Desastres_Manual_Aplicacao.pdf",
+      "correction_log": "https://atlasdigital.mdr.gov.br/arquivos/2026/2026.08-logs-correcoes.xlsx"
+    },
+    "source_hashes": {
+      "csv": "78f7efd2d853021678ff4af891e938375b9fd0ce77026cbe052a53dae12bf425",
+      "xlsx": "b7871f503d57887f5a77e7064cbf278cb8a34edfc46c9daddb241c465341cf7e",
+      "manual": "2287740926d28205c3f3c58ae5d0b0ae5e16daa8e8bb565e613077e61d9af808",
+      "correction_log": "fafdf50cfd5f0a185e6fe01b13caed45995446a67cf85e9f354b10ade1e24115"
+    },
+    "dim_municipality_sha256": "ab717fce924c1db964f25fedaf389afb71e1b20f22c314cf108ecb3ff163a390"
+  },
+  "output_hashes": {
+    "data/silver/silver_disaster_event.parquet": "e7730e519bf7432928330e74cd50451c70042324e9972f0b83ff1dd845ef89c6",
+    "data/silver/atlas_monetary_correction_factor.parquet": "8d6ed73c42d9e6cd68ff24b2868e953bcb9c16fb07abc1d5f6c146da782d8deb",
+    "data/silver/dim_disaster_type.parquet": "34815a8d809ec93240dd4ba6a7bf77f4116ba65120a0b73550bf44c6fabb08b6",
+    "data/gold/fact_disaster_event.parquet": "638811660013dc231d1dd37a157e564544b7841bfd800003bc6a9714bc875e06",
+    "data/gold/snapshot_municipality_disaster_history.parquet": "732f1d2d203c4f90c089ea617c60f0f3a5254c0ba781d15d6ffe18cebc953f0d",
+    "data/gold/municipality_disaster_type_summary.parquet": "47bfa298185118e2a8f5f5f78cbfb32411968d3c68a2316389974c138c93cd94",
+    "data/gold/municipality_disaster_month_profile.parquet": "d5a742a0b032929a0a9d3ffe8101ce6d9d0004e1e8493283b082f37735a4ea98",
+    "data/gold/atlas_data_quality_report.json": "ded4e7bdfaf20ac112bfe1846a29b9fd3a92edeb2c450d473f719c0b357d0915",
+    "docs/atlas-data-quality-report.md": "e01a41c1c720c900a3be063c612f9b9b952019734aa699f6d2aac7af193f9051",
+    "docs/atlas.md": "977d0efa98d1662611e86ed05c9bf4cc4fc462143c7b0b778c1cd5245aee6ffc"
+  },
+  "discovery_manifest": {
+    "url": "https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml",
+    "sha256": "a2c037adb075526357d692e44f00becd4ec3ab48711695aeb76dbf74673e327c",
+    "content_type": "text/html;charset=UTF-8",
+    "path": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/raw/atlas/discovery/a2c037adb075/downloads.html"
+  },
+  "release_impact_report": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/manifests/atlas/atlas_1991_2025_v1.1_2026-08-06_initial_impact.json",
+  "status": "PASS"
+}
