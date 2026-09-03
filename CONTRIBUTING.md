@@ -6,9 +6,9 @@ Obrigado pelo interesse no Antes da Chuva. O projeto combina produto digital, da
 
 - Abra uma issue para relatar um problema ou propor uma melhoria.
 - Envie um pull request com uma alteração pequena e verificável.
-- Se você faz parte da equipe oficial, trabalhe em uma branch própria e nunca diretamente na `main`.
+- Se você faz parte da equipe oficial, trabalhe em uma branch própria e nunca diretamente na `staging` ou na `main`.
 
-Ser colaborador convidado concede permissões adicionais no repositório, mas não permite ignorar as proteções da branch principal.
+Ser colaborador convidado concede permissões adicionais no repositório, mas não permite ignorar as proteções das branches permanentes.
 
 ## Preparar o ambiente
 
@@ -19,19 +19,39 @@ npm ci
 npm run dev
 ```
 
-Requisitos: Node.js 22.13 ou superior e npm 10 ou superior.
+Requisitos: Node.js 22.x (22.13 ou superior nessa linha) e npm 11.6.2.
 
 ## Fluxo de trabalho
 
 1. Crie ou escolha uma issue para contextualizar a mudança.
-2. Atualize sua branch local a partir da `main`.
+2. Atualize sua branch local a partir da `staging`, destino padrão dos novos PRs.
 3. Crie uma branch com um nome objetivo, como `feat/busca-por-estado`, `fix/fonte-card` ou `docs/metodologia`.
 4. Faça commits pequenos, em português ou inglês, com mensagens claras.
 5. Execute as verificações locais.
-6. Abra um pull request usando o modelo do repositório.
-7. Aguarde o build e pelo menos uma aprovação.
+6. Abra um pull request com destino à `staging`, usando o modelo do repositório.
+7. Aguarde as verificações `Build` e `Branch policy`, além de pelo menos uma aprovação de outra pessoa.
+8. Integre a funcionalidade usando **Squash and merge**. A equipe homologa o conjunto na staging da Vercel quando esse ambiente estiver vinculado.
+
+Para começar uma funcionalidade:
+
+```bash
+git fetch origin
+git switch -c feat/minha-feature origin/staging
+```
+
+Se você já iniciou uma funcionalidade a partir da `main`, incorpore `origin/staging` à sua branch, resolva eventuais conflitos e abra o PR com destino à `staging`.
+
+Depois da homologação, um mantenedor abre um PR da `staging` para a `main` e usa **Create a merge commit**, preservando a branch `staging`. Funcionalidades isoladas não entram diretamente na `main`.
+
+Consulte [Homologação e produção](docs/FLUXO_DE_RELEASE.md) para promoção, sincronização entre branches e configuração dos ambientes na Vercel.
 
 ## Verificações obrigatórias
+
+Na raiz do repositório, valide também a política de branches:
+
+```bash
+node --test .github/scripts/check-pr-target.test.cjs
+```
 
 Na pasta `app`:
 
@@ -40,7 +60,7 @@ npm run lint
 npm run build
 ```
 
-Se a mudança afetar dados, execute também:
+Se a mudança afetar dados, execute também na raiz do repositório:
 
 ```bash
 python scripts/build_data.py
@@ -68,7 +88,7 @@ Um pull request deve:
 - relacionar a issue correspondente quando existir;
 - manter o build aprovado.
 
-O merge é feito por squash. A branch é removida depois da integração.
+PRs de funcionalidades para `staging` usam squash, e suas branches temporárias podem ser removidas depois da integração. PRs de promoção (`staging` para `main`) e de sincronização de histórico usam merge commit. Nunca remova `staging` ou `main`.
 
 ## Segurança
 

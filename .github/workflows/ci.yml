@@ -4,16 +4,35 @@ on:
   pull_request:
     branches:
       - main
+      - staging
+    types: [opened, synchronize, reopened, edited, ready_for_review]
   workflow_dispatch:
 
 permissions:
   contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: 1
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  branch-policy:
+    name: Branch policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Obter código
+        uses: actions/checkout@v5
+
+      - name: Validar testes da política de branches
+        run: node --test .github/scripts/check-pr-target.test.cjs
+
+      - name: Verificar destino do pull request
+        run: node .github/scripts/check-pr-target.cjs
+
   build:
     name: Build
     runs-on: ubuntu-latest
