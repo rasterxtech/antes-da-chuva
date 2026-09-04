@@ -37,6 +37,7 @@ ordem:
 python -m src.pipeline
 python -m src.mapbiomas
 python -m src.atlas
+python -m src.munic
 python -m pytest -q
 ```
 

@@ -29,6 +29,7 @@ from src.config import (
     GOLD_DIR,
     MAPBIOMAS_CHANGE_PATH,
     MAPBIOMAS_SNAPSHOT_PATH,
+    MUNIC_GOLD_PATH,
     PROJECT_ROOT,
 )
 from src.contracts.presentation import (
@@ -68,6 +69,7 @@ GOLD_PATHS = {
     "atlas_fact": ATLAS_FACT_PATH,
     "mapbiomas_snapshot": MAPBIOMAS_SNAPSHOT_PATH,
     "mapbiomas_change": MAPBIOMAS_CHANGE_PATH,
+    "munic": MUNIC_GOLD_PATH,
 }
 
 
@@ -91,12 +93,12 @@ def _require_paths(paths: dict[str, Path]) -> None:
         )
 
 
-def _verify_manifest_hashes(project_root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+def _verify_manifest_hashes(project_root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     manifests = {
         source: _load_json(
             project_root / "data" / "manifests" / source / "latest_successful_run.json"
         )
-        for source in ("atlas", "mapbiomas")
+        for source in ("atlas", "mapbiomas", "munic")
     }
     errors = []
     for source, manifest in manifests.items():
@@ -111,7 +113,7 @@ def _verify_manifest_hashes(project_root: Path) -> tuple[dict[str, Any], dict[st
                 )
     if errors:
         raise RuntimeError("Hashes GOLD divergem dos manifests:\n" + "\n".join(errors))
-    return manifests["atlas"], manifests["mapbiomas"]
+    return manifests["atlas"], manifests["mapbiomas"], manifests["munic"]
 
 
 def _as_json_value(value: Any) -> Any:
@@ -208,6 +210,7 @@ def _metadata(
     project_root: Path,
     atlas_manifest: dict[str, Any],
     mapbiomas_manifest: dict[str, Any],
+    munic_manifest: dict[str, Any],
     atlas_catalog: list[dict[str, Any]],
 ) -> dict[str, Any]:
     ibge_report = _load_json(project_root / "data" / "gold" / "data_quality_report.json")
@@ -250,6 +253,13 @@ def _metadata(
                     "statistics"
                 ],
                 "manifest": "data/manifests/mapbiomas/latest_successful_run.json",
+            },
+            "munic": {
+                "reference_year": munic_manifest["source"]["reference_year"],
+                "materialized_at": munic_manifest["generated_at"],
+                "source_sha256": munic_manifest["source"]["sha256"],
+                "manifest": "data/manifests/munic/latest_successful_run.json",
+                "state": "self_reported",
             },
             "census": {
                 "state": "transitional_legacy",
@@ -355,6 +365,21 @@ def _load_gold_rows(connection: duckdb.DuckDBPyConnection, paths: dict[str, Path
             """
         )
     )
+    munic_rows = _rows_as_dicts(
+        connection.execute(
+            f"""
+            SELECT codigo_ibge, in_source,
+                   municipal_civil_defense_body_status,
+                   civil_defense_budget_provision_status,
+                   any_risk_prevention_planning_instrument_status,
+                   flood_risk_mapping_status, flood_contingency_plan_status,
+                   flood_early_warning_status, landslide_risk_mapping_status,
+                   landslide_contingency_plan_status, landslide_early_warning_status,
+                   source_year
+            FROM read_parquet('{_path_sql(paths['munic'])}')
+            """
+        )
+    )
     return {
         "dim": dim_rows,
         "snapshot": {row["codigo_ibge"]: row for row in snapshot_rows},
@@ -367,6 +392,7 @@ def _load_gold_rows(connection: duckdb.DuckDBPyConnection, paths: dict[str, Path
         "atlas_catalog": ATLAS_RAIN_CATALOG,
         "land_cover": land_cover_rows,
         "change": {row["codigo_ibge"]: row for row in change_rows},
+        "munic": {row["codigo_ibge"]: row for row in munic_rows},
     }
 
 
@@ -715,6 +741,28 @@ def _payloads(
 
         census = _transitional_census(legacy_by_code.get(code))
         transfers = _transitional_transfers(legacy_by_code.get(code))
+        munic = gold["munic"].get(code)
+        if munic is None:
+            raise ValueError(f"MUNIC ausente para {code}")
+        municipal_capacity = {
+            "state": "record" if munic["in_source"] else "not_in_source",
+            "provenance": "self_reported_munic_2020",
+            "reference_year": munic["source_year"],
+            "indicators": {
+                field.removesuffix("_status"): munic[field]
+                for field in (
+                    "municipal_civil_defense_body_status",
+                    "civil_defense_budget_provision_status",
+                    "any_risk_prevention_planning_instrument_status",
+                    "flood_risk_mapping_status",
+                    "flood_contingency_plan_status",
+                    "flood_early_warning_status",
+                    "landslide_risk_mapping_status",
+                    "landslide_contingency_plan_status",
+                    "landslide_early_warning_status",
+                )
+            },
+        }
         summary_text = _summary_30_seconds(
             municipality=municipality,
             disaster_state=disaster_state,
@@ -734,6 +782,7 @@ def _payloads(
                     "ibge": "record",
                     "atlas": disaster_state,
                     "mapbiomas": land_cover_state,
+                    "munic": municipal_capacity["state"],
                     "census": census["state"],
                     "transferegov": transfers["state"],
                 },
@@ -764,6 +813,7 @@ def _payloads(
                 "history": land_cover_history,
                 "change": change,
             },
+            "municipal_capacity": municipal_capacity,
             "census": census,
             "transfers": transfers,
             "benchmarks": gold["immediate_region_benchmarks"][code],
@@ -771,6 +821,7 @@ def _payloads(
                 "ibge",
                 "atlas",
                 "mapbiomas",
+                "munic_2020",
                 "census_transitional_legacy",
                 "transferegov_transitional_legacy",
             ],
@@ -879,7 +930,7 @@ def export_frontend_data(
     if not legacy_municipalities_path.is_file():
         raise FileNotFoundError(f"Payload legado ausente: {legacy_municipalities_path}")
     if verify_manifest_hashes:
-        atlas_manifest, mapbiomas_manifest = _verify_manifest_hashes(project_root)
+        atlas_manifest, mapbiomas_manifest, munic_manifest = _verify_manifest_hashes(project_root)
     else:
         atlas_manifest = _load_json(
             project_root / "data" / "manifests" / "atlas" / "latest_successful_run.json"
@@ -890,6 +941,9 @@ def export_frontend_data(
             / "manifests"
             / "mapbiomas"
             / "latest_successful_run.json"
+        )
+        munic_manifest = _load_json(
+            project_root / "data" / "manifests" / "munic" / "latest_successful_run.json"
         )
 
     connection = duckdb.connect(":memory:")
@@ -918,6 +972,7 @@ def export_frontend_data(
             project_root=project_root,
             atlas_manifest=atlas_manifest,
             mapbiomas_manifest=mapbiomas_manifest,
+            munic_manifest=munic_manifest,
             atlas_catalog=gold["atlas_catalog"],
         )
         _write_json(staged / "metadata.json", metadata)

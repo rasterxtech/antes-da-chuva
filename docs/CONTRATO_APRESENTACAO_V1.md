@@ -34,6 +34,7 @@ mesmos estados semanticos.
 | `no_coverage` | A fonte nao cobre a unidade territorial. Nao e equivalente a zero. |
 | `not_published` | A unidade existe na fonte transicional, mas o indicador nao foi publicado. |
 | `not_in_legacy_universe` | A unidade vigente nao existe na referencia temporal do payload legado. |
+| `not_in_source` | A unidade vigente nao existia no universo territorial da fonte em seu ano de referencia. |
 
 Em particular, Fernando de Noronha tem `land_cover.state: "no_coverage"` e
 Blumenau pode ter uma medida MapBiomas igual a `0` com
@@ -42,10 +43,19 @@ para o recorte de chuva, embora a GOLD preserve seus outros eventos Atlas.
 
 ## Fontes canonicas e transicao
 
-`municipality`, `disasters` e `land_cover` sao derivados exclusivamente das
-GOLDs IBGE, Atlas e MapBiomas, via DuckDB. Release Atlas, colecao MapBiomas,
+`municipality`, `disasters`, `land_cover` e `municipal_capacity` sao derivados
+exclusivamente das GOLDs IBGE, Atlas, MapBiomas e MUNIC, via DuckDB. Release Atlas, colecao MapBiomas,
 series e timestamps de materializacao em `metadata.json` vem dos manifests de
 execucao, sem constantes de versao no frontend.
+
+`municipal_capacity` apresenta nove estruturas e instrumentos da MUNIC 2020 em
+tres grupos: estrutura municipal, inundacoes e deslizamentos. Cada indicador
+preserva um dos estados `declared_yes`, `declared_no`, `refused`,
+`not_reported`, `not_applicable` ou `unknown`. O bloco declara
+`provenance: "self_reported_munic_2020"` e `reference_year: 2020`: sao respostas
+da prefeitura naquela edicao, nao verificacao atual, certificacao ou score. Boa
+Esperanca do Norte/MT usa `municipal_capacity.state: "not_in_source"`, pois foi
+criada depois da pesquisa.
 
 `municipality.regiao_imediata` e `municipality.codigo_regiao_imediata` preservam
 a Regiao Geografica Imediata vigente do IBGE. `summary.thirty_second_text` e gerado deterministicamente pelo exportador

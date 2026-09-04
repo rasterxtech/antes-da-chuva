@@ -107,6 +107,13 @@ def _validate_metadata(metadata: dict[str, Any]) -> None:
             "source_sha256",
             "manifest",
         ),
+        "munic": (
+            "reference_year",
+            "materialized_at",
+            "source_sha256",
+            "manifest",
+            "state",
+        ),
         "census": ("state", "reference"),
         "transferegov": ("state", "reference"),
     }

@@ -12,7 +12,7 @@
 
 ![Prévia do Antes da Chuva](app/public/og.png)
 
-O **Antes da Chuva** transforma bases públicas dispersas em uma leitura municipal curta, rastreável e acessível. Ao buscar uma cidade, a pessoa encontra o histórico de ocorrências ligadas à chuva, uma condição estrutural que pode ampliar danos, evidências de prevenção financiada pela União, mudanças observadas na cobertura da terra e caminhos oficiais para receber alertas.
+O **Antes da Chuva** transforma bases públicas dispersas em uma leitura municipal curta, rastreável e acessível. Ao buscar uma cidade, a pessoa encontra o histórico de ocorrências ligadas à chuva, uma condição estrutural que pode ampliar danos, estruturas e instrumentos de prevenção declarados pela prefeitura, evidências de prevenção financiada pela União, mudanças observadas na cobertura da terra e caminhos oficiais para receber alertas.
 
 O projeto foi criado para o **2º Concurso de Reúso de Dados Abertos da CGU, edição 2026**. Este repositório documenta o estado do código e dos dados de apresentação; a confirmação de uma implantação, submissão, homologação ou release é controlada separadamente no [checklist de entrega](docs/CRITERIOS_DO_CONCURSO.md).
 
@@ -22,8 +22,9 @@ A experiência foi desenhada para responder, em menos de um minuto:
 
 1. O que as chuvas já causaram neste município?
 2. Qual condição estrutural pode ampliar o impacto?
-3. Que ações federais de prevenção aparecem nas bases consultadas?
-4. Onde receber alertas oficiais da Defesa Civil?
+3. Que estruturas e instrumentos de prevenção a prefeitura declarou possuir em 2020?
+4. Que ações federais de prevenção aparecem nas bases consultadas?
+5. Onde receber alertas oficiais da Defesa Civil?
 
 O produto não prevê desastres, não atribui nota de proteção e não trata a ausência de registros como prova de ausência de política pública.
 
@@ -32,6 +33,7 @@ O produto não prevê desastres, não atribui nota de proteção e não trata a 
 - Busca entre 5.571 unidades territoriais analíticas vigentes do IBGE, usando o código IBGE como chave.
 - Histórico municipal de cinco tipologias relacionadas à chuva entre 1991 e 2025.
 - Indicador de saneamento do Censo Demográfico 2022, ainda em transição para pipeline canônico.
+- Nove estruturas e instrumentos de gestão de riscos declarados pelas prefeituras na MUNIC 2020.
 - Evidências selecionadas de transferências e parcerias da União, ainda em transição para pipeline canônico.
 - Cobertura e uso da terra pelo MapBiomas, com período e ausência de cobertura explícitos.
 - Acesso direto aos canais oficiais de alerta da Defesa Civil.
@@ -45,6 +47,7 @@ O produto não prevê desastres, não atribui nota de proteção e não trata a 
 | [IBGE - API de Localidades](https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=id) | Dimensão territorial municipal vigente | Canônica: gera identidade e índice municipal |
 | [Atlas Digital de Desastres no Brasil](https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml) | Registros municipais de alagamentos, enxurradas, inundações, movimentos de massa e chuvas intensas | Canônica: derivada das GOLDs; registros administrativos podem conter lacunas |
 | [MapBiomas Brasil](https://brasil.mapbiomas.org/) | Cobertura e uso da terra por município | Canônica: derivada das GOLDs; ausência de cobertura não é zero |
+| [MUNIC 2020 - IBGE](https://www.ibge.gov.br/estatisticas/sociais/saude/10586-pesquisa-deinformacoes-basicas-municipais.html?edicao=32141) | Estruturas e instrumentos de gestão de riscos declarados pelas prefeituras | Canônica: integra o contrato de apresentação v1 como evidência declaratória referente a 2020 |
 | [Censo Demográfico 2022, tabela 6805](https://sidra.ibge.gov.br/tabela/6805) | Percentual de domicílios fora das formas selecionadas de esgotamento sanitário | Transicional: reempacotado do payload legado; não mede risco hidrológico |
 | [Transferências e Parcerias da União](https://dados.gov.br/dados/conjuntos-dados/transferencias-e-parcerias-da-uniao) | Programas e propostas federais selecionados por ação, objeto e atribuição municipal | Transicional: proposta não equivale a política municipal completa |
 | [Defesa Civil](https://www.gov.br/mdr/pt-br/assuntos/protecao-e-defesa-civil/alertas-de-desastres-1) | Orientação para receber alertas oficiais | Serviço externo: o site não emite nem replica alertas em tempo real |
@@ -91,7 +94,7 @@ Fontes oficiais
        |
        v
 Pipelines Python -> RAW / SILVER / GOLD locais e ignorados pelo Git
-       |              (IBGE, Atlas e MapBiomas)
+       |              (IBGE, Atlas, MapBiomas e MUNIC)
        v
 export_frontend_data.py -> JSON público v1 por UF/partes
        |                    (índice, metadata e shards)
@@ -99,7 +102,7 @@ export_frontend_data.py -> JSON público v1 por UF/partes
 Aplicação React -> busca no índice e carrega somente o shard indicado
 ```
 
-Os pipelines canônicos de IBGE, MapBiomas e Atlas/S2ID estão em `src/`, com
+Os pipelines canônicos de IBGE, MapBiomas, Atlas/S2ID e MUNIC estão em `src/`, com
 testes em `tests/`. O navegador consome apenas JSON do contrato de apresentação
 v1, sem abrir Parquet nem executar junções. Censo e Transferegov seguem
 declarados como transicionais no próprio contrato. Consulte a
@@ -119,7 +122,7 @@ python -m pytest -q
 ```
 
 O exportador abaixo requer GOLDs locais materializadas. Ele usa o payload legado
-somente para Censo e Transferegov transicionais; Atlas, IBGE e MapBiomas vêm das
+somente para Censo e Transferegov transicionais; Atlas, IBGE, MapBiomas e MUNIC vêm das
 GOLDs. O navegador consome somente o contrato v1, sem ler o payload legado.
 
 Para exploração e testes rápidos, consulte as [amostras reduzidas para colaboradores](data/samples/README.md). Elas cobrem as 27 unidades federativas e casos de presença e ausência de dados nas três dimensões do produto.
@@ -133,6 +136,7 @@ data/raw/siconv_programa.csv.zip
 data/raw/siconv_programa_proposta.csv.zip
 data/raw/siconv_proposta.csv.zip
 data/raw/siconv_convenio.csv.zip
+data/raw/munic/2020/Base_MUNIC_2020.xlsx
 ```
 
 Geração do contrato publicado (com as GOLDs locais materializadas):

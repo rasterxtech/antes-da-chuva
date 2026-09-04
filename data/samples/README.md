@@ -10,6 +10,7 @@ Esta pasta oferece um recorte pequeno e legível do conjunto consolidado do Ante
 | `censo.sample.csv` | Uma linha por município | Exploração do indicador derivado do Censo 2022 |
 | `atlas.sample.csv` | Uma linha por município com histórico | Exploração dos registros agregados de desastres ligados à chuva |
 | `transferegov.sample.csv` | Uma linha por município com evidência selecionada | Exploração dos convênios e da evidência mais recente |
+| `munic.sample.csv` | Uma linha por município | Estruturas e instrumentos declarados pelas prefeituras na MUNIC 2020 |
 
 Todos os arquivos usam `codigo_ibge` ou `code` como chave de integração municipal.
 
@@ -45,6 +46,7 @@ O script valida a existência dos municípios, duplicatas e a cobertura das 27 u
 - A ausência de linha no Atlas ou no Transferegov representa ausência no recorte processado, não inexistência de desastre ou política pública.
 - O campo `reconhecidos` é um subconjunto dos registros administrativos conhecidos.
 - A amostra não deve ser usada para estimativas, rankings ou conclusões nacionais.
+- A MUNIC registra declarações das prefeituras referentes a 2020; não comprova que um instrumento esteja atualizado ou em funcionamento.
 - As fontes oficiais e suas limitações estão documentadas em `docs/AUDITORIA_FONTES.md`.
 
 ## Bases originais

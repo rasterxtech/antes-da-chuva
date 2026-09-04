@@ -5,6 +5,8 @@ import {
   type MunicipalShard,
   type MunicipalityIdentity,
   type MunicipalityPresentation,
+  type MunicIndicator,
+  type MunicStatus,
   type PresentationMetadata,
   type PresentationState,
 } from '@/lib/presentation-contract';
@@ -107,6 +109,7 @@ export function isPresentationMetadata(
 
   const atlas = sources.atlas;
   const mapbiomas = sources.mapbiomas;
+  const munic = sources.munic;
   const ibge = sources.ibge;
   const census = sources.census;
   const transfers = sources.transferegov;
@@ -131,6 +134,12 @@ export function isPresentationMetadata(
     typeof mapbiomas.materialized_at === 'string' &&
     typeof mapbiomas.source_sha256 === 'string' &&
     typeof mapbiomas.manifest === 'string' &&
+    isObject(munic) &&
+    munic.reference_year === 2020 &&
+    typeof munic.materialized_at === 'string' &&
+    typeof munic.source_sha256 === 'string' &&
+    typeof munic.manifest === 'string' &&
+    munic.state === 'self_reported' &&
     isObject(ibge) &&
     typeof ibge.source === 'string' &&
     typeof ibge.query_date === 'string' &&
@@ -150,8 +159,42 @@ function isPresentationState(value: unknown): value is PresentationState {
     value === 'no_record' ||
     value === 'no_coverage' ||
     value === 'not_published' ||
-    value === 'not_in_legacy_universe'
+    value === 'not_in_legacy_universe' ||
+    value === 'not_in_source'
   );
+}
+
+const MUNIC_INDICATORS: MunicIndicator[] = [
+  'municipal_civil_defense_body',
+  'civil_defense_budget_provision',
+  'any_risk_prevention_planning_instrument',
+  'flood_risk_mapping',
+  'flood_contingency_plan',
+  'flood_early_warning',
+  'landslide_risk_mapping',
+  'landslide_contingency_plan',
+  'landslide_early_warning',
+];
+
+function isMunicStatus(value: unknown): value is MunicStatus {
+  return value === 'declared_yes' || value === 'declared_no' ||
+    value === 'refused' || value === 'not_reported' ||
+    value === 'not_applicable' || value === 'unknown' ||
+    value === 'not_in_source';
+}
+
+function isMunicipalCapacity(value: unknown): boolean {
+  if (!isObject(value) || !isObject(value.indicators)) return false;
+  const statuses = value.indicators;
+  if ((value.state !== 'record' && value.state !== 'not_in_source') ||
+      value.provenance !== 'self_reported_munic_2020' ||
+      value.reference_year !== 2020 ||
+      Object.keys(statuses).length !== MUNIC_INDICATORS.length ||
+      !MUNIC_INDICATORS.every((name) => isMunicStatus(statuses[name]))) return false;
+  const values = Object.values(statuses);
+  return value.state === 'record'
+    ? !values.includes('not_in_source')
+    : values.every((status) => status === 'not_in_source');
 }
 
 function isNumberOrNull(value: unknown): value is number | null {
@@ -262,6 +305,7 @@ function isMunicipalityPresentation(
   const summary = value.summary;
   const disasters = value.disasters;
   const landCover = value.land_cover;
+  const municipalCapacity = value.municipal_capacity;
   const census = value.census;
   const transfers = value.transfers;
   return (
@@ -288,6 +332,7 @@ function isMunicipalityPresentation(
     (landCover.state === 'record' || landCover.state === 'no_coverage') &&
     Array.isArray(landCover.history) &&
     (landCover.change === null || isObject(landCover.change)) &&
+    isMunicipalCapacity(municipalCapacity) &&
     isObject(census) &&
     isPresentationState(census.state) &&
     census.provenance === 'transitional_legacy' &&

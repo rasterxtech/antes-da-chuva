@@ -40,6 +40,13 @@ const metadata: PresentationMetadata = {
       source_sha256: 'fixture',
       manifest: 'fixture',
     },
+    munic: {
+      reference_year: 2020,
+      materialized_at: '2026-09-03T22:00:00+00:00',
+      source_sha256: 'fixture',
+      manifest: 'fixture',
+      state: 'self_reported',
+    },
     census: {
       state: 'transitional_legacy',
       reference: 'Censo fixture',
@@ -135,6 +142,7 @@ function municipality(
         ibge: 'record',
         atlas: state,
         mapbiomas: landCoverState,
+        munic: code === '5101837' ? 'not_in_source' : 'record',
         census: state === 'no_record' ? 'not_published' : 'record',
         transferegov: 'record',
       },
@@ -208,6 +216,22 @@ function municipality(
             }
           : null,
     },
+    municipal_capacity: {
+      state: code === '5101837' ? 'not_in_source' : 'record',
+      provenance: 'self_reported_munic_2020',
+      reference_year: 2020,
+      indicators: Object.fromEntries([
+        'municipal_civil_defense_body',
+        'civil_defense_budget_provision',
+        'any_risk_prevention_planning_instrument',
+        'flood_risk_mapping',
+        'flood_contingency_plan',
+        'flood_early_warning',
+        'landslide_risk_mapping',
+        'landslide_contingency_plan',
+        'landslide_early_warning',
+      ].map((name) => [name, code === '5101837' ? 'not_in_source' : 'declared_yes'])),
+    } as MunicipalityPresentation['municipal_capacity'],
     census: {
       state: state === 'no_record' ? 'not_published' : 'record',
       provenance: 'transitional_legacy',
@@ -444,6 +468,11 @@ describe('municipal v1 loading', () => {
     ).toBeTruthy();
     expect(screen.getByText('Atlas/S2ID: 1991–2025')).toBeTruthy();
     expect(screen.getByText('MapBiomas: 1985–2025')).toBeTruthy();
+    expect(
+      screen.getByRole('heading', { name: 'Como o município declarou se preparar' }),
+    ).toBeTruthy();
+    expect(screen.getByText('Capacidade declarada · MUNIC 2020')).toBeTruthy();
+    expect(screen.getAllByText('Sim')).toHaveLength(9);
   });
 
   it('keeps no record, missing values, and zero distinct', async () => {

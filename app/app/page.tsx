@@ -49,6 +49,7 @@ import { DisasterHistory } from '@/components/presentation/disaster-history';
 import { TypesAndMonths } from '@/components/presentation/types-and-months';
 import { LandCoverHistory } from '@/components/presentation/land-cover-history';
 import { RegionalComparison } from '@/components/presentation/regional-comparison';
+import { MunicipalPreparedness } from '@/components/presentation/municipal-preparedness';
 
 const numberFormatter = new Intl.NumberFormat('pt-BR');
 const hectareFormatter = new Intl.NumberFormat('pt-BR', {
@@ -89,6 +90,7 @@ function sourceStateLabel(source: string, state: PresentationState) {
     no_coverage: 'sem cobertura',
     not_published: 'não publicado',
     not_in_legacy_universe: 'fora do universo temporal',
+    not_in_source: 'fora da fonte',
   };
   return `${source}: ${labels[state]}`;
 }
@@ -1113,8 +1115,9 @@ export default function Home() {
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/78 sm:text-lg">
               Em uma única leitura, veja o histórico de ocorrências ligadas à
-              chuva, uma condição de saneamento e evidências federais de
-              prevenção, com recorte e limitações à vista.
+              chuva, uma condição de saneamento, estruturas declaradas pela
+              prefeitura e evidências federais de prevenção, com recorte e
+              limitações à vista.
             </p>
 
             <div className="relative mt-8 min-w-0 rounded-2xl border border-white/15 bg-white p-3 text-foreground shadow-[0_24px_80px_rgb(4_20_32/28%)] sm:p-4">
@@ -1406,6 +1409,11 @@ export default function Home() {
                     : 'Atlas: metadados indisponíveis'}
                 </Tag>
                 <Tag>
+                  {metadata
+                    ? `MUNIC ${metadata.sources.munic.reference_year}`
+                    : 'MUNIC: metadados indisponíveis'}
+                </Tag>
+                <Tag>
                   {metadata?.sources.census.reference ??
                     'Censo: metadados indisponíveis'}
                 </Tag>
@@ -1428,6 +1436,8 @@ export default function Home() {
               municipality={selected.municipality}
               summary={selected.summary}
             />
+
+            <MunicipalPreparedness capacity={selected.municipal_capacity} />
 
             <div className="grid items-stretch gap-5 lg:grid-cols-3">
               <DisasterHistory disasters={selected.disasters} />
@@ -1635,7 +1645,7 @@ export default function Home() {
               {
                 icon: CheckCircle2,
                 title: 'Recorte explícito',
-                text: 'Cinco tipologias ligadas à chuva, um indicador do Censo e programas federais selecionados.',
+                text: 'Cinco tipologias ligadas à chuva, um indicador do Censo, nove quesitos da MUNIC 2020 e programas federais selecionados.',
               },
               {
                 icon: ShieldCheck,
@@ -1688,7 +1698,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-8 grid items-stretch gap-4 md:grid-cols-3">
+          <div className="mt-8 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4">
             {[
               {
                 label: 'Histórico',
@@ -1700,6 +1710,13 @@ export default function Home() {
                   : 'Registros municipais das cinco tipologias relacionadas à chuva.',
                 href: 'https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml',
                 action: 'Consultar Atlas',
+              },
+              {
+                label: 'Capacidade municipal',
+                title: 'Pesquisa de Informações Básicas Municipais · IBGE',
+                text: 'Estruturas e instrumentos de gestão de riscos declarados pelas prefeituras na MUNIC 2020.',
+                href: 'https://www.ibge.gov.br/estatisticas/sociais/saude/10586-pesquisa-deinformacoes-basicas-municipais.html?edicao=32141',
+                action: 'Consultar MUNIC',
               },
               {
                 label: 'Saneamento',
@@ -1811,6 +1828,11 @@ export default function Home() {
                 metadata
                   ? `Atlas de Desastres · ${metadata.sources.atlas.release}`
                   : 'Atlas de Desastres',
+                true,
+              )}
+              {sourceLink(
+                'https://www.ibge.gov.br/estatisticas/sociais/saude/10586-pesquisa-deinformacoes-basicas-municipais.html?edicao=32141',
+                'MUNIC 2020 · IBGE',
                 true,
               )}
               {sourceLink(

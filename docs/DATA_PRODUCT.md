@@ -12,15 +12,16 @@ Data product local, reproduzivel e auditavel para integrar dados publicos sobre 
 
 O projeto esta sendo construido em camadas. A base territorial canonica vem do IBGE e todas as fontes observacionais devem, sempre que possivel, terminar relacionadas ao mesmo `codigo_ibge`. A finalidade e permitir perguntas sobre territorio, cobertura da terra, desastres, capacidade municipal e recursos publicos sem misturar evidencias de fontes diferentes nem transformar correlacoes em causalidade.
 
-Neste momento existem tres produtos implementados:
+Neste momento existem quatro produtos implementados:
 
 | Produto | Fonte oficial | Papel no modelo | Status |
 |---|---|---|---|
 | `dim_municipality` | IBGE | Dimensao territorial canonica vigente | Produzido e validado |
 | Cobertura e uso da terra | MapBiomas Brasil | Fatos e snapshots temporais por municipio | Produzido e validado |
 | Historico de desastres | Atlas Digital/S2ID | Eventos oficiais, impactos e perfis historicos | Produzido e validado |
+| Capacidade municipal declarada | MUNIC 2020/IBGE | Estruturas e instrumentos de gestão de riscos declarados pela prefeitura | Produzido e validado |
 
-As proximas fontes planejadas incluem Indicador de Capacidade Municipal, Transferegov, SINISA e outros dados publicos relevantes. Elas ainda nao fazem parte dos pipelines atuais.
+As proximas fontes planejadas incluem Transferegov, SINISA e outros dados publicos relevantes. Elas ainda nao fazem parte dos pipelines atuais.
 
 ## Inicio Rapido
 
@@ -38,10 +39,11 @@ python -m pip install -r requirements.txt
 python -m src.pipeline
 python -m src.mapbiomas
 python -m src.atlas
+python -m src.munic
 python -m pytest -q
 ```
 
-A ordem importa: MapBiomas e Atlas dependem de
+A ordem importa: MapBiomas, Atlas e MUNIC dependem de
 `data/gold/dim_municipality.parquet`, produzido pela primeira etapa.
 
 Esses comandos baixam fontes oficiais e materializam arquivos locais ignorados
@@ -103,7 +105,7 @@ O principio central e separar tres coisas:
 2. fatos observacionais;
 3. interpretacoes ou indicadores derivados.
 
-`dim_municipality` resolve a identidade territorial vigente. MapBiomas fornece fatos observacionais de cobertura e uso da terra. Atlas/S2ID fornece registros historicos oficiais de desastres e impactos. Interpretacoes sobre risco, vulnerabilidade, probabilidade ou causalidade nao sao produzidas nesta fase.
+`dim_municipality` resolve a identidade territorial vigente. MapBiomas fornece fatos observacionais de cobertura e uso da terra. Atlas/S2ID fornece registros historicos oficiais de desastres e impactos. MUNIC fornece declaracoes das prefeituras sobre estruturas e instrumentos existentes em 2020. Interpretacoes sobre risco, vulnerabilidade, probabilidade ou causalidade nao sao produzidas nesta fase.
 
 ## Principios De Engenharia
 
@@ -149,7 +151,8 @@ dim_municipality (PK logica: codigo_ibge)
 |-- fact_disaster_event (municipio x registro oficial)
 |-- snapshot_municipality_disaster_history (municipio x data de referencia)
 |-- municipality_disaster_type_summary (municipio x COBRADE)
-`-- municipality_disaster_month_profile (municipio x mes)
+|-- municipality_disaster_month_profile (municipio x mes)
+`-- municipality_munic_capacity_2020 (municipio)
 
 municipality_disaster_type_summary.cobrade_code
 `-- dim_disaster_type.cobrade_code
@@ -248,6 +251,16 @@ Responsabilidades:
 | `data/gold/municipality_disaster_month_profile.parquet` | GOLD | Municipio x mes | 66.852 |
 | `data/gold/atlas_data_quality_report.json` | GOLD | Relatorio estruturado Atlas | 1 relatorio |
 | `data/manifests/atlas/latest_successful_run.json` | Manifest | Ultima execucao bem-sucedida | 1 manifest |
+
+### MUNIC 2020
+
+| Artefato | Camada | Granularidade | Linhas atuais |
+|---|---|---|---:|
+| `data/raw/munic/2020/Base_MUNIC_2020.xlsx` | RAW | Planilha oficial integral | 5.570 registros na aba usada |
+| `data/silver/silver_munic_risk_management_2020.parquet` | SILVER | Uma linha por municipio da edicao | 5.570 |
+| `data/gold/municipality_munic_capacity_2020.parquet` | GOLD | Uma linha por unidade territorial vigente | 5.571 |
+| `data/gold/munic_data_quality_report.json` | GOLD | Relatorio estruturado MUNIC | 1 relatorio |
+| `data/manifests/munic/latest_successful_run.json` | Manifest | Ultima execucao bem-sucedida | 1 manifest |
 
 ## Estrutura Do Repositorio
 
