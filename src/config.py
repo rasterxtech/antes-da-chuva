@@ -86,3 +86,26 @@ ATLAS_QUALITY_JSON_PATH = GOLD_DIR / "atlas_data_quality_report.json"
 ATLAS_QUALITY_MARKDOWN_PATH = DOCS_DIR / "atlas-data-quality-report.md"
 ATLAS_DOC_PATH = DOCS_DIR / "atlas.md"
 ATLAS_RUNS_DIR = DATA_DIR / "manifests" / "atlas"
+
+MUNIC_SOURCE_NAME = "IBGE, Pesquisa de Informacoes Basicas Municipais - MUNIC 2020"
+MUNIC_SOURCE_URL = (
+    "https://ftp.ibge.gov.br/Perfil_Municipios/2020/Base_de_Dados/"
+    "Base_MUNIC_2020.xlsx"
+)
+MUNIC_SOURCE_PAGE_URL = (
+    "https://www.ibge.gov.br/estatisticas/sociais/saude/10586-"
+    "pesquisa-deinformacoes-basicas-municipais.html?edicao=32141"
+)
+MUNIC_QUESTIONNAIRE_URL = (
+    "https://biblioteca.ibge.gov.br/visualizacao/instrumentos_de_coleta/"
+    "doc5625.pdf"
+)
+MUNIC_REFERENCE_YEAR = 2020
+MUNIC_RAW_ROOT = RAW_DIR / "munic" / "2020"
+MUNIC_RAW_PATH = MUNIC_RAW_ROOT / "Base_MUNIC_2020.xlsx"
+MUNIC_RAW_METADATA_PATH = MUNIC_RAW_ROOT / "metadata.json"
+MUNIC_SILVER_PATH = SILVER_DIR / "silver_munic_risk_management_2020.parquet"
+MUNIC_GOLD_PATH = GOLD_DIR / "municipality_munic_capacity_2020.parquet"
+MUNIC_QUALITY_JSON_PATH = GOLD_DIR / "munic_data_quality_report.json"
+MUNIC_QUALITY_MARKDOWN_PATH = DOCS_DIR / "munic-data-quality-report.md"
+MUNIC_RUNS_DIR = DATA_DIR / "manifests" / "munic"

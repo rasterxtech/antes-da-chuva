@@ -1,0 +1,132 @@
+{
+  "status": "PASS",
+  "generated_at": "2026-09-04T01:26:35+00:00",
+  "source": {
+    "source": "IBGE, Pesquisa de Informacoes Basicas Municipais - MUNIC 2020",
+    "source_url": "https://ftp.ibge.gov.br/Perfil_Municipios/2020/Base_de_Dados/Base_MUNIC_2020.xlsx",
+    "reference_year": 2020,
+    "ingested_at": "2026-09-04T01:26:35+00:00",
+    "raw_file": "data/raw/munic/2020/Base_MUNIC_2020.xlsx",
+    "size_bytes": 14204953,
+    "sha256": "8b89371dfdff43e32e8f6faa1950c95300eba6cd301d7a5f53f15f199b62ced1",
+    "http_status": 200,
+    "response_headers": {
+      "content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "content-length": "14204953",
+      "date": "Fri, 04 Sep 2026 01:26:36 GMT",
+      "etag": "\"d8c019-5d06ecdf31324\"",
+      "last-modified": "Wed, 10 Nov 2021 13:00:03 GMT"
+    },
+    "reused_local_file": false,
+    "license": "unspecified",
+    "license_note": "Arquivo publico do IBGE; nenhuma licenca SPDX especifica foi identificada para esta edicao. Atribuir a MUNIC 2020.",
+    "source_page_url": "https://www.ibge.gov.br/estatisticas/sociais/saude/10586-pesquisa-deinformacoes-basicas-municipais.html?edicao=32141",
+    "questionnaire_url": "https://biblioteca.ibge.gov.br/visualizacao/instrumentos_de_coleta/doc5625.pdf"
+  },
+  "rows": {
+    "silver": 5570,
+    "gold": 5571
+  },
+  "coverage": {
+    "source_municipalities": 5570,
+    "current_dimension_municipalities": 5571,
+    "not_in_2020_source": [
+      "5101837"
+    ]
+  },
+  "declared_yes_counts": {
+    "municipal_civil_defense_body_status": 4236,
+    "flood_risk_mapping_status": 2164,
+    "flood_contingency_plan_status": 1407,
+    "flood_early_warning_status": 436,
+    "landslide_contingency_plan_status": 1016,
+    "landslide_early_warning_status": 246,
+    "civil_defense_budget_provision_status": 968,
+    "civil_defense_early_warning_status": 435
+  },
+  "checks": [
+    {
+      "name": "source_has_5570_municipalities",
+      "status": "PASS",
+      "observed": 5570,
+      "expected": 5570
+    },
+    {
+      "name": "source_codigo_ibge_is_unique",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "source_codigo_ibge_format_is_valid",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "all_source_codes_match_current_dimension",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "gold_matches_current_dimension",
+      "status": "PASS",
+      "observed": 5571,
+      "expected": 5571
+    },
+    {
+      "name": "new_municipality_is_explicitly_outside_2020_source",
+      "status": "PASS",
+      "observed": [
+        "5101837"
+      ],
+      "expected": [
+        "5101837"
+      ]
+    },
+    {
+      "name": "status_values_follow_contract",
+      "status": "PASS",
+      "observed": {},
+      "expected": {}
+    },
+    {
+      "name": "budget_not_applicable_is_not_used_for_declared_compdec",
+      "status": "PASS",
+      "observed": 0,
+      "expected": 0
+    },
+    {
+      "name": "selected_indicator_counts_match_2020_release",
+      "status": "PASS",
+      "observed": {
+        "municipal_civil_defense_body_status": 4236,
+        "flood_risk_mapping_status": 2164,
+        "flood_contingency_plan_status": 1407,
+        "flood_early_warning_status": 436,
+        "landslide_contingency_plan_status": 1016,
+        "landslide_early_warning_status": 246,
+        "civil_defense_budget_provision_status": 968,
+        "civil_defense_early_warning_status": 435
+      },
+      "expected": {
+        "municipal_civil_defense_body_status": 4236,
+        "flood_risk_mapping_status": 2164,
+        "flood_contingency_plan_status": 1407,
+        "flood_early_warning_status": 436,
+        "landslide_contingency_plan_status": 1016,
+        "landslide_early_warning_status": 246,
+        "civil_defense_budget_provision_status": 968,
+        "civil_defense_early_warning_status": 435
+      }
+    }
+  ],
+  "problems_found": [],
+  "warnings": [
+    "As respostas foram declaradas pelas prefeituras e se referem a 2020.",
+    "Recusa, nao informou, nao sabe e nao se aplica permanecem estados distintos.",
+    "A variavel Mgrd201 usa o significado do questionario oficial: mapeamento de risco em encostas; o dicionario repete por engano o rotulo de inundacoes.",
+    "Previsao orcamentaria e recursos da COMPDEC sao quesitos condicionais; nao se aplica nunca equivale a nao."
+  ]
+}

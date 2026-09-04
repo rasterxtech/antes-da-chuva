@@ -70,6 +70,17 @@ TABLES = {
         "water_area_change_10y_ha DOUBLE, wetland_area_change_10y_ha DOUBLE",
         "municipality_land_cover_change.parquet",
     ),
+    "municipality_munic_capacity_2020": (
+        "codigo_ibge VARCHAR, in_source BOOLEAN, "
+        "municipal_civil_defense_body_status VARCHAR, "
+        "civil_defense_budget_provision_status VARCHAR, "
+        "any_risk_prevention_planning_instrument_status VARCHAR, "
+        "flood_risk_mapping_status VARCHAR, flood_contingency_plan_status VARCHAR, "
+        "flood_early_warning_status VARCHAR, landslide_risk_mapping_status VARCHAR, "
+        "landslide_contingency_plan_status VARCHAR, landslide_early_warning_status VARCHAR, "
+        "source_year INTEGER",
+        "municipality_munic_capacity_2020.parquet",
+    ),
 }
 
 
@@ -81,6 +92,21 @@ def _write_json(path: Path, value: object) -> None:
 def _materialize_fixture(root: Path, fixture: dict | None = None) -> Path:
     if fixture is None:
         fixture = json.loads((FIXTURES / "gold_fixture.json").read_text(encoding="utf-8"))
+    if "municipality_munic_capacity_2020" not in fixture:
+        munic_rows = []
+        for municipality in fixture["dim_municipality"]:
+            code = municipality[0]
+            if code == "5101837":
+                munic_rows.append([code, False, *(["not_in_source"] * 9), 2020])
+            elif code == "4202404":
+                munic_rows.append([
+                    code, True, "declared_yes", "declared_yes", "declared_yes",
+                    "declared_yes", "declared_no", "not_reported", "declared_yes",
+                    "declared_no", "unknown", 2020,
+                ])
+            else:
+                munic_rows.append([code, True, *(["declared_no"] * 9), 2020])
+        fixture["municipality_munic_capacity_2020"] = munic_rows
     gold_dir = root / "data" / "gold"
     gold_dir.mkdir(parents=True)
     connection = duckdb.connect(":memory:")
@@ -137,6 +163,17 @@ def _materialize_fixture(root: Path, fixture: dict | None = None) -> Path:
             "source_hashes": {"statistics": "fixture-mapbiomas"},
         },
     )
+    _write_json(
+        root / "data" / "manifests" / "munic" / "latest_successful_run.json",
+        {
+            "status": "PASS",
+            "generated_at": "2026-09-03T22:00:00+00:00",
+            "source": {
+                "reference_year": 2020,
+                "sha256": "fixture-munic",
+            },
+        },
+    )
     legacy = root / "app" / "public" / "data" / "municipios.json"
     legacy.parent.mkdir(parents=True)
     legacy.write_text(
@@ -175,6 +212,8 @@ def test_contract_keeps_codigo_ibge_as_text_and_matches_typescript(
     assert payload["municipality"]["codigo_ibge"] == "4202404"
     assert isinstance(payload["municipality"]["codigo_ibge"], str)
     assert payload["municipality"]["regiao_imediata"] == "Blumenau"
+    assert payload["municipal_capacity"]["state"] == "record"
+    assert payload["municipal_capacity"]["indicators"]["municipal_civil_defense_body"] == "declared_yes"
     assert payload["summary"]["thirty_second_text"] == (
         "Desde 1991, foram encontrados 32 registros relacionados à chuva em Blumenau. "
         "Enxurradas é o tipo mais frequente na série consultada. O registro mais recente "
@@ -296,6 +335,9 @@ def test_all_mandatory_edge_municipalities_keep_expected_states(
     fernando_de_noronha = _payload(output, "2605459")
     assert fernando_de_noronha["land_cover"]["state"] == "no_coverage"
     assert fernando_de_noronha["land_cover"]["history"] == []
+    boa_esperanca = _payload(output, "5101837")
+    assert boa_esperanca["municipal_capacity"]["state"] == "not_in_source"
+    assert set(boa_esperanca["municipal_capacity"]["indicators"].values()) == {"not_in_source"}
 
 
 def test_annual_benchmark_months_and_type_percentages_are_reconciled(

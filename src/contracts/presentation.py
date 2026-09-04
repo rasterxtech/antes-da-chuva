@@ -18,6 +18,7 @@ PRESENTATION_STATES = frozenset(
         "no_coverage",
         "not_published",
         "not_in_legacy_universe",
+        "not_in_source",
     }
 )
 
@@ -27,6 +28,7 @@ PresentationState = Literal[
     "no_coverage",
     "not_published",
     "not_in_legacy_universe",
+    "not_in_source",
 ]
 
 
@@ -51,6 +53,7 @@ class PresentationPayload(TypedDict):
     summary: dict[str, Any]
     disasters: dict[str, Any]
     land_cover: dict[str, Any]
+    municipal_capacity: dict[str, Any]
     census: dict[str, Any]
     transfers: dict[str, Any]
     benchmarks: dict[str, Any]
@@ -66,6 +69,7 @@ def validate_presentation_payload(payload: dict[str, Any]) -> None:
         "summary",
         "disasters",
         "land_cover",
+        "municipal_capacity",
         "census",
         "transfers",
         "benchmarks",
@@ -104,7 +108,7 @@ def validate_presentation_payload(payload: dict[str, Any]) -> None:
         if not isinstance(municipality.get(field), str):
             raise ValueError(f"municipality.{field} deve ser texto")
 
-    for section in ("disasters", "land_cover", "census", "transfers"):
+    for section in ("disasters", "land_cover", "municipal_capacity", "census", "transfers"):
         value = payload[section]
         if not isinstance(value, dict) or value.get("state") not in PRESENTATION_STATES:
             raise ValueError(f"{section}.state invalido")
@@ -193,6 +197,33 @@ def validate_presentation_payload(payload: dict[str, Any]) -> None:
         raise ValueError("census deve declarar proveniencia transicional")
     if payload["transfers"].get("provenance") != "transitional_legacy":
         raise ValueError("transfers deve declarar proveniencia transicional")
+    capacity = payload["municipal_capacity"]
+    if capacity.get("provenance") != "self_reported_munic_2020" or capacity.get("reference_year") != 2020:
+        raise ValueError("municipal_capacity deve declarar proveniencia e referencia MUNIC 2020")
+    expected_indicators = {
+        "municipal_civil_defense_body",
+        "civil_defense_budget_provision",
+        "any_risk_prevention_planning_instrument",
+        "flood_risk_mapping",
+        "flood_contingency_plan",
+        "flood_early_warning",
+        "landslide_risk_mapping",
+        "landslide_contingency_plan",
+        "landslide_early_warning",
+    }
+    indicators = capacity.get("indicators")
+    allowed_statuses = {
+        "declared_yes", "declared_no", "refused", "not_reported",
+        "not_applicable", "unknown", "not_in_source",
+    }
+    if not isinstance(indicators, dict) or set(indicators) != expected_indicators:
+        raise ValueError("municipal_capacity possui indicadores invalidos")
+    if any(value not in allowed_statuses for value in indicators.values()):
+        raise ValueError("municipal_capacity possui status invalido")
+    if capacity["state"] == "record" and "not_in_source" in indicators.values():
+        raise ValueError("municipal_capacity com registro nao pode usar not_in_source")
+    if capacity["state"] == "not_in_source" and set(indicators.values()) != {"not_in_source"}:
+        raise ValueError("municipal_capacity fora da fonte deve explicitar todos os indicadores")
     immediate_benchmark = payload["benchmarks"].get("immediate_region") if isinstance(payload["benchmarks"], dict) else None
     if not isinstance(immediate_benchmark, dict) or immediate_benchmark.get("includes_selected_municipality") is not True:
         raise ValueError("benchmarks.immediate_region invalido")

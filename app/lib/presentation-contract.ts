@@ -7,7 +7,28 @@ export type PresentationState =
   | 'no_record'
   | 'no_coverage'
   | 'not_published'
-  | 'not_in_legacy_universe';
+  | 'not_in_legacy_universe'
+  | 'not_in_source';
+
+export type MunicStatus =
+  | 'declared_yes'
+  | 'declared_no'
+  | 'refused'
+  | 'not_reported'
+  | 'not_applicable'
+  | 'unknown'
+  | 'not_in_source';
+
+export type MunicIndicator =
+  | 'municipal_civil_defense_body'
+  | 'civil_defense_budget_provision'
+  | 'any_risk_prevention_planning_instrument'
+  | 'flood_risk_mapping'
+  | 'flood_contingency_plan'
+  | 'flood_early_warning'
+  | 'landslide_risk_mapping'
+  | 'landslide_contingency_plan'
+  | 'landslide_early_warning';
 
 export type MunicipalityIdentity = {
   codigo_ibge: string;
@@ -61,6 +82,13 @@ export type PresentationMetadata = {
       materialized_at: string;
       source_sha256: string;
       manifest: string;
+    };
+    munic: {
+      reference_year: number;
+      materialized_at: string;
+      source_sha256: string;
+      manifest: string;
+      state: 'self_reported';
     };
     census: {
       state: string;
@@ -145,6 +173,13 @@ export type TransitionalCensus = {
   outside_selected_sewer_pct: number | null;
 };
 
+export type MunicipalCapacity = {
+  state: Extract<PresentationState, 'record' | 'not_in_source'>;
+  provenance: 'self_reported_munic_2020';
+  reference_year: 2020;
+  indicators: Record<MunicIndicator, MunicStatus>;
+};
+
 export type TransitionalTransfers = {
   state: Extract<
     PresentationState,
@@ -188,6 +223,7 @@ export type MunicipalityPresentation = {
     highlights: Array<Record<string, never>>;
   };
   land_cover: LandCover;
+  municipal_capacity: MunicipalCapacity;
   census: TransitionalCensus;
   transfers: TransitionalTransfers;
   benchmarks: {
