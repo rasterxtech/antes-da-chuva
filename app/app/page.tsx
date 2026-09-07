@@ -1439,11 +1439,13 @@ export default function Home() {
 
             <MunicipalPreparedness capacity={selected.municipal_capacity} />
 
-            <div className="grid items-stretch gap-5 lg:grid-cols-3">
+            <div className="space-y-5">
               <DisasterHistory disasters={selected.disasters} />
               <TypesAndMonths disasters={selected.disasters} />
-              <CensusCard census={selected.census} metadata={metadata} />
-              <TransferCard transfers={selected.transfers} metadata={metadata} />
+              <div className="grid items-stretch gap-5 lg:grid-cols-2">
+                <CensusCard census={selected.census} metadata={metadata} />
+                <TransferCard transfers={selected.transfers} metadata={metadata} />
+              </div>
             </div>
 
             <LandCoverHistory landCover={selected.land_cover} />

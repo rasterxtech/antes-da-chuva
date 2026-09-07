@@ -1,7 +1,7 @@
 # MUNIC 2020 Data Quality Report
 
 - Status: **PASS**
-- Gerado em: `2026-09-04T01:26:35+00:00`
+- Gerado em: `2026-09-07T19:23:43+00:00`
 - SILVER: **5570** linhas
 - GOLD: **5571** linhas
 - Fora da fonte de 2020: `['5101837']`

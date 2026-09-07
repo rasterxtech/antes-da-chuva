@@ -16,6 +16,9 @@ __pycache__/
 *.parquet
 .pytest_cache/
 .venv/
+.npm-cache/
+.uv-cache/
+.uv-python/
 
 # Large pipeline artifacts stay local. Only the placeholders are versioned.
 data/raw/*

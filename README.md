@@ -58,15 +58,15 @@ A avaliação completa de qualidade, escopo e limites está em [Auditoria das fo
 
 - React 19 e TypeScript
 - Tailwind CSS
-- Vite e Vinext
-- Cloudflare Workers no artefato de produção
-- Python e DuckDB para a consolidação local das bases
+- Next.js 16 com App Router
+- Vercel como plataforma de deploy, com homologação separada de produção
+- Python e DuckDB para a consolidação reproduzível das bases
 
 ## Executar localmente
 
 Pré-requisitos:
 
-- Node.js 22.13 ou superior
+- Node.js 22.x (22.13 ou superior nessa linha)
 - npm 11.6.2
 
 ```bash
@@ -145,7 +145,7 @@ Geração do contrato publicado (com as GOLDs locais materializadas):
 python scripts/export_frontend_data.py
 ```
 
-Saída local, deliberadamente excluída do Git:
+Saída local, deliberadamente excluída do histórico Git:
 
 ```text
 app/public/data/v1/metadata.json
@@ -153,9 +153,16 @@ app/public/data/v1/municipal-index.json
 app/public/data/v1/uf/<UF>.json ou <UF>-<parte>.json
 ```
 
-Os payloads v1 são reproduzíveis e não acompanham o repositório. Antes de
-executar a aplicação com dados municipais reais, materialize as GOLDs locais e
-execute `python scripts/export_frontend_data.py`.
+Os payloads v1 são reproduzíveis e não acompanham o repositório. O arquivo
+`app/presentation-data-release.json` fixa a URL e o SHA 256 do artefato público
+usado nos builds. `npm run dev`, `npm run build` e `npm run start` materializam
+automaticamente esse pacote quando os arquivos locais não existem. Quem estiver trabalhando na camada de dados pode
+regenerar a saída com `python scripts/export_frontend_data.py`; nesse caso, o
+build valida e preserva a cópia local.
+
+O artefato publicado contém apenas JSONs derivados que já são servidos pelo
+site. Bases brutas, SILVERs e GOLDs continuam fora do Git e são compartilhadas
+separadamente com a equipe.
 
 Os shards usam alvo de 24 MiB para permanecer abaixo do limite de asset de 25 MiB
 da Cloudflare. Uma UF que excede o alvo e publicada em partes deterministicas;
@@ -220,10 +227,13 @@ antes-da-chuva/
 - [Produto de dados](docs/DATA_PRODUCT.md)
 - [Dados locais e manifests](docs/DADOS_LOCAIS_E_MANIFESTS.md)
 - [Baseline da consolidação](docs/BASELINE_CONSOLIDACAO.md)
+- [Homologação e produção](docs/FLUXO_DE_RELEASE.md)
 
 ## Contribuição
 
-Alterações na branch `main` são feitas exclusivamente por pull request, com build obrigatório e aprovação de outra pessoa. Consulte o [guia de contribuição](CONTRIBUTING.md) antes de começar.
+O desenvolvimento segue o fluxo `feature → staging → main`. A `staging` é o destino padrão dos PRs e reúne as funcionalidades para homologação. A `main` recebe somente PRs vindos da `staging` após a validação da equipe.
+
+As duas branches exigem verificações automáticas e aprovação de outra pessoa. Consulte o [guia de contribuição](CONTRIBUTING.md) e o [fluxo de homologação e produção](docs/FLUXO_DE_RELEASE.md) antes de começar. O vínculo com os ambientes da Vercel é uma configuração separada; criar as branches não conclui a migração de hospedagem.
 
 Falhas de segurança não devem ser publicadas em issues. Siga as instruções da [política de segurança](SECURITY.md).
 

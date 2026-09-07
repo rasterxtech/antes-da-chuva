@@ -267,7 +267,7 @@ def _metadata(
             },
             "transferegov": {
                 "state": "transitional_legacy",
-                "reference": "Payload publicado legado",
+                "reference": "Transferências e Parcerias da União",
             },
         },
     }

@@ -463,7 +463,7 @@ describe('municipal v1 loading', () => {
     });
     expect(
       within(regionalComparison).getByRole('heading', {
-        name: 'Registros relacionados à chuva',
+        name: 'Registros relacionados à chuva nos últimos 10 anos',
       }),
     ).toBeTruthy();
     expect(screen.getByText('Atlas/S2ID: 1991–2025')).toBeTruthy();
