@@ -8,7 +8,6 @@ import {
   rename,
   rm,
 } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
@@ -102,8 +101,10 @@ async function hydrate() {
     return;
   }
 
+  const outputParent = dirname(outputDirectory);
+  await mkdir(outputParent, { recursive: true });
   const temporaryRoot = await mkdtemp(
-    resolve(tmpdir(), 'antes-da-chuva-presentation-'),
+    resolve(outputParent, '.antes-da-chuva-presentation-'),
   );
   const archivePath = resolve(temporaryRoot, 'presentation-data-v1.tar.gz');
   const extractedDirectory = resolve(temporaryRoot, 'v1');
@@ -141,7 +142,6 @@ async function hydrate() {
     }
 
     await validatePresentationData(extractedDirectory);
-    await mkdir(dirname(outputDirectory), { recursive: true });
     await rm(outputDirectory, { recursive: true, force: true });
     await rename(extractedDirectory, outputDirectory);
     console.log(
