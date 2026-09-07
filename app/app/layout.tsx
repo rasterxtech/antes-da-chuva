@@ -8,7 +8,8 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://antesdachuva.info'),
   title: 'Antes da Chuva | Leitura pública municipal',
   icons: {
-    icon: '/favicon.svg',
+    icon: [{ url: '/favicon-v2.svg', type: 'image/svg+xml' }],
+    shortcut: '/favicon-v2.svg',
   },
   description:
     'Histórico de ocorrências ligadas à chuva, evidências federais de prevenção e acesso aos canais oficiais de alerta em uma leitura municipal transparente.',
