@@ -67,7 +67,7 @@ export function RegionalComparison({
         Imediata de {region.nome}. As sínteses regionais usam os municípios
         comparáveis divulgados em cada métrica.
       </p>
-      <div className="mt-6 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-6">
         {definitions.map(({ key, title, suffix, change }) => {
           const metric = region.metrics[key];
           const denominator = metric.denominator;
@@ -79,58 +79,49 @@ export function RegionalComparison({
               ? metric.reference.reference_date
               : null;
           return (
-            <article
-              className="rounded-xl border border-border bg-muted/25 p-4"
-              key={key}
-            >
-              <h3 className="font-heading text-base font-semibold">{title}</h3>
-              <dl className="mt-4 grid gap-3 text-sm">
+            <article className="regional-row" key={key}>
+              <div>
+                <h3 className="font-sans text-lg font-bold">{title}</h3>
+                <p className="mt-2 text-sm leading-5 text-muted-foreground">
+                  Universo: {region.municipality_count} municípios;{' '}
+                  {denominator.included} comparáveis
+                  {denominator.missing
+                    ? `, ${denominator.missing} sem cobertura`
+                    : ''}
+                  {denominator.undefined
+                    ? `, ${denominator.undefined} sem base comparável`
+                    : ''}
+                  .
+                  {typeof referenceDate === 'string'
+                    ? ` Janela de 10 anos encerrada em ${formatReferenceDate(referenceDate)}.`
+                    : ''}
+                </p>
+                {hasPercentile && (
+                  <details className="data-details">
+                    <summary>Posição no conjunto comparável</summary>
+                    <p>
+                      Valor estritamente maior que{' '}
+                      {decimal.format(metric.percentile_strictly_lower_pct!)}%
+                      dos {denominator.included} municípios comparáveis. Essa
+                      posição não é uma classificação de risco.
+                    </p>
+                  </details>
+                )}
+              </div>
+              <dl className="regional-values">
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                    Município
-                  </dt>
-                  <dd className="mt-1 text-xl font-semibold tabular-nums">
-                    {format(metric.municipality_value, suffix, change)}
-                  </dd>
-                </div>
-                <div className="border-t border-border pt-3">
-                  <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                    Média regional
-                  </dt>
-                  <dd className="mt-1 font-semibold tabular-nums">
-                    {format(metric.mean, suffix, change)}
-                  </dd>
+                  <dt>Município</dt>
+                  <dd>{format(metric.municipality_value, suffix, change)}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
-                    Mediana regional
-                  </dt>
-                  <dd className="mt-1 text-xs text-muted-foreground tabular-nums">
-                    {format(metric.median, suffix, change)}
-                  </dd>
+                  <dt>Média regional</dt>
+                  <dd>{format(metric.mean, suffix, change)}</dd>
+                </div>
+                <div>
+                  <dt>Mediana regional</dt>
+                  <dd>{format(metric.median, suffix, change)}</dd>
                 </div>
               </dl>
-              {hasPercentile && (
-                <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                  Valor estritamente maior que{' '}
-                  {decimal.format(metric.percentile_strictly_lower_pct!)}% dos{' '}
-                  {denominator.included} municípios comparáveis.
-                </p>
-              )}
-              <p className="mt-3 border-t border-border pt-3 text-xs leading-5 text-muted-foreground">
-                Universo: {region.municipality_count} municípios;{' '}
-                {denominator.included} comparáveis
-                {denominator.missing
-                  ? `, ${denominator.missing} sem cobertura`
-                  : ''}
-                {denominator.undefined
-                  ? `, ${denominator.undefined} sem base comparável`
-                  : ''}
-                .{' '}
-                {typeof referenceDate === 'string'
-                  ? `Janela móvel de 10 anos encerrada em ${formatReferenceDate(referenceDate)}.`
-                  : ''}
-              </p>
             </article>
           );
         })}

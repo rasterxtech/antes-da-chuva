@@ -35,7 +35,7 @@ repositório. Ela não afirma avaliação, nota, homologação ou submissão.
 | Inovação e originalidade | [METODOLOGIA.md](METODOLOGIA.md), [CONTRATO_APRESENTACAO_V1.md](CONTRATO_APRESENTACAO_V1.md) | Descrição final aprovada pela equipe no formulário |
 | Relevância e impacto | [AUDITORIA_FONTES.md](AUDITORIA_FONTES.md), [DESCRICAO_SUBMISSAO.md](../deliverables/DESCRICAO_SUBMISSAO.md) | Texto final, público-alvo e impacto revisados pela equipe |
 | Benefício para sociedade ou economia | `app/app/page.tsx`, [METODOLOGIA.md](METODOLOGIA.md), [ROTEIRO_DEMO.md](../deliverables/ROTEIRO_DEMO.md) | Demonstração e declaração final no formulário |
-| Replicabilidade e escalabilidade | `src/`, `tests/`, `scripts/export_frontend_data.py`, [REPRODUCAO.md](REPRODUCAO.md), `scripts/verify_clean_clone.sh` | Executar e registrar o ensaio em clone limpo; definir licença e titular |
+| Replicabilidade e escalabilidade | `src/`, `tests/`, `scripts/export_frontend_data.py`, [REPRODUCAO.md](REPRODUCAO.md), [LICENSE](../LICENSE), [NOTICE](../NOTICE) | Atualizar o ensaio em clone limpo para o commit submetido; revisão de admissibilidade pela organização |
 
 ## Evidências de admissibilidade
 
@@ -43,7 +43,7 @@ repositório. Ela não afirma avaliação, nota, homologação ou submissão.
 |---|---|---|
 | Uso e identificação de dados públicos | [FONTES_DE_DADOS.md](FONTES_DE_DADOS.md), [AUDITORIA_FONTES.md](AUDITORIA_FONTES.md) | Pendente de conferência no formulário |
 | Metodologia e limites | [METODOLOGIA.md](METODOLOGIA.md), [CONTRATO_APRESENTACAO_V1.md](CONTRATO_APRESENTACAO_V1.md) | Pronto para referenciar; publicação e URL final pendentes |
-| Código aberto e licença adequada | Código, testes e documentação no repositório | Pendente: licença e titular não foram definidos |
+| Código aberto e licença adequada | Código, testes, [Apache 2.0](../LICENSE), [NOTICE](../NOTICE) e [guia de licenciamento](LICENCIAMENTO.md) | Licença e titulares definidos em 08/09/2026; não representa certificação de admissibilidade pela CGU |
 | Iniciativa funcional | Interface e testes de contrato no checkout | Pendente: validar implantação alvo e registrar smoke test |
 | Evidência de inscrição e homologação | Estrutura em `deliverables/` | Pendente: ação e confirmação no portal |
 
@@ -62,7 +62,7 @@ repositório. Ela não afirma avaliação, nota, homologação ou submissão.
 - [ ] Confirmar URL estável de implantação e preencher `deliverables/SMOKE_TEST_PRODUCAO.md` com data, navegador e resultado.
 - [ ] Revisar links oficiais e a data de consulta em `docs/FONTES_DE_DADOS.md`.
 - [ ] Publicar ou referenciar a metodologia e as limitações aprovadas.
-- [ ] Definir licença e titular, adicionar `LICENSE` e alinhar o README.
+- [x] Definir licença e titulares, adicionar `LICENSE` e `NOTICE` e alinhar o README: Apache 2.0, decisão de 08/09/2026.
 - [ ] Executar `scripts/verify_clean_clone.sh` contra um commit disponível e guardar a saída ou registro no local definido pela equipe.
 - [ ] Capturar a demonstração conforme `deliverables/ROTEIRO_DEMO.md` e registrar arquivos em `deliverables/capturas/`.
 - [ ] Revisar e adaptar `deliverables/DESCRICAO_SUBMISSAO.md` aos campos reais do formulário.

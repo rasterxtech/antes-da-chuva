@@ -6,7 +6,7 @@ Esta pasta oferece um recorte pequeno e legível do conjunto consolidado do Ante
 
 | Arquivo | Grão | Uso recomendado |
 | --- | --- | --- |
-| `municipios.sample.json` | Um objeto por município | Testes que precisam do mesmo formato consumido pelo frontend |
+| `municipios.sample.json` | Um objeto por município | Exploração do formato legado; não substitui o contrato v1 consumido pelo frontend atual |
 | `censo.sample.csv` | Uma linha por município | Exploração do indicador derivado do Censo 2022 |
 | `atlas.sample.csv` | Uma linha por município com histórico | Exploração dos registros agregados de desastres ligados à chuva |
 | `transferegov.sample.csv` | Uma linha por município com evidência selecionada | Exploração dos convênios e da evidência mais recente |

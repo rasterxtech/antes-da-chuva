@@ -61,14 +61,22 @@ Abra um PR dessa branch temporária para `staging`, aguarde aprovação e verifi
 
 O repositório usa Next.js 16 com App Router e o preset nativo da Vercel. O arquivo `app/vercel.json` fixa `npm ci` para instalação e `npm run build` para compilação. A configuração de produção anterior do Sites/Cloudflare foi removida do código; o histórico do Git preserva a versão anterior para referência.
 
-Configurações do repositório não criam automaticamente projetos, ambientes ou domínios. Antes de vincular o domínio público, valide o deployment da migração na Vercel; mantenha a hospedagem antiga disponível até concluir essa conferência e o corte de DNS.
+Configuração operacional do projeto `rasterxtech/antes-da-chuva`. Os vínculos de domínio abaixo foram consultados na API da Vercel em 08/09/2026:
 
-Após essa validação, no projeto correto da Vercel:
+| Domínio | Destino |
+| --- | --- |
+| `antesdachuva.info` | Ambiente Production |
+| `www.antesdachuva.info` | Redirecionamento 308 para `antesdachuva.info` |
+| `stg.antesdachuva.info` | Preview vinculado à branch `staging` |
+
+Os três domínios estão verificados na Vercel. Isso não substitui a conferência de commit e funcionamento a cada publicação. Cloudflare administra o DNS; o frontend é hospedado na Vercel, não no Sites.
+
+Ao revisar ou reconstruir a configuração:
 
 1. Configure **Root Directory** como `app`, **Framework Preset** como **Next.js** e **Node.js Version** como **22.x**. Use `npm ci`, `npm run build` e o diretório de saída padrão do Next.js (`.next`), sem apontar para o antigo `dist`.
 2. Em **Settings → Environments → Production → Branch Tracking**, selecione explicitamente `main`, mesmo que a branch padrão do GitHub seja `staging`.
 3. Vincule `staging` a um ambiente customizado de homologação, se disponível no plano. Como alternativa, use o Preview dessa branch com domínio e variáveis específicos.
-4. Use `stg.antesdachuva.info` para o Preview da branch `staging` e `antesdachuva.info` para Production (`main`). Esses vínculos já estão cadastrados no projeto `rasterxtech/antes-da-chuva` da Vercel; a ativação pública depende da validação dos deployments e da configuração de DNS. Nenhuma alteração de DNS é realizada por este documento.
+4. Preserve os vínculos da tabela e mantenha `main` como branch de Production. STG e previews conservam a proteção de acesso existente. Acesso ao repositório GitHub não implica acesso automático à equipe da Vercel.
 5. Separe variáveis e credenciais de homologação e produção. Não exponha segredos em variáveis do frontend, e não versione arquivos `.env`.
 6. Verifique que um merge em `staging` atualiza somente homologação, e que um merge em `main` dispara Production. Confirme também a associação automática do domínio de produção se a publicação deve ocorrer sem etapa manual.
 7. Faça um teste completo do fluxo antes de liberar a publicação no domínio público.
@@ -77,4 +85,4 @@ O CI do GitHub valida o código; ele não contém credenciais nem passos de depl
 
 ## Se uma versão apresentar problemas
 
-Pause novas promoções. Um mantenedor deve avaliar o rollback para um deployment conhecido no painel da Vercel, quando a hospedagem estiver migrada. Depois, a correção ou reversão deve passar por uma branch de trabalho, PR para `staging`, homologação e PR de promoção para `main`. Não faça force push, não exclua as branches permanentes e não desative as proteções para contornar uma falha.
+Pause novas promoções. Um mantenedor deve avaliar o rollback para um deployment conhecido no painel da Vercel. Depois, a correção ou reversão deve passar por uma branch de trabalho, PR para `staging`, homologação e PR de promoção para `main`. Não faça force push, não exclua as branches permanentes e não desative as proteções para contornar uma falha.

@@ -46,7 +46,7 @@ publicado e zero observado são estados diferentes.
 
 - [ ] URL estável da iniciativa: `[PENDENTE]`
 - [ ] Link do código público e commit submetido: `[PENDENTE]`
-- [ ] Licença e titular: `[PENDENTE]`
+- [x] Licença: Apache 2.0. Titulares: Felipe Flumignan, Felipe Liske, Isabella Grimaldi, Isabelle Camargo e Leoni Leopoldino. Ver LICENSE e NOTICE.
 - [ ] Pessoas responsáveis e critérios de elegibilidade: `[PENDENTE]`
 - [ ] URL ou identificador do caso de reúso no Portal Brasileiro de Dados Abertos: `[PENDENTE]`
 - [ ] Confirmação de envio e homologação: `[PENDENTE]`

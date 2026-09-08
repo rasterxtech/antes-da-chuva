@@ -16,7 +16,7 @@ reprodução integral das fontes oficiais, de suas GOLDs ou de uma implantação
 ## Pré-requisitos locais
 
 - Python 3.13, alinhado ao CI atual.
-- Node.js 22.13 ou superior e npm 11.6.2.
+- Node.js 22.x (22.13 ou superior nessa linha) e npm 11.6.2.
 - Acesso à rede para instalar dependências. A execução completa dos pipelines
   também requer acesso às fontes oficiais e espaço para dados locais.
 
@@ -31,6 +31,8 @@ python -m pip install -r requirements.txt
 python -m pytest -q tests/test_presentation_export.py
 python -m pytest -q
 ```
+
+No PowerShell, substitua a ativação acima por `.\.venv\Scripts\Activate.ps1`.
 
 `tests/test_presentation_export.py` cria Parquets temporários a partir de
 `tests/fixtures/presentation_v1/`, executa o exportador e verifica contrato,
@@ -84,6 +86,7 @@ estiverem disponíveis; não foi executada por este documento:
 python -m src.pipeline
 python -m src.mapbiomas
 python -m src.atlas
+python -m src.munic
 python scripts/export_frontend_data.py
 python -m pytest -q
 ```
