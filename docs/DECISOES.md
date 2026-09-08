@@ -71,7 +71,7 @@ Decisões são registradas para evitar mudanças de direção sem evidência dur
 
 ## Decisões abertas
 
-- Hospedagem definitiva e domínio público.
+- Validação final dos materiais de inscrição e elegibilidade da equipe.
 - Municípios usados no roteiro final de demonstração.
 
 ## D-012 — Universo territorial de apresentação v1
@@ -85,3 +85,22 @@ Decisões são registradas para evitar mudanças de direção sem evidência dur
 - **Decisão:** IBGE, Atlas e MapBiomas são exportados exclusivamente das GOLDs canônicas. Censo e Transferegov mantêm `provenance: "transitional_legacy"` até que tenham pipelines oficiais.
 - **Motivo:** a separação elimina o Atlas legado como fonte da interface sem fingir que Censo e Transferegov já foram canonizados.
 - **Status:** implementada em 03/09/2026. Detalhes em [CONTRATO_APRESENTACAO_V1.md](CONTRATO_APRESENTACAO_V1.md).
+
+## D-014: publicação da v1 e identidade editorial
+
+- **Decisão:** apresentar o produto publicamente como Antes da Chuva v1, sem rótulos de MVP ou fases de desenvolvimento; manter registros de verificação e publicação separados.
+- **Identidade:** Bricolage nos títulos editoriais, Atkinson nos textos e números, capítulos municipais e fontes próximas das evidências.
+- **Entrega:** desenvolvimento em branch de trabalho, PR para `staging`, homologação e promoção para `main` somente após aceite.
+- **Status:** definido em 08/09/2026. A implementação e seus testes estão em [HOMOLOGACAO_DESIGN_STAGING.md](HOMOLOGACAO_DESIGN_STAGING.md).
+
+## D-015: hospedagem e domínios
+
+- **Decisão:** Vercel para o frontend; Cloudflare para DNS. `antesdachuva.info` atende produção e `stg.antesdachuva.info` acompanha a branch `staging`. `www` redireciona para o domínio principal com 308.
+- **Status:** vínculos dos três domínios verificados na API da Vercel em 08/09/2026. Consulte [FLUXO_DE_RELEASE.md](FLUXO_DE_RELEASE.md).
+
+## D-016: Apache 2.0 com NOTICE
+
+- **Decisão:** Apache License 2.0 sem cláusulas adicionais, acompanhada de NOTICE com origem e titulares em ordem alfabética.
+- **Motivo:** permitir ampla reutilização, inclusive comercial, com preservação dos avisos de autoria. A escolha não exige copyleft nem crédito obrigatório no rodapé dos derivados.
+- **Titulares informados:** Felipe Flumignan, Felipe Liske, Isabella Grimaldi, Isabelle Camargo e Leoni Leopoldino.
+- **Status:** escolha e nomes confirmados pelos responsáveis em 08/09/2026. Código, dados de terceiros e marca permanecem juridicamente distintos; detalhes em [LICENCIAMENTO.md](LICENCIAMENTO.md).

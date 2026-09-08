@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import {
-  Legend,
+  CartesianGrid,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -11,6 +11,7 @@ import {
   YAxis,
 } from 'recharts';
 import type { MunicipalityPresentation } from '@/lib/presentation-contract';
+import { ChartKey, MAPBIOMAS_URL, SourceNote } from './editorial';
 
 type Period = 'full' | 5 | 10 | 20;
 
@@ -56,6 +57,9 @@ export function LandCoverHistory({
           Não há classificação publicada para esta unidade territorial no
           recorte carregado. A ausência não é um valor zero.
         </p>
+        <SourceNote href={MAPBIOMAS_URL} label="MapBiomas Brasil">
+          Cobertura não disponível no recorte publicado.
+        </SourceNote>
       </section>
     );
   const first = landCover.history[0];
@@ -65,7 +69,7 @@ export function LandCoverHistory({
   const availablePeriods: Period[] = [
     'full',
     ...([5, 10, 20] as const).filter(
-      (years) => change[`reference_year_${years}y`] !== null,
+      (years) => typeof change[`reference_year_${years}y`] === 'number',
     ),
   ];
   const referenceYear =
@@ -106,16 +110,15 @@ export function LandCoverHistory({
         </div>
         <button
           type="button"
-          className="rounded border border-border px-3 py-2 text-sm font-bold"
+          className="min-h-11 rounded-lg border border-border px-3 py-2 text-sm font-bold hover:bg-muted"
           onClick={() => setUnit(unit === 'pct' ? 'km2' : 'pct')}
         >
           Mostrar {unit === 'pct' ? 'km²' : '%'}
         </button>
       </div>
-      <label className="mt-5 block text-sm font-bold">
+      <label className="chart-controls">
         Período{' '}
         <select
-          className="ml-3 rounded border border-border bg-background p-2"
           value={period}
           onChange={(event) =>
             setPeriod(
@@ -133,7 +136,7 @@ export function LandCoverHistory({
         </select>
       </label>
       <div
-        className="mt-5 h-72"
+        className="chart-frame"
         aria-label={`Série de área urbanizada e vegetação nativa em ${unit === 'pct' ? 'percentual' : 'quilômetros quadrados'}`}
       >
         <ResponsiveContainer
@@ -142,16 +145,76 @@ export function LandCoverHistory({
           initialDimension={{ width: 800, height: 288 }}
           minWidth={0}
         >
-          <LineChart data={data}>
-            <XAxis dataKey="year" />
-            <YAxis />
-            <Tooltip formatter={(value) => format(Number(value))} />
-            <Legend />
-            <Line dataKey="urban" name="Área urbanizada" stroke="#177e89" />
-            <Line dataKey="native" name="Vegetação nativa" stroke="#15803d" />
+          <LineChart
+            data={data}
+            margin={{ top: 12, right: 8, bottom: 8, left: 0 }}
+          >
+            <CartesianGrid
+              vertical={false}
+              stroke="var(--border)"
+              strokeDasharray="3 5"
+            />
+            <XAxis
+              dataKey="year"
+              interval="preserveStartEnd"
+              minTickGap={28}
+              tickLine={false}
+              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+            />
+            <YAxis
+              width={40}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value: number) =>
+                value.toLocaleString('pt-BR', { notation: 'compact' })
+              }
+              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+            />
+            <Tooltip
+              contentStyle={{
+                borderRadius: 12,
+                borderColor: 'var(--border)',
+                fontSize: 14,
+                background: 'var(--card)',
+              }}
+              formatter={(value) => format(Number(value))}
+            />
+            <Line
+              dataKey="urban"
+              name="Área urbanizada"
+              stroke="var(--chart-municipality)"
+              strokeWidth={3}
+              dot={false}
+              isAnimationActive={false}
+            />
+            <Line
+              dataKey="native"
+              name="Vegetação nativa"
+              stroke="var(--chart-vegetation)"
+              strokeWidth={3}
+              strokeDasharray="7 4"
+              dot={false}
+              isAnimationActive={false}
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
+      <ChartKey
+        items={[
+          { label: 'Área urbanizada', color: 'var(--chart-municipality)' },
+          {
+            label: 'Vegetação nativa',
+            color: 'var(--chart-vegetation)',
+            dashed: true,
+          },
+        ]}
+      />
+      <p className="mt-2 text-center text-sm text-muted-foreground">
+        Unidade:{' '}
+        {unit === 'pct'
+          ? 'percentual da área mapeada (%)'
+          : 'quilômetros quadrados (km²)'}
+      </p>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
         {[
           {
@@ -179,7 +242,7 @@ export function LandCoverHistory({
           </div>
         ))}
       </div>
-      <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+      <div className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
         <Indicator
           label="Agropecuária"
           value={latest.agriculture_livestock_area_ha}
@@ -193,12 +256,39 @@ export function LandCoverHistory({
         série não permite afirmar causalidade com eventos, risco ou perda de
         vegetação.
       </p>
+      <details className="data-details">
+        <summary>Consultar valores por ano</summary>
+        <table>
+          <caption className="sr-only">
+            Cobertura e uso da terra em {unit === 'pct' ? 'percentual' : 'km²'}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Ano</th>
+              <th scope="col">Área urbanizada</th>
+              <th scope="col">Vegetação nativa</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row) => (
+              <tr key={row.year}>
+                <th scope="row">{row.year}</th>
+                <td>{format(row.urban)}</td>
+                <td>{format(row.native)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
+      <SourceNote href={MAPBIOMAS_URL} label="MapBiomas Brasil">
+        Cobertura e uso da terra de {start.year} a {latest.year}.
+      </SourceNote>
     </section>
   );
 }
 function Indicator({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded bg-muted p-3">
+    <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted p-3 sm:block">
       <span>{label}</span>
       <strong className="block">
         {(value / 100).toLocaleString('pt-BR')} km²

@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import {
   Bar,
-  BarChart,
+  ComposedChart,
   CartesianGrid,
-  Legend,
   Line,
   ResponsiveContainer,
   Tooltip,
@@ -13,6 +12,7 @@ import {
   YAxis,
 } from 'recharts';
 import type { MunicipalityPresentation } from '@/lib/presentation-contract';
+import { ATLAS_URL, ChartKey, SourceNote } from './editorial';
 
 const number = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
 const integer = new Intl.NumberFormat('pt-BR');
@@ -34,6 +34,9 @@ export function DisasterHistory({
           chuva. Isso não significa ausência de evento, risco ou necessidade de
           prevenção.
         </p>
+        <SourceNote href={ATLAS_URL} label="Atlas Digital de Desastres / S2ID">
+          Ausência de registros no recorte publicado, não ausência de risco.
+        </SourceNote>
       </section>
     );
   const annual = disasters.history.annual;
@@ -59,10 +62,9 @@ export function DisasterHistory({
         linha mostra a média dos municípios da mesma Região Geográfica Imediata,
         incluindo municípios sem registros como zero.
       </p>
-      <label className="mt-5 block text-sm font-bold">
+      <label className="chart-controls">
         Tipo COBRADE/Atlas
         <select
-          className="ml-3 rounded border border-border bg-background p-2"
           value={typeId ?? 'total'}
           onChange={(event) =>
             setTypeId(
@@ -81,7 +83,7 @@ export function DisasterHistory({
         </select>
       </label>
       <div
-        className="mt-5 h-72"
+        className="chart-frame"
         aria-label={`Série anual de registros municipais e média da Região Imediata de ${annual.benchmark.immediate_region.nome}`}
       >
         <ResponsiveContainer
@@ -90,35 +92,74 @@ export function DisasterHistory({
           initialDimension={{ width: 800, height: 288 }}
           minWidth={0}
         >
-          <BarChart data={selected.points}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="year" />
-            <YAxis />
+          <ComposedChart
+            data={selected.points}
+            margin={{ top: 12, right: 8, bottom: 8, left: 0 }}
+          >
+            <CartesianGrid
+              vertical={false}
+              stroke="var(--border)"
+              strokeDasharray="3 5"
+            />
+            <XAxis
+              dataKey="year"
+              minTickGap={28}
+              interval="preserveStartEnd"
+              tickLine={false}
+              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+            />
+            <YAxis
+              width={36}
+              allowDecimals={false}
+              tickLine={false}
+              axisLine={false}
+              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+            />
             <Tooltip
-              formatter={(value, name) => [
+              contentStyle={{
+                borderRadius: 12,
+                borderColor: 'var(--border)',
+                fontSize: 14,
+                background: 'var(--card)',
+              }}
+              formatter={(value, _name, item) => [
                 number.format(Number(value)),
-                name === 'municipal_event_count'
+                item.dataKey === 'municipal_event_count'
                   ? 'Município'
                   : 'Média regional',
               ]}
               labelFormatter={(year) => `${year}`}
             />
-            <Legend />
             <Bar
               dataKey="municipal_event_count"
               name="Município"
-              fill="#177e89"
+              fill="var(--chart-municipality)"
+              radius={[3, 3, 0, 0]}
+              isAnimationActive={false}
             />
             <Line
               type="monotone"
               dataKey="immediate_region_average_event_count"
               name="Média regional"
-              stroke="#d97706"
-              strokeWidth={2}
+              stroke="var(--chart-regional)"
+              strokeWidth={2.5}
+              strokeDasharray="5 3"
+              dot={false}
+              isAnimationActive={false}
             />
-          </BarChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
+      <ChartKey
+        items={[
+          { label: 'Município', color: 'var(--chart-municipality)' },
+          {
+            label: 'Média regional',
+            color: 'var(--chart-regional)',
+            dashed: true,
+          },
+        ]}
+      />
       <p className="sr-only">
         {selected.points
           .map(
@@ -127,7 +168,11 @@ export function DisasterHistory({
           )
           .join(' ')}
       </p>
-      <dl className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <p className="mt-5 text-sm text-muted-foreground">
+        Total, último registro e impactos se referem a todas as tipologias. O
+        ano com mais registros acompanha o filtro selecionado.
+      </p>
+      <dl className="mt-5 grid gap-3 sm:grid-cols-2 sm:[&>div:last-child]:col-span-2 lg:grid-cols-5 lg:[&>div:last-child]:col-span-1">
         <Metric
           label="Total"
           value={integer.format(disasters.history.rain_related_event_count)}
@@ -141,7 +186,7 @@ export function DisasterHistory({
         <Metric
           label="Ano com mais registros"
           value={
-            peak
+            peak && peak.municipal_event_count > 0
               ? `${peak.year} (${integer.format(peak.municipal_event_count)})`
               : 'Não informado'
           }
@@ -157,6 +202,34 @@ export function DisasterHistory({
           )}
         />
       </dl>
+      <details className="data-details">
+        <summary>Consultar valores por ano</summary>
+        <table>
+          <caption className="sr-only">Série anual do tipo selecionado</caption>
+          <thead>
+            <tr>
+              <th scope="col">Ano</th>
+              <th scope="col">Município</th>
+              <th scope="col">Média regional</th>
+            </tr>
+          </thead>
+          <tbody>
+            {selected.points.map((point) => (
+              <tr key={point.year}>
+                <th scope="row">{point.year}</th>
+                <td>{integer.format(point.municipal_event_count)}</td>
+                <td>
+                  {number.format(point.immediate_region_average_event_count)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
+      <SourceNote href={ATLAS_URL} label="Atlas Digital de Desastres / S2ID">
+        Série de {annual.first_year} a {annual.latest_year}. Registros
+        informados, não uma previsão.
+      </SourceNote>
     </section>
   );
 }

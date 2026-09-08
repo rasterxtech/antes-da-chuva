@@ -1,7 +1,17 @@
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from '@testing-library/react';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import Home from '@/app/page';
-import { inactiveTransferStatus, isMunicipalIndex } from '@/lib/presentation-data';
+import {
+  inactiveTransferStatus,
+  isMunicipalIndex,
+} from '@/lib/presentation-data';
 import type {
   MunicipalIndex,
   MunicipalityPresentation,
@@ -29,7 +39,9 @@ const metadata: PresentationMetadata = {
       materialized_at: '2026-09-02T21:06:38+00:00',
       source_sha256: 'fixture',
       manifest: 'fixture',
-      catalog: [{ atlas_type_id: 1, name: 'Inundações', cobrade_codes: ['12100'] }],
+      catalog: [
+        { atlas_type_id: 1, name: 'Inundações', cobrade_codes: ['12100'] },
+      ],
     },
     mapbiomas: {
       collection_id: '11',
@@ -112,21 +124,37 @@ function municipality(
   const annualSeries = [null, ...atlasTypes].map((atlas_type_id) => ({
     atlas_type_id,
     points: years.map((year) => {
-      const isRecordedYear = state === 'record' && (year === 2001 || year === 2024);
-      const count = isRecordedYear && (atlas_type_id === null || atlas_type_id === 1) ? 1 : 0;
-      return { year, municipal_event_count: count, immediate_region_average_event_count: count };
+      const isRecordedYear =
+        state === 'record' && (year === 2001 || year === 2024);
+      const count =
+        isRecordedYear && (atlas_type_id === null || atlas_type_id === 1)
+          ? 1
+          : 0;
+      return {
+        year,
+        municipal_event_count: count,
+        immediate_region_average_event_count: count,
+      };
     }),
   }));
   const disasterTypes = atlasTypes.map((atlas_type_id) => ({
     codigo_ibge: code,
     cobrade_codes: atlas_type_id === 1 ? ['12100'] : [],
     type_name: `Tipo ${atlas_type_id}`,
-    first_event_date: atlas_type_id === 1 && state === 'record' ? '2001-01-01' : null,
-    latest_event_date: atlas_type_id === 1 && state === 'record' ? '2024-05-01' : null,
+    first_event_date:
+      atlas_type_id === 1 && state === 'record' ? '2001-01-01' : null,
+    latest_event_date:
+      atlas_type_id === 1 && state === 'record' ? '2024-05-01' : null,
     event_count: atlas_type_id === 1 && state === 'record' ? 2 : 0,
-    deaths: 0, injured: 0, homeless: 0, displaced: 0, missing: 0,
-    recognized_event_count: 0, reported_affected_total: 0,
-    atlas_type_id, event_pct: atlas_type_id === 1 && state === 'record' ? 100 : 0,
+    deaths: 0,
+    injured: 0,
+    homeless: 0,
+    displaced: 0,
+    missing: 0,
+    recognized_event_count: 0,
+    reported_affected_total: 0,
+    atlas_type_id,
+    event_pct: atlas_type_id === 1 && state === 'record' ? 100 : 0,
   }));
 
   return {
@@ -165,10 +193,27 @@ function municipality(
           missing: 0,
           reported_affected_total: 0,
         },
-        annual: { first_year: 2001, latest_year: 2024, benchmark: { immediate_region: { codigo: selected.codigo_regiao_imediata, nome: selected.regiao_imediata, municipality_count: 1, zeros_policy: 'included_as_zero' } }, series: annualSeries },
+        annual: {
+          first_year: 2001,
+          latest_year: 2024,
+          benchmark: {
+            immediate_region: {
+              codigo: selected.codigo_regiao_imediata,
+              nome: selected.regiao_imediata,
+              municipality_count: 1,
+              zeros_policy: 'included_as_zero',
+            },
+          },
+          series: annualSeries,
+        },
       },
       types: disasterTypes,
-      months: Array.from({ length: 12 }, (_, index) => ({ month: index + 1, event_count: 0, rain_related_event_count: index === 0 && state === 'record' ? 2 : 0, event_pct: state === 'record' ? (index === 0 ? 100 : 0) : null })),
+      months: Array.from({ length: 12 }, (_, index) => ({
+        month: index + 1,
+        event_count: 0,
+        rain_related_event_count: index === 0 && state === 'record' ? 2 : 0,
+        event_pct: state === 'record' ? (index === 0 ? 100 : 0) : null,
+      })),
       highlights: [],
     },
     land_cover: {
@@ -220,17 +265,22 @@ function municipality(
       state: code === '5101837' ? 'not_in_source' : 'record',
       provenance: 'self_reported_munic_2020',
       reference_year: 2020,
-      indicators: Object.fromEntries([
-        'municipal_civil_defense_body',
-        'civil_defense_budget_provision',
-        'any_risk_prevention_planning_instrument',
-        'flood_risk_mapping',
-        'flood_contingency_plan',
-        'flood_early_warning',
-        'landslide_risk_mapping',
-        'landslide_contingency_plan',
-        'landslide_early_warning',
-      ].map((name) => [name, code === '5101837' ? 'not_in_source' : 'declared_yes'])),
+      indicators: Object.fromEntries(
+        [
+          'municipal_civil_defense_body',
+          'civil_defense_budget_provision',
+          'any_risk_prevention_planning_instrument',
+          'flood_risk_mapping',
+          'flood_contingency_plan',
+          'flood_early_warning',
+          'landslide_risk_mapping',
+          'landslide_contingency_plan',
+          'landslide_early_warning',
+        ].map((name) => [
+          name,
+          code === '5101837' ? 'not_in_source' : 'declared_yes',
+        ]),
+      ),
     } as MunicipalityPresentation['municipal_capacity'],
     census: {
       state: state === 'no_record' ? 'not_published' : 'record',
@@ -259,20 +309,37 @@ function municipality(
     },
     benchmarks: {
       immediate_region: {
-        codigo: selected.codigo_regiao_imediata, nome: selected.regiao_imediata,
-        municipality_count: 1, includes_selected_municipality: true,
-        metrics: Object.fromEntries([
-          ['rain_related_event_count_10y', 2, 'registros'],
-          ['urban_change_20y_pct', 900, 'percentual'],
-          ['native_vegetation_change_20y_pct', -11.1, 'percentual'],
-          ['urban_area_pct', 1, 'percentual'],
-          ['native_vegetation_area_pct', 80, 'percentual'],
-        ].map(([key, value, unit]) => [key, {
-          source: key === 'rain_related_event_count_10y' ? 'Atlas Digital de Desastres/S2ID' : 'MapBiomas Brasil',
-          unit, reference: key === 'rain_related_event_count_10y' ? { window_years: 10, reference_date: '2025-12-31' } : { latest_snapshot_year: 2025 },
-          municipality_value: value, mean: value, median: value, percentile_strictly_lower_pct: 0,
-          denominator: { included: 1, missing: 0, undefined: 0 },
-        }])),
+        codigo: selected.codigo_regiao_imediata,
+        nome: selected.regiao_imediata,
+        municipality_count: 1,
+        includes_selected_municipality: true,
+        metrics: Object.fromEntries(
+          [
+            ['rain_related_event_count_10y', 2, 'registros'],
+            ['urban_change_20y_pct', 900, 'percentual'],
+            ['native_vegetation_change_20y_pct', -11.1, 'percentual'],
+            ['urban_area_pct', 1, 'percentual'],
+            ['native_vegetation_area_pct', 80, 'percentual'],
+          ].map(([key, value, unit]) => [
+            key,
+            {
+              source:
+                key === 'rain_related_event_count_10y'
+                  ? 'Atlas Digital de Desastres/S2ID'
+                  : 'MapBiomas Brasil',
+              unit,
+              reference:
+                key === 'rain_related_event_count_10y'
+                  ? { window_years: 10, reference_date: '2025-12-31' }
+                  : { latest_snapshot_year: 2025 },
+              municipality_value: value,
+              mean: value,
+              median: value,
+              percentile_strictly_lower_pct: 0,
+              denominator: { included: 1, missing: 0, undefined: 0 },
+            },
+          ]),
+        ),
       },
     } as unknown as MunicipalityPresentation['benchmarks'],
     sources: [],
@@ -303,8 +370,9 @@ function mockData(
   return mockedFetch;
 }
 
+const scrollIntoViewMock = vi.fn();
 beforeAll(() => {
-  HTMLElement.prototype.scrollIntoView = vi.fn();
+  HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 });
 
 afterEach(() => {
@@ -315,6 +383,123 @@ afterEach(() => {
 });
 
 describe('municipal v1 loading', () => {
+  it('consults a unique typed municipality through the primary button without losing the query on refocus', async () => {
+    mockData({
+      '/data/v1/municipal-index.json': () => jsonResponse(index),
+      '/data/v1/metadata.json': () => jsonResponse(metadata),
+      '/data/v1/uf/SC-001.json': () =>
+        jsonResponse({
+          schema_version: 'v1',
+          uf: 'SC',
+          municipalities: { '4202404': municipality('4202404', 'record') },
+        }),
+    });
+    render(<Home />);
+    const search = await screen.findByLabelText(
+      'Busque por nome, UF ou código IBGE',
+    );
+    await waitFor(() => expect(search).toHaveProperty('disabled', false));
+    fireEvent.focus(search);
+    fireEvent.change(search, { target: { value: 'Blumenau' } });
+    fireEvent.blur(search);
+    fireEvent.focus(search);
+    expect(search).toHaveProperty('value', 'Blumenau');
+    fireEvent.click(screen.getByRole('button', { name: 'Explorar município' }));
+    await screen.findByRole('heading', { name: 'Blumenau / SC' });
+    expect(window.location.search).toBe('?codigo_ibge=4202404');
+    await waitFor(() =>
+      expect(document.activeElement).toBe(document.getElementById('resultado')),
+    );
+    fireEvent.focus(search);
+    expect(
+      await screen.findByRole('option', { name: /Blumenau, SC/ }),
+    ).toBeTruthy();
+  });
+
+  it('keeps an ambiguous query until an explicit suggestion is selected', async () => {
+    const mockedFetch = mockData({
+      '/data/v1/municipal-index.json': () => jsonResponse(index),
+      '/data/v1/metadata.json': () => jsonResponse(metadata),
+    });
+    render(<Home />);
+    const search = await screen.findByLabelText(
+      'Busque por nome, UF ou código IBGE',
+    );
+    await waitFor(() => expect(search).toHaveProperty('disabled', false));
+    fireEvent.focus(search);
+    fireEvent.change(search, { target: { value: 'an' } });
+    expect(screen.getAllByRole('option').length).toBeGreaterThan(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Explorar município' }));
+    expect(search).toHaveProperty('value', 'an');
+    expect(window.location.search).toBe('');
+    expect(
+      mockedFetch.mock.calls.some(([url]) => requestPath(url).includes('/uf/')),
+    ).toBe(false);
+    fireEvent.keyDown(search, { key: 'ArrowDown' });
+    expect(search.getAttribute('aria-activedescendant')).toBe(
+      screen.getAllByRole('option')[0].id,
+    );
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      block: 'nearest',
+      inline: 'nearest',
+      behavior: 'instant',
+    });
+    fireEvent.keyDown(search, { key: 'Escape' });
+    expect(search.getAttribute('aria-activedescendant')).toBeNull();
+    expect(document.activeElement).toBe(search);
+    fireEvent.change(search, { target: { value: 'ac' } });
+    expect(search.getAttribute('aria-expanded')).toBe('true');
+    fireEvent.keyDown(search, { key: 'Escape' });
+    fireEvent.keyDown(search, { key: 'ArrowDown' });
+    expect(search.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('treats a complete UF as a state filter instead of a substring of city names', async () => {
+    mockData({
+      '/data/v1/municipal-index.json': () =>
+        jsonResponse({
+          ...index,
+          municipalities: [
+            ...index.municipalities,
+            {
+              ...index.municipalities[0],
+              codigo_ibge: '2920908',
+              municipio: 'Mascote',
+              municipio_normalized: 'mascote',
+              uf: 'BA',
+              shard: '/data/v1/uf/BA.json',
+            },
+          ],
+        }),
+      '/data/v1/metadata.json': () => jsonResponse(metadata),
+    });
+    render(<Home />);
+    const search = await screen.findByRole('combobox', {
+      name: 'Busque por nome, UF ou código IBGE',
+    });
+    await waitFor(() => expect(search).toHaveProperty('disabled', false));
+    fireEvent.focus(search);
+    fireEvent.change(search, { target: { value: 'sc' } });
+    expect(screen.getAllByRole('option')).toHaveLength(1);
+    expect(screen.getByRole('option', { name: /Blumenau, SC/ })).toBeTruthy();
+    expect(screen.queryByRole('option', { name: /Mascote/ })).toBeNull();
+  });
+
+  it('closes the mobile navigation with Escape and returns focus to its trigger', () => {
+    mockData({});
+    render(<Home />);
+    fireEvent.click(screen.getByRole('button', { name: 'Abrir navegação' }));
+    const nav = screen.getByRole('navigation', { name: 'Navegação móvel' });
+    within(nav).getByRole('link', { name: 'Fontes' }).focus();
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' });
+    expect(
+      screen.queryByRole('navigation', { name: 'Navegação móvel' }),
+    ).toBeNull();
+    expect(document.activeElement).toBe(
+      screen.getByRole('button', { name: 'Abrir navegação' }),
+    );
+  });
+
   it('provides a skip link to the main content', () => {
     mockData({
       '/data/v1/municipal-index.json': () => jsonResponse(index),
@@ -379,10 +564,14 @@ describe('municipal v1 loading', () => {
 
     render(<Home />);
 
-    const search = await screen.findByLabelText('Busque por nome, UF ou código IBGE');
+    const search = await screen.findByLabelText(
+      'Busque por nome, UF ou código IBGE',
+    );
     fireEvent.focus(search);
     fireEvent.change(search, { target: { value: 'Blumenau' } });
-    fireEvent.click(await screen.findByRole('option', { name: /Blumenau, SC/ }));
+    fireEvent.click(
+      await screen.findByRole('option', { name: /Blumenau, SC/ }),
+    );
 
     await screen.findByText('Blumenau · SC');
     expect(window.location.search).toBe('?codigo_ibge=4202404');
@@ -405,7 +594,9 @@ describe('municipal v1 loading', () => {
 
     render(<Home />);
 
-    const search = await screen.findByLabelText('Busque por nome, UF ou código IBGE');
+    const search = await screen.findByLabelText(
+      'Busque por nome, UF ou código IBGE',
+    );
     fireEvent.focus(search);
     fireEvent.change(search, { target: { value: 'Blumenau' } });
     fireEvent.keyDown(search, { key: 'Enter' });
@@ -456,8 +647,10 @@ describe('municipal v1 loading', () => {
 
     render(<Home />);
 
-    await screen.findByRole('heading', { name: 'BLUMENAU / SC' });
-    expect(screen.getByText('Região Geográfica Imediata de Blumenau')).toBeTruthy();
+    await screen.findByRole('heading', { name: 'Blumenau / SC' });
+    expect(
+      screen.getByText('Região Geográfica Imediata de Blumenau'),
+    ).toBeTruthy();
     const regionalComparison = screen.getByRole('region', {
       name: 'Como este município se compara à região?',
     });
@@ -466,10 +659,23 @@ describe('municipal v1 loading', () => {
         name: 'Registros relacionados à chuva nos últimos 10 anos',
       }),
     ).toBeTruthy();
-    expect(screen.getByText('Atlas/S2ID: 1991–2025')).toBeTruthy();
-    expect(screen.getByText('MapBiomas: 1985–2025')).toBeTruthy();
+    const summaryRegion = screen.getByRole('region', { name: 'Blumenau / SC' });
     expect(
-      screen.getByRole('heading', { name: 'Como o município declarou se preparar' }),
+      within(summaryRegion)
+        .getByRole('link', { name: /Atlas\/S2ID/ })
+        .getAttribute('href'),
+    ).toBe('https://atlasdigital.mdr.gov.br/paginas/downloads.xhtml');
+    expect(
+      within(summaryRegion)
+        .getByRole('link', { name: /MapBiomas/ })
+        .getAttribute('href'),
+    ).toBe('https://brasil.mapbiomas.org/downloads/estatisticas/');
+    expect(summaryRegion.textContent).toContain(': 1991 a 2025');
+    expect(summaryRegion.textContent).toContain(': 1985 a 2025');
+    expect(
+      screen.getByRole('heading', {
+        name: 'Como o município declarou se preparar',
+      }),
     ).toBeTruthy();
     expect(screen.getByText('Capacidade declarada · MUNIC 2020')).toBeTruthy();
     expect(screen.getAllByText('Sim')).toHaveLength(9);
@@ -492,7 +698,9 @@ describe('municipal v1 loading', () => {
 
     await screen.findByText('Nenhum registro encontrado no recorte');
     expect(
-      screen.getByText('Nenhum registro foi encontrado nesta release do Atlas/S2ID.'),
+      screen.getByText(
+        'Nenhum registro foi encontrado nesta release do Atlas/S2ID.',
+      ),
     ).toBeTruthy();
     expect(screen.getByText('Valor não publicado')).toBeTruthy();
     expect(screen.getByText('R$ 0')).toBeTruthy();
@@ -551,7 +759,9 @@ describe('municipal v1 loading', () => {
 
     await screen.findByText('Dados municipais indisponíveis');
     await waitFor(() => {
-      expect(screen.getByText(/Não foi possível carregar o recorte de SC/)).toBeTruthy();
+      expect(
+        screen.getByText(/Não foi possível carregar o recorte de SC/),
+      ).toBeTruthy();
     });
   });
 

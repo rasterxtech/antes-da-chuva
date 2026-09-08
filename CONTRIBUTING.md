@@ -30,7 +30,7 @@ Requisitos: Node.js 22.x (22.13 ou superior nessa linha) e npm 11.6.2.
 5. Execute as verificações locais.
 6. Abra um pull request com destino à `staging`, usando o modelo do repositório.
 7. Aguarde as verificações `Build` e `Branch policy`, além de pelo menos uma aprovação de outra pessoa.
-8. Integre a funcionalidade usando **Squash and merge**. A equipe homologa o conjunto na staging da Vercel quando esse ambiente estiver vinculado.
+8. Integre a funcionalidade usando **Squash and merge**. A equipe homologa o conjunto em `stg.antesdachuva.info`, vinculado ao Preview da branch `staging` na Vercel.
 
 Para começar uma funcionalidade:
 
@@ -96,10 +96,15 @@ Um pull request deve:
 - explicar o problema e a solução;
 - indicar como a mudança foi testada;
 - incluir imagens quando houver alteração visual;
+- usar o [roteiro de homologação visual](docs/HOMOLOGACAO_DESIGN_STAGING.md) como referência e registrar cenários realmente testados;
 - relacionar a issue correspondente quando existir;
 - manter o build aprovado.
 
 PRs de funcionalidades para `staging` usam squash, e suas branches temporárias podem ser removidas depois da integração. PRs de promoção (`staging` para `main`) e de sincronização de histórico usam merge commit. Nunca remova `staging` ou `main`.
+
+## Licença das contribuições
+
+O código original usa [Apache License 2.0](LICENSE). Ao enviar uma contribuição intencionalmente para inclusão, observe a seção 5 da licença e confirme que possui os direitos ou a autorização necessária. Preserve LICENSE, NOTICE e os avisos de terceiros. Consulte o [guia de licenciamento](docs/LICENCIAMENTO.md) para créditos, dados públicos e marca.
 
 ## Segurança
 
