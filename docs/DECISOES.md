@@ -1,6 +1,6 @@
 # Registro de decisões
 
-Decisões são registradas para evitar mudanças de direção sem evidência durante o prazo curto do concurso.
+Decisões são registradas para evitar mudanças de direção sem evidência durante o prazo curto do concurso. As decisões D-001 a D-011 preservam o contexto do MVP inicial; as decisões posteriores registram o estado consolidado.
 
 ## D-001 — Nome
 
@@ -73,3 +73,15 @@ Decisões são registradas para evitar mudanças de direção sem evidência dur
 
 - Hospedagem definitiva e domínio público.
 - Municípios usados no roteiro final de demonstração.
+
+## D-012 — Universo territorial de apresentação v1
+
+- **Decisão:** a busca e os shards v1 usam as 5.571 unidades territoriais analíticas vigentes da API de Localidades do IBGE, com `codigo_ibge` textual de sete dígitos.
+- **Motivo:** a dimensão vigente inclui Boa Esperança do Norte/MT (`5101837`), que não estava no universo temporal de 5.570 códigos do Censo 2022. A unidade não será removida nem preenchida com zero.
+- **Status:** implementada em 03/09/2026. Detalhes em [UNIVERSO_TERRITORIAL.md](UNIVERSO_TERRITORIAL.md).
+
+## D-013 — Fontes canônicas e transicionais no contrato v1
+
+- **Decisão:** IBGE, Atlas e MapBiomas são exportados exclusivamente das GOLDs canônicas. Censo e Transferegov mantêm `provenance: "transitional_legacy"` até que tenham pipelines oficiais.
+- **Motivo:** a separação elimina o Atlas legado como fonte da interface sem fingir que Censo e Transferegov já foram canonizados.
+- **Status:** implementada em 03/09/2026. Detalhes em [CONTRATO_APRESENTACAO_V1.md](CONTRATO_APRESENTACAO_V1.md).

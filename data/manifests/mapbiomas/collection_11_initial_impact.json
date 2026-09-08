@@ -1,0 +1,20 @@
+{
+  "previous_collection": null,
+  "current_collection": "11",
+  "previous_latest_year": null,
+  "current_latest_year": 2025,
+  "rows_previous": null,
+  "rows_current": {
+    "raw_wide": 77406,
+    "silver": 3173605,
+    "fact": 2798168,
+    "snapshot": 228370,
+    "change": 5570
+  },
+  "class_ids_added": [],
+  "class_ids_removed": [],
+  "municipalities_added": [],
+  "municipalities_removed": [],
+  "schema_changes": {},
+  "common_year_indicator_comparison": null
+}
