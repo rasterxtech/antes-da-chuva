@@ -1,0 +1,80 @@
+{
+  "run_id": "20260902T210532Z_35997b91",
+  "started_at": "2026-09-02T21:05:32+00:00",
+  "finished_at": "2026-09-02T21:05:56+00:00",
+  "collection_id": "11",
+  "collection_version": "v1",
+  "first_year": 1985,
+  "latest_year": 2025,
+  "source_urls": {
+    "statistics_discovery": "https://brasil.mapbiomas.org/downloads/estatisticas/",
+    "statistics_download": "https://drive.google.com/uc?id=1otOqymHuixvkRGVl65zTTNyfaHo46Gqk&export=download",
+    "legend_discovery": "https://brasil.mapbiomas.org/downloads/codigos-de-legenda/",
+    "legend_download": "https://brasil.mapbiomas.org/wp-content/uploads/sites/3/2026/08/legend_code_mapbiomas_brazil_collection_11.csv"
+  },
+  "source_hashes": {
+    "statistics": "c223fd84dcdd21e49d651788ff5a726a7e3aa04d2eab730e99407dd80a8d3e30",
+    "statistics_xlsx_member": "8de70a35fdd35f943e059763d128825ee08c0978948311ac03c769e0f178abfe",
+    "legend": "603239c5de7cca95799c788ab553a73ec3fc16477f681f63bb5af191d2f54dbe"
+  },
+  "rows": {
+    "raw_wide": 77406,
+    "silver": 3173605,
+    "fact": 2798168,
+    "snapshot": 228370,
+    "change": 5570
+  },
+  "rows_raw": 77406,
+  "rows_silver": 3173605,
+  "rows_fact": 2798168,
+  "rows_snapshot": 228370,
+  "rows_change": 5570,
+  "municipality_coverage_pct": 99.98204990127446,
+  "input_signature": {
+    "collection_id": "11",
+    "collection_version": "v1",
+    "statistics_url": "https://drive.google.com/uc?id=1otOqymHuixvkRGVl65zTTNyfaHo46Gqk&export=download",
+    "statistics_sha256": "c223fd84dcdd21e49d651788ff5a726a7e3aa04d2eab730e99407dd80a8d3e30",
+    "legend_url": "https://brasil.mapbiomas.org/wp-content/uploads/sites/3/2026/08/legend_code_mapbiomas_brazil_collection_11.csv",
+    "legend_sha256": "603239c5de7cca95799c788ab553a73ec3fc16477f681f63bb5af191d2f54dbe"
+  },
+  "pipeline_fingerprint": "3b7b5e71fd2290b3a216287ae5d02a2f8887e3b8c93f01b690a39cd1766e89e0",
+  "output_hashes": {
+    "data/silver/mapbiomas_land_cover.parquet": "a564af374a6a3e434b1cb96b2cd7fa513b75df30bb29fbc01f1cbf84a546cc66",
+    "data/silver/mapbiomas_class_legend.parquet": "bf51dadeae86b671732a8d8c0ad70a334db1c713379d9d062e3ab963e3453b2b",
+    "data/gold/fact_municipality_land_cover.parquet": "1a820b661389d858f7ecc75a8410f20025290e2fe11f0c710f62cc8c7c9fe14d",
+    "data/gold/snapshot_municipality_land_cover.parquet": "011513f65ddb4c51503d3a5da94a50cd60801465ca4834f004275de91812dc5c",
+    "data/gold/municipality_land_cover_change.parquet": "64ee8ab7d687a3aacaf65ba2bea190664da470876d7aa8733ab1beef8730585c",
+    "data/gold/mapbiomas_data_quality_report.json": "3e63aee73b62f7a926c78d69adcac50858708067f2bd1102cee4bbc67bbaba32",
+    "docs/mapbiomas-data-quality-report.md": "3c0a9fa07c5876e53eb7139820d20bbbc5eaa64b24782c93f4ff21268ca88e24",
+    "docs/mapbiomas.md": "763599cf29e24896a519a806468931aa3880b82549c9d9d9200fe86db0fb89d8"
+  },
+  "discovery_pages": {
+    "coverage": {
+      "url": "https://brasil.mapbiomas.org/iniciativas-e-produtos/cobertura-e-uso-da-terra/cobertura-30m/cobertura/",
+      "sha256": "c5ed3b1c84b461086f5566f7192c63146cf925400bcda234807d04f366f86ab4",
+      "content_type": "text/html; charset=UTF-8",
+      "path": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/raw/mapbiomas/collection_11/discovery/c5ed3b1c84b4/coverage.html"
+    },
+    "statistics": {
+      "url": "https://brasil.mapbiomas.org/downloads/estatisticas/",
+      "sha256": "d290ea8eb5ce01328ac7ca69fdfaee8f9eaa091e8fa676a473bd3c3f3b080fb7",
+      "content_type": "text/html; charset=UTF-8",
+      "path": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/raw/mapbiomas/collection_11/discovery/d290ea8eb5ce/statistics.html"
+    },
+    "legend": {
+      "url": "https://brasil.mapbiomas.org/downloads/codigos-de-legenda/",
+      "sha256": "7917b9691450bb2a596af040e6e5e0597ab6ecd44fd9f931db94abde0e66b767",
+      "content_type": "text/html; charset=UTF-8",
+      "path": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/raw/mapbiomas/collection_11/discovery/7917b9691450/legend.html"
+    },
+    "urbanization": {
+      "url": "https://brasil.mapbiomas.org/iniciativas-e-produtos/cobertura-e-uso-da-terra/areas-urbanizadas/urbanizacao-anual/",
+      "sha256": "d34042a831d13af41c4b0800c93ea290785aeca6758eaf31dd8dc57b8f506532",
+      "content_type": "text/html; charset=UTF-8",
+      "path": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/raw/mapbiomas/collection_11/discovery/d34042a831d1/urbanization.html"
+    }
+  },
+  "collection_impact_report": "/home/Leoni.Leopoldino/Documentos/personal/antesdachuva/data/manifests/mapbiomas/collection_11_initial_impact.json",
+  "status": "PASS"
+}

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": "v1",
+  "territorialUniverse": "ibge_current_5571",
+  "municipalityCount": 5571,
+  "archiveUrl": "https://github.com/rasterxtech/antes-da-chuva/releases/download/data-v1-2026-09-07/presentation-data-v1-2026-09-07.tar.gz",
+  "sha256": "8962e6618c4fe2dcc376a004759b32094a017acf88b7f1c28e9f0c1ebcfcc7ee"
+}
