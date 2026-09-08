@@ -2,7 +2,9 @@
 
 Data: 08/09/2026. Candidato: `codex/design-atlas-editorial`, a partir de `staging` em `062f297dae819dede873500ec250b6238dbd4daa`.
 
-Status: implementação e verificações locais concluídas; revisão humana e deployment da staging ainda necessários. Nenhuma promoção para `main`, alteração de DNS ou redução de proteções faz parte desta entrega.
+Status: implementação e verificações locais concluídas; [PR #8 aberto para staging](https://github.com/rasterxtech/antes-da-chuva/pull/8). Revisão humana e deployment da staging ainda necessários. Nenhuma promoção para `main`, alteração de DNS ou redução de proteções faz parte desta entrega.
+
+Commit de implementação: `48204ac7056b0f1eb93c6e333cc405504936bfbf`. O cabeçalho do PR identifica o candidato atual, incluindo eventuais atualizações documentais posteriores; o deployment a homologar deve corresponder a esse candidato.
 
 ## Mudanças entregues
 
@@ -61,6 +63,7 @@ Capturas do build de produção executado localmente; não são comprovação de
 - Medição comparativa de LCP/CLS com repetições e auditoria completa de contraste não executadas. Não se declara conformidade WCAG nem ganho de desempenho medido.
 - A navegação ficou mais orientada, mas não se afirma redução da altura total da página. Notas legíveis e conteúdo acessível podem aumentar sua extensão.
 - Favicon e ilustração existentes preservados. Nova imagem de compartilhamento e nova arte autoral ficam para avaliação posterior ao aceite desta direção.
+- Alerta de dependência preexistente consultado em 08/09/2026: `pytest`, tratamento de diretórios temporários, severidade moderada, correção indicada em 9.0.3. O pacote de testes Python não foi atualizado por este PR visual; revisar separadamente antes da release, com a suíte Python. Isso não é uma varredura completa de segurança.
 
 ## Roteiro de aceite
 

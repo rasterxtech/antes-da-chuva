@@ -1,6 +1,6 @@
 # Plano de melhoria visual e homologação em staging
 
-Data: 08/09/2026. Estado: núcleo implementado e validado localmente após autorização; PR e homologação de staging pendentes. Consulte o [registro de implementação e testes](HOMOLOGACAO_DESIGN_STAGING.md).
+Data: 08/09/2026. Estado: núcleo implementado e validado localmente após autorização; [PR #8](https://github.com/rasterxtech/antes-da-chuva/pull/8) aberto para staging, aguardando revisão e homologação. Consulte o [registro de implementação e testes](HOMOLOGACAO_DESIGN_STAGING.md).
 
 Base: [revisão crítica de design](REVISAO_DESIGN_2026-09-08.md).
 
